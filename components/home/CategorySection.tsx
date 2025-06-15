@@ -1,39 +1,58 @@
-import { SubCategory } from "@/lib/generated/prisma";
-import Link from "next/link";
+import React from "react";
 
-interface CategorySectionProps {
-  categories: SubCategory[];
-}
-
-const CategorySection = ({ categories }: CategorySectionProps) => {
+const categories = [
+  {
+    name: "COSMETICS",
+    image:
+      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727315701/800w-5eU04gvABJs_zqip4d.webp",
+  },
+  {
+    name: "SKINCARE",
+    image:
+      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727315700/800w-qWKqCY5hzd8_hr8sey.webp",
+  },
+  {
+    name: "LUXURY PERFUMES",
+    image:
+      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727315700/800w-Yn6osI7XMnI_azndat.webp",
+  },
+  {
+    name: "BATH & BODY",
+    image:
+      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727315701/800w-DI-sLlEIVnM_tiuzw4.webp",
+  },
+  {
+    name: "Skin Deodorants",
+    image:
+      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727315700/Skin_Care_Products_nvwzf0.png",
+  },
+  {
+    name: "GIFT SETS",
+    image:
+      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727315701/800w-XaTLqFr-mtI_yinzh6.jpg",
+  },
+];
+const CategorySection = () => {
   return (
-    <div className="container mx-auto mb-[20px] px-4">
-      <div className="flex justify-center">
-        <div className="heading ownContainer uppercase sm:my-[40px]">
-          SHOP BY CATEGORY
-        </div>
+    <div className="container mx-auto px-4 mb-[20px]">
+      <div className="heading my-[10px] ownContainer text-center uppercase heading ownContainer  sm:my-[40px]">
+        LUXURY CATEGORIES
       </div>
-      <div className="relative flex justify-center">
-        <div className="flex overflow-x-auto gap-4 sm:gap-6 scroll-smooth no-scrollbar">
-          {categories.map((category) => (
-            <Link
-              href={`/category/${category.slug}`}
-              key={category.id}
-              className="flex-shrink-0 w-[250px]"
-            >
-              <div className="flex flex-col">
-                <img
-                  src={category.images[0]?.url || ""}
-                  alt={category.name}
-                  className="w-[250px] h-[250px] object-cover"
-                />
-                <h3 className="text-sm font-medium mt-2 text-center">
-                  {category.name}
-                </h3>
-              </div>
-            </Link>
-          ))}
-        </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        {categories.map((category, index) => (
+          <div key={index} className="flex flex-col items-center">
+            <div className="bg-gray-100">
+              <img
+                src={category.image}
+                alt={category.name}
+                className="w-full h-auto object-cover"
+              />
+            </div>
+            <span className="text-sm font-medium text-center">
+              {category.name}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
