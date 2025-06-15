@@ -1,236 +1,182 @@
 "use client";
 
-import { ChevronDown, Star } from "lucide-react";
 import { useState } from "react";
-import { Button } from "../ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "../ui/textarea";
-import { useForm } from "@mantine/form";
+import { Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import ReviewModal from "./ReviewModal";
+import { getAuthenticatedUserId } from "@/app/actions/auth";
 
-const ProductReviewComponent = () => {
-  const [sortBy, setSortBy] = useState("Most Recent");
-  const form = useForm({
-    initialValues: {
-      rating: "",
-      review: "",
-      title: "",
-    },
-    validate: {
-      rating: (value) => (value ? null : "Rating is required."),
-      review: (value) =>
-        value.trim().length > 0 ? null : "Review cannot be empty.",
-      title: (value) => (value ? null : "Title is required."),
-    },
-  });
-  const reviewData = {
-    averageRating: 4.4,
-    totalReviews: 1222,
-    ratingBreakDown: [
-      { stars: 5, percentage: 71, count: 864 },
-      { stars: 4, percentage: 27, count: 332 },
-      { stars: 3, percentage: 2, count: 23 },
-      { stars: 2, percentage: 0, count: 0 },
-      { stars: 1, percentage: 0, count: 2 },
-    ],
+interface Review {
+  review: {
+    rating: number;
+    review: string;
+    reviewCreatedAt: Date;
+    reviewBy: {
+      username: string;
+    };
+    verified: boolean;
   };
+}
+
+interface ProductReviewComponentProps {
+  reviews: Review[];
+  productId: string;
+  productSlug: string;
+}
+
+export default function ProductReviewComponent({
+  reviews,
+  productId,
+  productSlug,
+}: ProductReviewComponentProps) {
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const router = useRouter();
+
+  const verifiedReviews = reviews.filter((r) => r.review.verified);
+  const displayedReviews = verifiedReviews.slice(0, 3);
+
+  const handleWriteReview = async () => {
+    const { userId, error } = await getAuthenticatedUserId();
+    if (error || !userId) {
+      router.push("/auth");
+      return;
+    }
+    setIsReviewModalOpen(true);
+  };
+
+  const ratingCounts = verifiedReviews.reduce(
+    (acc, review) => {
+      acc[review.review.rating] = (acc[review.review.rating] || 0) + 1;
+      return acc;
+    },
+    {} as Record<number, number>
+  );
+
+  const totalRatings = verifiedReviews.length;
+  const averageRating = (
+    verifiedReviews.reduce((sum, review) => sum + review.review.rating, 0) /
+    totalRatings
+  ).toFixed(1);
+
   return (
-    <div className="ownContainer p-4 mt-[20px]">
-      <h2 className="heading">Customer Reviews</h2>
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="md:w-1/3">
-          <div className="flex items-center mb-2">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
-                className={`w-6 h-6 ${
-                  star <= Math.round(reviewData.averageRating)
-                    ? "text-yellow-400 fill-yellow-400"
-                    : "text-gray-300"
-                }`}
-              />
-            ))}
-            <span className="ml-2 text-xl font-semibold">
-              {reviewData.averageRating.toFixed(1)}
-            </span>
+    <div className="space-y-8">
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl font-semibold">RATINGS</h2>
+            <Star className="w-5 h-5" />
           </div>
-          <p className="text-sm text-gray-600 mb-4">
-            Based on {reviewData.totalReviews} reviews
-          </p>
-          {reviewData.ratingBreakDown.map((rating) => (
-            <div key={rating.stars} className="flex items-center mb-2">
-              <div className="flex items-center w-24">
-                {[1, 2, 3, 4, 5].map((star) => (
+          <Button
+            variant="outline"
+            onClick={handleWriteReview}
+            className="border-2"
+          >
+            Write a Review
+          </Button>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 mb-8">
+          <div className="flex items-center gap-4">
+            <div className="text-5xl font-bold">{averageRating}</div>
+            <div className="flex flex-col">
+              <div className="flex">
+                {[...Array(5)].map((_, i) => (
                   <Star
-                    key={star}
+                    key={i}
                     className={`w-4 h-4 ${
-                      star <= rating.stars
-                        ? "text-yellow-400 fill-yellow-400"
-                        : "text-gray-300"
+                      i < Math.floor(Number(averageRating))
+                        ? "fill-primary stroke-primary"
+                        : "stroke-gray-300"
                     }`}
                   />
                 ))}
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5 ml-2">
-                <div
-                  className="bg-yellow-400 h-2.5 rounded-full"
-                  style={{ width: `${rating.percentage}%` }}
-                ></div>
+              <div className="text-sm text-gray-500">
+                {totalRatings} Verified Reviews
               </div>
-              <span className="ml-2 text-sm text-gray-600 w-12">
-                {rating.percentage}%
-              </span>
-              <span className="ml-2 text-sm text-gray-600 w-12">
-                ({rating.count})
-              </span>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            {[5, 4, 3, 2, 1].map((rating) => (
+              <div key={rating} className="flex items-center gap-2">
+                <span className="w-3">{rating}</span>
+                <Star className="w-4 h-4" />
+                <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-primary"
+                    style={{
+                      width: `${
+                        ((ratingCounts[rating] || 0) / totalRatings) * 100
+                      }%`,
+                    }}
+                  />
+                </div>
+                <span className="text-sm text-gray-500 w-8">
+                  {ratingCounts[rating] || 0}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          {displayedReviews.map((review, index) => (
+            <div key={index} className="border-b pb-4 last:border-0">
+              <div className="flex mb-2">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-4 h-4 ${
+                      i < review.review.rating
+                        ? "fill-primary stroke-primary"
+                        : "stroke-gray-300"
+                    }`}
+                  />
+                ))}
+              </div>
+              <p className="mb-2">{review.review.review}</p>
+              <div className="flex items-center justify-between text-sm text-gray-500">
+                <div className="flex items-center gap-2">
+                  <span>{review.review.reviewBy.username}</span>
+                  <span>|</span>
+                  <span>
+                    {new Date(review.review.reviewCreatedAt).toLocaleDateString(
+                      "en-US",
+                      {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      }
+                    )}
+                  </span>
+                </div>
+              </div>
             </div>
           ))}
-          <Link href={"/review"}>
-            <button className="text-sm text-blue-600 mt-2">
-              See all reviews
-            </button>
-          </Link>
         </div>
-        <div className="md:w-2/3">
-          <div className="flex justify-between mb-4">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button>Leave a Review</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <h2>Submit Your Review</h2>
-                </DialogHeader>
 
-                <form
-                // onSubmit={form.onSubmit(handleSubmit)}
-                >
-                  {/* Rating Select */}
-                  <div style={{ marginBottom: "1rem" }}>
-                    <Select
-                      onValueChange={(value) =>
-                        form.setFieldValue("rating", value)
-                      }
-                      value={form.values.rating}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select Rating" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Rating</SelectLabel>
-                          <SelectItem value="1">1 Star</SelectItem>
-                          <SelectItem value="2">2 Stars</SelectItem>
-                          <SelectItem value="3">3 Stars</SelectItem>
-                          <SelectItem value="4">4 Stars</SelectItem>
-                          <SelectItem value="5">5 Stars</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
+        {totalRatings > 3 && (
+          <div className="mt-4 text-center">
+            <Link
+              href={`/review/${productSlug}`}
+              className="text-sm text-gray-500 hover:text-gray-700"
+            >
+              View all {totalRatings} reviews
+            </Link>
+          </div>
+        )}
+      </Card>
 
-                  {/* Review Textarea */}
-                  <div style={{ marginBottom: "1rem" }}>
-                    <Textarea
-                      placeholder="Write your review here"
-                      {...form.getInputProps("review")}
-                    />
-                  </div>
-
-                  {/* Submit Button */}
-                  <DialogFooter>
-                    <Button type="submit">Submit Review</Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
-            <div className="relative">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="appearance-none border rounded py-2 px-4 pr-8 leading-tight focus:outline focus:border-blue-500"
-              >
-                {" "}
-                <option>Most Recent</option>
-                <option>Highest Rated</option>
-                <option>Lowest Rated</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <ChevronDown className="w-4 h-4" />
-              </div>
-            </div>
-          </div>
-          <div className="border-t pt-4">
-            <div className="flex items-center mb-2">
-              <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-xl font-semibold mr-3">
-                S
-              </div>
-              <div>
-                <div className="flex items-center">
-                  <span className="font-semibold mr-2">Suraj M.</span>
-                  <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                    Verified
-                  </span>
-                </div>
-                <div className="flex">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className="w-4 h-4 text-yellow-400 fill-yellow-400"
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-            <p className="text-lg mb-2">Soo gorgeous 😍❤️</p>
-            <p className="text-gray-600">
-              The best perfume of VibeCart, Really AMAZING!!! ❤️
-            </p>
-          </div>
-          <div className="border-t pt-4">
-            <div className="flex items-center mb-2">
-              <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-xl font-semibold mr-3">
-                R
-              </div>
-              <div>
-                <div className="flex items-center">
-                  <span className="font-semibold mr-2">Rudra R.</span>
-                  <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                    Verified
-                  </span>
-                </div>
-                <div className="flex">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className="w-4 h-4 text-yellow-400 fill-yellow-400"
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-            <p className="text-lg mb-2">Good</p>
-            <p className="text-gray-600">Best Perfume I used ❤️</p>
-          </div>
-        </div>
-      </div>
+      <ReviewModal
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+        productId={productId}
+        productSlug={productSlug}
+      />
     </div>
   );
-};
-
-export default ProductReviewComponent;
+}

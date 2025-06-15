@@ -17,22 +17,35 @@ import { GiPerfumeBottle } from "react-icons/gi";
 import { FaBath } from "react-icons/fa";
 import { PiHighlighterCircleBold } from "react-icons/pi";
 import { MdFace4 } from "react-icons/md";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchModal from "./SearchModal";
 import Link from "next/link";
-import AccountPopUp from "./AccountPopUp";
 import CartDrawer from "./CartDrawer";
+import FavoritesDrawer from "./FavoritesDrawer";
 import { hamburgerMenuState } from "./store";
 import { useAtom, useStore } from "jotai";
+import { useRouter } from "next/navigation";
+import { getAuthenticatedUser } from "@/lib/auth";
 
 const Navbar = () => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hamMenuOpen, setHamMenuOpen] = useAtom(hamburgerMenuState, {
     store: useStore(),
   });
 
   // Manage submenu visibility
   const [activeSubmenu, setActiveSubmenu] = useState(null);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const user = await getAuthenticatedUser();
+      setIsAuthenticated(!!user);
+    };
+    checkAuth();
+  }, []);
 
   const handleOnClickHamburgerMenu = () => {
     setHamMenuOpen(true);
@@ -43,6 +56,14 @@ const Navbar = () => {
       setActiveSubmenu(null); // Close submenu if it's already open
     } else {
       setActiveSubmenu(name); // Open the clicked submenu
+    }
+  };
+
+  const handleProfileClick = () => {
+    if (isAuthenticated) {
+      router.push("/profile");
+    } else {
+      router.push("/auth");
     }
   };
 
@@ -208,9 +229,15 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center justify-end lg:w-1/3">
-            <div>
-              <AccountPopUp />
-            </div>
+            <Button
+              onClick={handleProfileClick}
+              variant={"ghost"}
+              size={"icon"}
+              className="lg:flex"
+            >
+              <User size={24} />
+            </Button>
+            <FavoritesDrawer />
             <CartDrawer />
           </div>
         </div>

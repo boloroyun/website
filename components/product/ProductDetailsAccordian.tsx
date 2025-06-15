@@ -5,56 +5,68 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-const ProductDetailsAccordian = () => {
+
+interface ProductDetailsAccordianProps {
+  description: string;
+  longDescription: string;
+  benefits: { name: string }[];
+  ingredients: { name: string }[];
+}
+
+const ProductDetailsAccordian = ({
+  description,
+  longDescription,
+  benefits,
+  ingredients,
+}: ProductDetailsAccordianProps) => {
   return (
-    <div>
-      <Accordion type="single" collapsible className="w-full">
-        <AccordionItem value="item-1">
-          <AccordionTrigger className="uppercase subHeading tracking-[1px]">
-            DESCRIPTION
-          </AccordionTrigger>
-          <AccordionContent>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio
-            voluptates, necessitatibus itaque iste perspiciatis odit repudiandae
-            dicta aspernatur beatae, quas modi ut illum nulla ea eligendi
-            mollitia, impedit fugiat. Consequuntur.
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="item-2">
-          <AccordionTrigger className="uppercase subHeading tracking-[1px]">
-            KEY BENEFITS
-          </AccordionTrigger>
-          <AccordionContent>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio
-            voluptates, necessitatibus itaque iste perspiciatis odit repudiandae
-            dicta aspernatur beatae, quas modi ut illum nulla ea eligendi
-            mollitia, impedit fugiat. Consequuntur.
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="item-3">
-          <AccordionTrigger className="uppercase subHeading tracking-[1px]">
-            Ingredients
-          </AccordionTrigger>
-          <AccordionContent>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio
-            voluptates, necessitatibus itaque iste perspiciatis odit repudiandae
-            dicta aspernatur beatae, quas modi ut illum nulla ea eligendi
-            mollitia, impedit fugiat. Consequuntur.
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="item-4">
-          <AccordionTrigger className="uppercase subHeading tracking-[1px]">
-            FAQ&apos;S
-          </AccordionTrigger>
-          <AccordionContent>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio
-            voluptates, necessitatibus itaque iste perspiciatis odit repudiandae
-            dicta aspernatur beatae, quas modi ut illum nulla ea eligendi
-            mollitia, impedit fugiat. Consequuntur.
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    </div>
+    <Accordion type="single" collapsible className="w-full mb-[20px]">
+      <AccordionItem value="item-1">
+        <AccordionTrigger className="text-lg font-semibold">
+          DESCRIPTION
+        </AccordionTrigger>
+        <AccordionContent>
+          <div className="space-y-4">
+            <p>{description}</p>
+            <div dangerouslySetInnerHTML={{ __html: longDescription }} />
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="item-2">
+        <AccordionTrigger className="text-lg font-semibold">
+          BENEFITS
+        </AccordionTrigger>
+        <AccordionContent>
+          {benefits.length > 0 ? (
+            <ul className="list-disc pl-4 space-y-2">
+              {benefits.map((benefit, index) => (
+                <li key={index}>{benefit.name}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No benefits listed for this product.</p>
+          )}
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="item-3">
+        <AccordionTrigger className="text-lg font-semibold">
+          INGREDIENTS
+        </AccordionTrigger>
+        <AccordionContent>
+          {ingredients.length > 0 ? (
+            <ul className="list-disc pl-4 space-y-2">
+              {ingredients.map((ingredient, index) => (
+                <li key={index}>{ingredient.name}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No ingredients listed for this product.</p>
+          )}
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 };
 

@@ -4,21 +4,18 @@ import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
 
-const desktopImages = [
-  "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727399729/pixelcut-export_smh3fv.png",
-  "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727399729/pixelcut-export_2_ze8uvi.png",
-  "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727399729/pixelcut-export_3_ovaqca.png",
-  "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727399728/pixelcut-export_1_focyqi.png",
-];
+interface BannerCarouselProps {
+  banners: {
+    public_id: string;
+    url: string;
+  }[];
+  app_banners: {
+    public_id: string;
+    url: string;
+  }[];
+}
 
-const mobileImages = [
-  "https://placehold.co/400x200?text=Mobile+Slide+1",
-  "https://placehold.co/400x200?text=Mobile+Slide+2",
-  "https://placehold.co/400x200?text=Mobile+Slide+3",
-  "https://placehold.co/400x200?text=Mobile+Slide+4",
-];
-
-const BannerCarousel = () => {
+const BannerCarousel = ({ banners, app_banners }: BannerCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -46,7 +43,9 @@ const BannerCarousel = () => {
     };
   }, []);
 
-  const images = isMobile ? mobileImages : desktopImages;
+  const images = isMobile
+    ? app_banners.map((banner) => banner.url)
+    : banners.map((banner) => banner.url);
 
   return (
     <div
