@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
-import Link from "next/link";
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import Link from 'next/link';
 
 const OrderPage = () => {
   return (
@@ -47,7 +47,7 @@ const OrderPage = () => {
                 {/* Total amount */}
                 <div className="w-full sm:w-1/2 md:w-1/4 p-4">
                   <div className="font-semibold text-sm mb-1">TOTAL:</div>
-                  <div>₹404.00</div>
+                  <div>$404.00</div>
                 </div>
               </div>
 
@@ -101,7 +101,7 @@ const OrderPage = () => {
                   {/* First item */}
                   <div className="flex justify-between items-center mb-4">
                     <span className="font-medium">1 Item</span>
-                    <span className="font-medium">₹ 334</span>
+                    <span className="font-medium">$ 334</span>
                   </div>
 
                   {/* Product details */}
@@ -117,9 +117,9 @@ const OrderPage = () => {
                       </h3>
                       <p className="text-sm text-gray-600">300ml • Qty 1</p>
                       <div className="flex items-center mt-1">
-                        <span className="font-medium mr-2">₹334</span>
+                        <span className="font-medium mr-2">$334</span>
                         <span className="text-sm text-gray-500 line-through mr-2">
-                          ₹468
+                          $468
                         </span>
                         <span className="text-sm text-green-600">29% off</span>
                       </div>
@@ -139,9 +139,9 @@ const OrderPage = () => {
                       </h3>
                       <p className="text-sm text-gray-600">300ml • Qty 1</p>
                       <div className="flex items-center mt-1">
-                        <span className="font-medium mr-2">₹334</span>
+                        <span className="font-medium mr-2">$334</span>
                         <span className="text-sm text-gray-500 line-through mr-2">
-                          ₹468
+                          $468
                         </span>
                         <span className="text-sm text-green-600">29% off</span>
                       </div>
@@ -157,7 +157,7 @@ const OrderPage = () => {
                   <div className="flex items-center">
                     <CheckCircle2 className="w-5 h-5 text-green-500 mr-2" />
                     <span className="text-green-700">
-                      Yay! You have saved ₹134 on this order
+                      Yay! You have saved $134 on this order
                     </span>
                   </div>
                 </div>
@@ -169,37 +169,37 @@ const OrderPage = () => {
                     {/* Total MRP */}
                     <div className="flex justify-between">
                       <span>Total MRP</span>
-                      <span>₹468</span>
+                      <span>$468</span>
                     </div>
 
                     {/* Total discount */}
                     <div className="flex justify-between text-green-600">
                       <span>Total Discount</span>
-                      <span>- ₹134</span>
+                      <span>- $134</span>
                     </div>
 
                     {/* Shipping charges */}
                     <div className="flex justify-between">
                       <span>Shipping Charges</span>
-                      <span>₹50</span>
+                      <span>$50</span>
                     </div>
 
                     {/* COD charges */}
                     <div className="flex justify-between">
                       <span>COD Charges</span>
-                      <span>₹20</span>
+                      <span>$20</span>
                     </div>
 
                     {/* Subtotal */}
                     <div className="flex justify-between font-semibold pt-2 border-t">
                       <span>Subtotal</span>
-                      <span>₹404</span>
+                      <span>$404</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Continue shopping button */}
-                <Link href={"/"}>
+                <Link href={'/'}>
                   <Button className="w-full mt-3">CONTINUE SHOPPING</Button>
                 </Link>
               </div>

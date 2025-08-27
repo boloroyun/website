@@ -1,29 +1,22 @@
-import React from "react";
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-const comboData = [
-  {
-    id: 1,
-    title: "Daily Essential Kit",
-    imgSrc:
-      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727314688/800w-fDTMbXs8Oe0_lo6rzv.webp",
-    altText: "Slide 1",
-  },
-  {
-    id: 2,
-    title: "Impeccable Matte Set of Three",
-    imgSrc:
-      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727314688/800w-5eU04gvABJs_tatwlc.webp",
-    altText: "Slide 2",
-  },
-  {
-    id: 3,
-    title: "Fragrance Team Set",
-    imgSrc:
-      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727314688/800w-7c4w5uNaEyc_plialn.webp",
-    altText: "Slide 3",
-  },
-];
-const SpecialCombos = () => {
+interface SpecialCombo {
+  id: string;
+  title: string;
+  link: string;
+  images: Array<{
+    url: string;
+    public_id: string;
+  }>;
+}
+
+interface SpecialCombosProps {
+  data?: SpecialCombo[];
+}
+
+const SpecialCombos = ({ data = [] }: SpecialCombosProps) => {
   return (
     <div className="container mx-auto px-4 mb-[20px]">
       <div className="heading my-[10px] ownContainer text-center uppercase sm:my-[40px]">
@@ -31,18 +24,45 @@ const SpecialCombos = () => {
       </div>
       <div className="relative">
         <div className="flex overflow-x-auto gap-[20px] sm:justify-center scroll-smooth no-scrollbar">
-          {comboData.map((combo) => (
-            <div key={combo.id} className="flex-shrink-0 w-[80vw] sm:w-[347px]">
-              <img
-                src={combo.imgSrc}
-                alt={combo.altText}
-                className="w-full h-auto object-cover"
-              />
-              <p className="text-center uppercase textGap font-[500]">
-                {combo.title}
+          {data.length > 0 ? (
+            data.map((combo) => {
+              const mainImage =
+                combo.images && combo.images.length > 0
+                  ? combo.images[0].url
+                  : '';
+              return (
+                <div
+                  key={combo.id}
+                  className="flex-shrink-0 w-[80vw] sm:w-[347px]"
+                >
+                  <Link href={combo.link || '#'}>
+                    {mainImage ? (
+                      <Image
+                        src={mainImage}
+                        alt={combo.title}
+                        width={347}
+                        height={300}
+                        className="w-full h-auto object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                      />
+                    ) : (
+                      <div className="w-full h-[300px] bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-500">No Image</span>
+                      </div>
+                    )}
+                  </Link>
+                  <p className="text-center uppercase textGap font-[500] mt-2">
+                    {combo.title}
+                  </p>
+                </div>
+              );
+            })
+          ) : (
+            <div className="flex justify-center items-center w-full h-48">
+              <p className="text-gray-500 text-lg">
+                No special combos available
               </p>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>

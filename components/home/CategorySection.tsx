@@ -1,58 +1,61 @@
-import React from "react";
+import React from 'react';
+import Link from 'next/link';
 
-const categories = [
-  {
-    name: "COSMETICS",
-    image:
-      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727315701/800w-5eU04gvABJs_zqip4d.webp",
-  },
-  {
-    name: "SKINCARE",
-    image:
-      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727315700/800w-qWKqCY5hzd8_hr8sey.webp",
-  },
-  {
-    name: "LUXURY PERFUMES",
-    image:
-      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727315700/800w-Yn6osI7XMnI_azndat.webp",
-  },
-  {
-    name: "BATH & BODY",
-    image:
-      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727315701/800w-DI-sLlEIVnM_tiuzw4.webp",
-  },
-  {
-    name: "Skin Deodorants",
-    image:
-      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727315700/Skin_Care_Products_nvwzf0.png",
-  },
-  {
-    name: "GIFT SETS",
-    image:
-      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727315701/800w-XaTLqFr-mtI_yinzh6.jpg",
-  },
-];
-const CategorySection = () => {
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  images: Array<{
+    url: string;
+    public_id: string;
+  }>;
+  productCount: number;
+}
+
+interface CategorySectionProps {
+  categories: Category[];
+}
+
+const CategorySection: React.FC<CategorySectionProps> = ({ categories }) => {
   return (
     <div className="container mx-auto px-4 mb-[20px]">
       <div className="heading my-[10px] ownContainer text-center uppercase heading ownContainer  sm:my-[40px]">
         LUXURY CATEGORIES
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {categories.map((category, index) => (
-          <div key={index} className="flex flex-col items-center">
-            <div className="bg-gray-100">
-              <img
-                src={category.image}
-                alt={category.name}
-                className="w-full h-auto object-cover"
-              />
-            </div>
-            <span className="text-sm font-medium text-center">
-              {category.name}
-            </span>
+        {categories.length > 0 ? (
+          categories.map((category) => (
+            <Link
+              key={category.id}
+              href={`/category/${category.slug}`}
+              className="flex flex-col items-center group hover:scale-105 transition-transform duration-200"
+            >
+              <div className="bg-gray-100 rounded-lg overflow-hidden shadow-md group-hover:shadow-lg transition-shadow duration-200">
+                <img
+                  src={
+                    category.images.length > 0
+                      ? category.images[0].url
+                      : '/images/placeholder-category.jpg'
+                  }
+                  alt={category.name}
+                  className="w-full h-auto object-cover aspect-square"
+                />
+              </div>
+              <span className="text-sm font-medium text-center mt-2 group-hover:text-blue-600 transition-colors duration-200">
+                {category.name.toUpperCase()}
+              </span>
+              <span className="text-xs text-gray-500">
+                {category.productCount} products
+              </span>
+            </Link>
+          ))
+        ) : (
+          <div className="col-span-full text-center py-8">
+            <p className="text-gray-500">
+              No categories available at the moment.
+            </p>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

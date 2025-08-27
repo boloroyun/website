@@ -1,33 +1,33 @@
-"use client";
-import useEmblaCarousel from "embla-carousel-react";
-import { Star, ChevronLeft, ChevronRight } from "lucide-react";
-import React from "react";
-import { CiInstagram } from "react-icons/ci";
+'use client';
+import useEmblaCarousel from 'embla-carousel-react';
+import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import React from 'react';
+import { CiInstagram } from 'react-icons/ci';
 
 const reviews = [
   {
     id: 1,
-    name: "Milinda Thakur",
-    instagram: "milli_thanur_123",
-    image: "https://placehold.co/200x200",
+    name: 'Sarah Johnson',
+    instagram: 'sarah_homedesign',
+    image: 'https://placehold.co/200x200',
     rating: 5,
-    text: "VIBECART has set a new standard in the fragrance market, offering exceptional quality at remarkably affordable prices.",
+    text: 'LUX Cabinets & Stones transformed our kitchen completely! The quality of their countertops and craftsmanship exceeded our expectations.',
   },
   {
     id: 2,
-    name: "Shubhman Ravi",
-    instagram: "shubhman_92_ravi",
-    image: "https://placehold.co/200x200",
+    name: 'Mike Rodriguez',
+    instagram: 'mike_contractor',
+    image: 'https://placehold.co/200x200',
     rating: 5,
-    text: "Amazed by the lasting power of these scents. VIBECART provides high-end fragrances at unmatched prices.",
+    text: 'Professional installation and premium materials. LUX Cabinets & Stones delivers exceptional results for every project.',
   },
   {
     id: 3,
-    name: "Raghav varma",
-    instagram: "raghav.varma_89",
-    image: "https://placehold.co/200x200",
+    name: 'Emily Chen',
+    instagram: 'emily.interiors',
+    image: 'https://placehold.co/200x200',
     rating: 5,
-    text: "Discovered my signature fragrance with VIBECART. The meticulous craftsmanship in their perfumes is truly impressive.",
+    text: 'From consultation to completion, LUX Cabinets & Stones provided outstanding service. Our new bathroom vanity is absolutely gorgeous!',
   },
 ];
 const ReviewSection = () => {
@@ -60,8 +60,8 @@ const ReviewSection = () => {
                         key={index}
                         className={`w-6 h-6 ${
                           index < review.rating
-                            ? "text-yellow-400 fill-current"
-                            : "text-gray-300"
+                            ? 'text-yellow-400 fill-current'
+                            : 'text-gray-300'
                         }`}
                       />
                     ))}

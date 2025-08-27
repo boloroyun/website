@@ -1,7 +1,7 @@
 // Import necessary components and libraries for the Orders page functionality
-import { Tabs } from "@/components/ui/tabs";
-import { TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
-import React from "react";
+import { Tabs } from '@/components/ui/tabs';
+import { TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -9,48 +9,48 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { XCircle } from "lucide-react";
-import { FaLink } from "react-icons/fa";
-import Link from "next/link";
+} from '@/components/ui/table';
+import { XCircle } from 'lucide-react';
+import { FaLink } from 'react-icons/fa';
+import Link from 'next/link';
 
 // Sample order data to display in the table
 const orders = [
   {
-    id: "66ed5ec9d316594990e71a19",
+    id: '66ed5ec9d316594990e71a19',
     products: [
-      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727352106/4_upscaled_hqhzq6.png",
+      'https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727352106/4_upscaled_hqhzq6.png',
     ],
-    paymentMethod: "COD", // Cash on delivery payment method
-    total: "₹ 2400", // Order total amount
+    paymentMethod: 'COD', // Cash on delivery payment method
+    total: '$ 2400', // Order total amount
     paid: false, // Payment status
   },
   {
-    id: "66ec30c7671caca80b89518e",
+    id: '66ec30c7671caca80b89518e',
     products: [
-      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727352106/2_upscaled_g6ibby.png",
-      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727352106/3_upscaled_smnoeu.png",
+      'https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727352106/2_upscaled_g6ibby.png',
+      'https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727352106/3_upscaled_smnoeu.png',
     ],
-    paymentMethod: "COD",
-    total: "₹ 5600",
+    paymentMethod: 'COD',
+    total: '$ 5600',
     paid: false,
   },
   {
-    id: "66dbb70be5922373191adf66",
+    id: '66dbb70be5922373191adf66',
     products: [
-      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727352106/1_upscaled_pku7p3.png",
+      'https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727352106/1_upscaled_pku7p3.png',
     ],
-    paymentMethod: "COD",
-    total: "₹ 1280",
+    paymentMethod: 'COD',
+    total: '$ 1280',
     paid: false,
   },
   {
-    id: "66cab025fa11686711ff2fc8",
+    id: '66cab025fa11686711ff2fc8',
     products: [
-      "https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727352106/2_upscaled_g6ibby.png",
+      'https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727352106/2_upscaled_g6ibby.png',
     ],
-    paymentMethod: "RazorPay", // Payment made using RazorPay gateway
-    total: "₹ 750",
+    paymentMethod: 'RazorPay', // Payment made using RazorPay gateway
+    total: '$ 750',
     paid: false,
   },
 ];
@@ -124,7 +124,7 @@ const OrdersPage = () => {
 
                   {/* Link to view more details about the order */}
                   <TableCell>
-                    <Link href={"/order"}>
+                    <Link href={'/order'}>
                       <button className="text-blue-500 hover:text-blue-700">
                         <FaLink size={24} color="black" />
                       </button>

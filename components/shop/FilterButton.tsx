@@ -1,42 +1,42 @@
-import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
-import { Slider } from "@/components/ui/slider";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { useEffect, useState } from 'react';
+import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
+import { Slider } from '@/components/ui/slider';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from '@/components/ui/sheet';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 const categories = [
-  { name: "Bath & Body", count: 45 },
-  { name: "Candles", count: 1 },
-  { name: "Cosmetics", count: 8 },
-  { name: "Fragrance", count: 73 },
-  { name: "Hair Care", count: 2 },
-  { name: "Lip Care", count: 3 },
+  { name: 'Bath & Body', count: 45 },
+  { name: 'Candles', count: 1 },
+  { name: 'Cosmetics', count: 8 },
+  { name: 'Fragrance', count: 73 },
+  { name: 'Hair Care', count: 2 },
+  { name: 'Lip Care', count: 3 },
 ];
 
 const productTypes = [
-  { name: "Attar", count: 1 },
-  { name: "Attar Set", count: 1 },
-  { name: "Body Deo - 150ml", count: 4 },
-  { name: "Body Lotion - 200ml", count: 7 },
-  { name: "Body Mist - 150ml", count: 4 },
-  { name: "Candle Gift set", count: 1 },
+  { name: 'Attar', count: 1 },
+  { name: 'Attar Set', count: 1 },
+  { name: 'Body Deo - 150ml', count: 4 },
+  { name: 'Body Lotion - 200ml', count: 7 },
+  { name: 'Body Mist - 150ml', count: 4 },
+  { name: 'Candle Gift set', count: 1 },
 ];
 
 const availabilityOptions = [
-  { name: "In stock", count: 148 },
-  { name: "Out of stock", count: 9 },
+  { name: 'In stock', count: 148 },
+  { name: 'Out of stock', count: 9 },
 ];
 const FilterButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,8 +45,8 @@ const FilterButton = () => {
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
   const FilterContent = () => (
     <div className="p-4 bg-white shadow-lg rounded-lg w-full">
@@ -69,7 +69,7 @@ const FilterButton = () => {
             className="mb-2"
           />
           <p className="text-sm">
-            Price: ₹{priceRange[0]} - ₹{priceRange[1]}
+            Price: ${priceRange[0]} - ${priceRange[1]}
           </p>
         </div>
 
@@ -181,7 +181,7 @@ const FilterButton = () => {
             className="bg-black text-white px-4 py-2 flex items-center"
             onClick={() => setIsOpen(!isOpen)}
           >
-            FILTER{" "}
+            FILTER{' '}
             {isOpen ? (
               <ChevronUp className="ml-2 h-4 w-4" />
             ) : (

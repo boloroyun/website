@@ -1,34 +1,36 @@
-import React from "react";
-import { Rabbit, Droplet, Wallet, Users } from "lucide-react";
+import React from 'react';
+import { Rabbit, Droplet, Wallet, Users } from 'lucide-react';
 const NeedOfWebsite = () => {
   const features = [
     {
       icon: Rabbit,
-      title: "CRUELTY FREE",
+      title: 'CRUELTY FREE',
       description:
-        "Compassion in every drop: Our promise of ethical, cruelty-free products.",
+        'Compassion in every drop: Our promise of ethical, cruelty-free products.',
     },
     {
       icon: Droplet,
-      title: "FRAGRANCE FORWARD",
-      description: "Opulent and imported fragrance oils in each creation.",
+      title: 'FRAGRANCE FORWARD',
+      description: 'Opulent and imported fragrance oils in each creation.',
     },
     {
       icon: Wallet,
-      title: "AFFORDABLE LUXURY",
+      title: 'AFFORDABLE LUXURY',
       description:
-        "Delivering Exceptional Quality and Sophistication at an Affordable Price.",
+        'Delivering Exceptional Quality and Sophistication at an Affordable Price.',
     },
     {
       icon: Users,
-      title: "GENDER NEUTRAL",
+      title: 'GENDER NEUTRAL',
       description:
-        "Enhance your self-care ritual with bath, body, and personal care products for everyone.",
+        'Enhance your self-care ritual with bath, body, and personal care products for everyone.',
     },
   ];
   return (
     <div className="container mx-auto px-4 mb-[20px] my-[10px]">
-      <h2 className="heading text-center my-[40px]">WHY VIBECART</h2>
+      <h2 className="heading text-center my-[40px]">
+        WHY LUX CABINETS & STONES
+      </h2>
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
         {features.map((feature, index) => (
           <div key={index} className="flex flex-col items-center text-center ">

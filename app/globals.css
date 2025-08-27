@@ -79,3 +79,11 @@
 .para {
   @apply tracking-[0.6px] text-sm font-[400] sm:text-sm;
 }
+
+/* Line clamp utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
