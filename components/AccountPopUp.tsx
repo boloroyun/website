@@ -96,6 +96,12 @@ const AccountPopUp = ({ isOpen, onClose }: AccountPopUpProps) => {
         setCurrentStep('verification');
         setResendTimer(30);
         setCanResend(false);
+        
+        // Show test code in development mode
+        if (result.testCode) {
+          console.log('🔧 Development Mode - Use this code:', result.testCode);
+          setError(`Development Mode: Use code ${result.testCode}`);
+        }
       } else {
         setError(result.error || 'Failed to send verification code');
       }
@@ -128,6 +134,13 @@ const AccountPopUp = ({ isOpen, onClose }: AccountPopUpProps) => {
         setCode(['', '', '', '']);
         setResendTimer(30);
         setCanResend(false);
+        
+        // Show test code in development mode
+        if (result.testCode) {
+          console.log('🔧 Development Mode - New code:', result.testCode);
+          setError(`Development Mode: Use code ${result.testCode}`);
+        }
+        
         // Focus first input after resend
         if (inputRefs.current[0]) {
           inputRefs.current[0].focus();

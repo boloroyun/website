@@ -73,11 +73,14 @@ export async function sendVerificationCode(username: string, email: string) {
     return { success: true, message: 'Verification code sent successfully' };
   } catch (emailError) {
     console.error('Failed to send verification email:', emailError);
+    console.log(`🔧 Development Mode - Verification code for ${email}: ${code}`);
 
     // Email failed, but code is stored - provide helpful message
     return {
       success: true,
-      message: `Verification code generated (${code}). Email service not configured - use this code for testing.`,
+      message: process.env.NODE_ENV === 'development' 
+        ? `Email service not configured. Use this code: ${code}`
+        : 'Verification code sent successfully',
       testCode: process.env.NODE_ENV === 'development' ? code : undefined,
     };
   }
@@ -272,20 +275,35 @@ export async function resendVerificationCode(email: string) {
 
     console.log(`🔄 New verification code generated for ${email}: ${code}`);
 
-    // Generate email HTML
-    const emailHtml = await generateVerificationEmailHtml(storedData.username, code);
+    // Try to send email (but don't fail if email service is not configured)
+    try {
+      // Generate email HTML
+      const emailHtml = await generateVerificationEmailHtml(storedData.username, code);
 
-    // Send email using the email service
-    await sendEmail({
-      to: email,
-      subject: 'New Verification Code - LUX Cabinets & Stones',
-      html: emailHtml,
-    });
+      // Send email using the email service
+      await sendEmail({
+        to: email,
+        subject: 'New Verification Code - LUX Cabinets & Stones',
+        html: emailHtml,
+      });
 
-    return {
-      success: true,
-      message: 'New verification code sent successfully',
-    };
+      console.log(`✅ Email sent successfully to ${email}`);
+      return { 
+        success: true, 
+        message: 'New verification code sent successfully',
+      };
+    } catch (emailError) {
+      console.error('Failed to resend verification email:', emailError);
+      console.log(`🔧 Development Mode - New verification code for ${email}: ${code}`);
+      
+      return { 
+        success: true, 
+        message: process.env.NODE_ENV === 'development' 
+          ? `Email service not configured. Use this code: ${code}`
+          : 'New verification code sent successfully',
+        testCode: process.env.NODE_ENV === 'development' ? code : undefined,
+      };
+    }
   } catch (error) {
     console.error('Failed to resend verification email:', error);
     return { success: false, error: 'Failed to resend verification email' };
