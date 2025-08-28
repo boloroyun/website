@@ -103,14 +103,14 @@ export default function MyAccount() {
     if (activeTab === 'orders' && isAuthenticated) {
       loadOrders();
     }
-  }, [activeTab, isAuthenticated]);
+  }, [activeTab, isAuthenticated, loadOrders]);
 
   // Load shipping address when address tab is active
   useEffect(() => {
     if (activeTab === 'address' && isAuthenticated) {
       loadShippingAddress();
     }
-  }, [activeTab, isAuthenticated]);
+  }, [activeTab, isAuthenticated, loadShippingAddress]);
 
   // Clear messages after 5 seconds
   useEffect(() => {
@@ -123,7 +123,7 @@ export default function MyAccount() {
   }, [message]);
 
   // Load user orders
-  const loadOrders = async () => {
+  const loadOrders = useCallback(async () => {
     setIsLoadingOrders(true);
     try {
       const response = await fetch('/api/profile/orders');
@@ -142,10 +142,10 @@ export default function MyAccount() {
     } finally {
       setIsLoadingOrders(false);
     }
-  };
+  }, []);
 
   // Load shipping address
-  const loadShippingAddress = async () => {
+  const loadShippingAddress = useCallback(async () => {
     setIsLoadingAddress(true);
     try {
       const response = await fetch('/api/profile/shipping-address');
@@ -162,7 +162,7 @@ export default function MyAccount() {
     } finally {
       setIsLoadingAddress(false);
     }
-  };
+  }, []);
 
   // Handle username update
   const handleUpdateUsername = async () => {

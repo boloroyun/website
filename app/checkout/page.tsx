@@ -133,14 +133,7 @@ const CheckoutPage = () => {
   }, [hasHydrated, items.length, router, isPlacingOrder, orderCompleted]);
 
   // Load shipping address
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadShippingAddress();
-    }
-  }, [isAuthenticated]);
-
-  // Load shipping address
-  const loadShippingAddress = async () => {
+  const loadShippingAddress = useCallback(async () => {
     setIsLoadingAddress(true);
     try {
       const result = await getUserShippingAddress();
@@ -163,7 +156,13 @@ const CheckoutPage = () => {
     } finally {
       setIsLoadingAddress(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadShippingAddress();
+    }
+  }, [isAuthenticated, loadShippingAddress]);
 
   // Handle phone number formatting
   const handlePhoneChange = useCallback((value: string) => {
