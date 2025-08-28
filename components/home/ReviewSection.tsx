@@ -2,6 +2,7 @@
 import useEmblaCarousel from 'embla-carousel-react';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import React from 'react';
+import Image from 'next/image';
 import { CiInstagram } from 'react-icons/ci';
 
 const reviews = [
@@ -49,9 +50,11 @@ const ReviewSection = () => {
             {reviews.map((review) => (
               <div key={review.id} className="flex-[0_0_100%] min-w-0  px-4">
                 <div className="bg-white rounded-lg p-6 flex flex-col items-center">
-                  <img
+                  <Image
                     src={review.image}
                     alt={`${review.name}'s profile`}
+                    width={96}
+                    height={96}
                     className="w-24 h-24 rounded-full mb-6 object-cover "
                   />
                   <div className="flex mb-4">

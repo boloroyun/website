@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import MobileBottomBar from '@/components/MobileBottomBar';
 import Footer from '@/components/Footer';
 import { Toaster } from 'sonner';
+import CrispChat from '@/components/CrispChat';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -44,8 +45,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const crispWebsiteId = process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID;
-
   return (
     <html lang="en">
       <body
@@ -57,24 +56,7 @@ export default function RootLayout({
         <MobileBottomBar />
         <Footer />
         <Toaster position="top-right" richColors />
-
-        {crispWebsiteId && (
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.$crisp = [];
-                window.CRISP_WEBSITE_ID = "${crispWebsiteId}";
-                (function() {
-                  var d = document;
-                  var s = d.createElement("script");
-                  s.src = "https://client.crisp.chat/l.js";
-                  s.async = 1;
-                  d.getElementsByTagName("head")[0].appendChild(s);
-                })();
-              `,
-            }}
-          />
-        )}
+        <CrispChat />
       </body>
     </html>
   );

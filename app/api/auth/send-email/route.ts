@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate HTML email using React Email
-    const emailHtml = render(
+    const emailHtml = await render(
       VerificationCodeEmail({
         username,
         verificationCode: code,

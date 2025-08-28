@@ -1,6 +1,7 @@
 import React from 'react';
 import ProductCard from '@/components/home/ProductCard';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Product {
   id: string;
@@ -83,9 +84,11 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({
               {/* Category Image */}
               {section.category.images.length > 0 && (
                 <div className="flex-shrink-0">
-                  <img
+                  <Image
                     src={section.category.images[0].url}
                     alt={section.category.name}
+                    width={80}
+                    height={80}
                     className="w-20 h-20 object-cover rounded-full shadow-lg"
                   />
                 </div>

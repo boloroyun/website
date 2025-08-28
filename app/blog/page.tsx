@@ -88,10 +88,10 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
   const { posts, pagination } = blogPostsResult.data!;
   const featuredPosts = featuredPostsResult.success
-    ? featuredPostsResult.data
+    ? featuredPostsResult.data || []
     : [];
-  const categories = categoriesResult.success ? categoriesResult.data : [];
-  const tags = tagsResult.success ? tagsResult.data : [];
+  const categories = categoriesResult.success ? categoriesResult.data || [] : [];
+  const tags = tagsResult.success ? tagsResult.data || [] : [];
 
   console.log(
     `📚 Loaded ${posts.length} posts, ${featuredPosts.length} featured, ${categories.length} categories, ${tags.length} tags`

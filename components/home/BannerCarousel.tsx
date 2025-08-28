@@ -19,13 +19,84 @@ const BannerCarousel = ({
   websiteBanners = [],
   appBanners = [],
 }: BannerCarouselProps) => {
+  // 🔥 ALL HOOKS AT TOP LEVEL - No exceptions!
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [imageError, setImageError] = useState<{ [key: number]: boolean }>({});
 
-  // Use website banners for desktop, app banners for mobile
+  // Calculate images based on current mobile state
   const desktopImages = websiteBanners.map((banner) => banner.url);
   const mobileImages = appBanners.map((banner) => banner.url);
+
+  const images = isMobile
+    ? mobileImages.length > 0
+      ? mobileImages
+      : desktopImages.length > 0
+        ? desktopImages
+        : []
+    : desktopImages.length > 0
+      ? desktopImages
+      : mobileImages.length > 0
+        ? mobileImages
+        : [];
+
+  // 🎯 useCallback hooks - ALL conditional logic inside callbacks
+  const nextSlide = useCallback(() => {
+    // ✅ Condition INSIDE the callback
+    if (images.length > 0) {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }
+  }, [images.length]);
+
+  const prevSlide = useCallback(() => {
+    // ✅ Condition INSIDE the callback
+    if (images.length > 0) {
+      setCurrentIndex(
+        (prevIndex) => (prevIndex - 1 + images.length) % images.length
+      );
+    }
+  }, [images.length]);
+
+  const handleImageError = useCallback((index: number) => {
+    setImageError((prev) => ({ ...prev, [index]: true }));
+  }, []);
+
+  const goToSlide = useCallback((index: number) => {
+    setCurrentIndex(index);
+  }, []);
+
+  // 🔄 useEffect for window resize (runs once on mount)
+  useEffect(() => {
+    const handleResize = () => {
+      const screenWidth = window.innerWidth;
+      const isMobileScreen = screenWidth <= 768;
+      console.log('📏 Screen width:', screenWidth, 'isMobile:', isMobileScreen);
+      setIsMobile(isMobileScreen);
+    };
+
+    // Set up resize listener
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []); // ✅ Empty dependency - resize listener only needs to be set up once
+
+  // 🔄 useEffect for auto-slide functionality
+  useEffect(() => {
+    // ✅ Conditional auto-slide logic INSIDE useEffect
+    let interval: NodeJS.Timeout | null = null;
+    if (images.length > 0) {
+      interval = setInterval(nextSlide, 5000);
+    }
+
+    // Cleanup function
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [nextSlide, images.length]); // ✅ Proper dependencies for auto-slide
 
   // Debug logging for mobile detection and image selection
   console.log('🔍 BannerCarousel Debug Info:');
@@ -34,24 +105,10 @@ const BannerCarousel = ({
   console.log('📱 mobileImages count:', mobileImages.length);
   console.log('🖥️ desktopImages:', desktopImages);
   console.log('📱 mobileImages:', mobileImages);
-
-  // Use real images or don't render if no images are available
-  const images = isMobile
-    ? mobileImages.length > 0
-      ? mobileImages
-      : desktopImages.length > 0
-      ? desktopImages
-      : []
-    : desktopImages.length > 0
-    ? desktopImages
-    : mobileImages.length > 0
-    ? mobileImages
-    : [];
-
   console.log('🎯 Selected images for display:', images);
   console.log('📊 Final image count:', images.length);
 
-  // Don't render the carousel if no images are available
+  // Render empty state or carousel based on available images
   if (images.length === 0) {
     return (
       <div className="w-full h-[400px] bg-gray-100 flex items-center justify-center mb-[20px]">
@@ -62,34 +119,6 @@ const BannerCarousel = ({
       </div>
     );
   }
-
-  const nextSlide = useCallback(() => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-  }, [images.length]);
-
-  const prevSlide = useCallback(() => {
-    setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
-    );
-  }, [images.length]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const screenWidth = window.innerWidth;
-      const isMobileScreen = screenWidth <= 768; // Changed to more standard mobile breakpoint
-      console.log('📏 Screen width:', screenWidth, 'isMobile:', isMobileScreen);
-      setIsMobile(isMobileScreen);
-    };
-
-    window.addEventListener('resize', handleResize);
-    handleResize(); // Initial check
-
-    const interval = setInterval(nextSlide, 5000);
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [nextSlide]);
 
   return (
     <div
@@ -111,9 +140,7 @@ const BannerCarousel = ({
               fill
               className="object-cover"
               priority={index === 0}
-              onError={() =>
-                setImageError((prev) => ({ ...prev, [index]: true }))
-              }
+              onError={() => handleImageError(index)}
             />
           ) : (
             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -149,7 +176,7 @@ const BannerCarousel = ({
             className={`w-3 h-3 rounded-full ${
               index === currentIndex ? 'bg-white' : 'bg-white/50'
             }`}
-            onClick={() => setCurrentIndex(index)}
+            onClick={() => goToSlide(index)}
             aria-label={`Go to slide ${index + 1}`}
           />
         ))}

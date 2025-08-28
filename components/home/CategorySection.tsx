@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Category {
   id: string;
@@ -31,13 +32,15 @@ const CategorySection: React.FC<CategorySectionProps> = ({ categories }) => {
               className="flex flex-col items-center group hover:scale-105 transition-transform duration-200"
             >
               <div className="bg-gray-100 rounded-lg overflow-hidden shadow-md group-hover:shadow-lg transition-shadow duration-200">
-                <img
+                <Image
                   src={
                     category.images.length > 0
                       ? category.images[0].url
                       : '/images/placeholder-category.jpg'
                   }
                   alt={category.name}
+                  width={200}
+                  height={200}
                   className="w-full h-auto object-cover aspect-square"
                 />
               </div>

@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const OrderPage = () => {
   return (
@@ -106,9 +107,11 @@ const OrderPage = () => {
 
                   {/* Product details */}
                   <div className="flex items-center">
-                    <img
+                    <Image
                       src="https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727352106/2_upscaled_g6ibby.png"
                       alt="Product Image"
+                      width={60}
+                      height={60}
                       className="mr-4 w-[60px] h-[60px]"
                     />
                     <div>
@@ -128,9 +131,11 @@ const OrderPage = () => {
 
                   {/* Second item */}
                   <div className="flex items-center mt-4">
-                    <img
+                    <Image
                       src="https://res.cloudinary.com/dtxh3ew7s/image/upload/v1727352106/1_upscaled_pku7p3.png"
                       alt="Product Image"
+                      width={60}
+                      height={60}
                       className="mr-4 w-[60px] h-[60px]"
                     />
                     <div>

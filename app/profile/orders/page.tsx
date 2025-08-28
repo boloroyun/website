@@ -13,6 +13,7 @@ import {
 import { XCircle } from 'lucide-react';
 import { FaLink } from 'react-icons/fa';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Sample order data to display in the table
 const orders = [
@@ -97,10 +98,12 @@ const OrdersPage = () => {
                   <TableCell>
                     <div className="flex space-x-2">
                       {order.products.map((product, index) => (
-                        <img
+                        <Image
                           key={index}
                           src={product}
-                          alt="_"
+                          alt={`Product ${index + 1}`}
+                          width={40}
+                          height={40}
                           className="rounded-full bg-gray-200 w-[40px] h-[40px]"
                         />
                       ))}

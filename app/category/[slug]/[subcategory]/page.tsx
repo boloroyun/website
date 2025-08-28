@@ -2,6 +2,7 @@ import { getAllProducts } from '@/actions/products.actions';
 import { notFound } from 'next/navigation';
 import ProductCard from '@/components/home/ProductCard';
 import prisma from '@/lib/prisma';
+import Image from 'next/image';
 
 interface SubCategoryPageProps {
   params: {
@@ -77,10 +78,14 @@ export default async function SubCategoryPage({
           {/* Subcategory Header */}
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4">{subCategoryData.name}</h1>
-            {subCategoryData.images && subCategoryData.images.length > 0 && (
-              <img
+            {subCategoryData.images && 
+             subCategoryData.images.length > 0 && 
+             subCategoryData.images[0].url && (
+              <Image
                 src={subCategoryData.images[0].url}
                 alt={subCategoryData.name}
+                width={768}
+                height={256}
                 className="w-full h-64 object-cover rounded-lg mx-auto max-w-2xl"
               />
             )}

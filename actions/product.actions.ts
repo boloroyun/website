@@ -323,13 +323,13 @@ export async function getRelatedProductsByCategory(
           discount: product.discount ?? undefined,
           pricingType: product.pricingType,
           images: product.images
-            .map((image) => ({
+            .map((image: any) => ({
               url: image.url || '',
               public_id: image.public_id || '',
             }))
-            .filter((image) => image.url),
+            .filter((image: any) => image.url),
           sizes: product.sizes,
-          colors: product.colors.map((color) => ({
+          colors: product.colors.map((color: any) => ({
             ...color,
             image: color.image ?? undefined,
           })),

@@ -11,7 +11,7 @@ export default async function BestSellersPage() {
     ? bestSellersResult.data || []
     : [];
 
-  // Transform data for category organization
+  // Transform null values to undefined for compatibility with Product interface
   const bestSellersFormatted = bestSellers.map((product) => ({
     ...product,
     brand: product.brand ?? undefined,
@@ -21,12 +21,6 @@ export default async function BestSellersPage() {
       ...color,
       image: color.image ?? undefined,
     })),
-    subCategories:
-      product.productSubCategories?.map((psc) => ({
-        id: psc.subCategory.id,
-        name: psc.subCategory.name,
-        slug: psc.subCategory.slug,
-      })) || [],
   }));
 
   // Organize by categories with featured priority

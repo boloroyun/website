@@ -109,9 +109,6 @@ export async function getUserOrders() {
     const orders = await prisma.order.findMany({
       where: { userId: currentUser.id },
       orderBy: { createdAt: 'desc' },
-      include: {
-        products: true,
-      },
     });
 
     return { success: true, orders };
@@ -173,7 +170,7 @@ export async function updateShippingAddress(addressData: {
       'country',
     ];
     for (const field of requiredFields) {
-      if (!addressData[field]?.trim()) {
+      if (!(addressData as any)[field]?.trim()) {
         return {
           success: false,
           error: `${field.replace(/([A-Z])/g, ' $1').toLowerCase()} is required`,

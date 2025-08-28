@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import {
   Facebook,
   Instagram,
@@ -37,14 +38,14 @@ const Footer = () => {
         {/* Column 1: Company Information & Contact */}
         <div className="space-y-6">
           <div>
-            <div className="flex items-center space-x-3 mb-4">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
-                LUX
-              </h2>
-              <div className="text-sm">
-                <div className="font-semibold">CABINETS</div>
-                <div className="text-gray-300">& STONES</div>
-              </div>
+            <div className="mb-4">
+              <Image
+                src="/images/logo.jpeg"
+                alt="LUX Cabinets & Stones"
+                width={150}
+                height={67}
+                className="h-33  w-auto filter brightness-100 invert"
+              />
             </div>
 
             <p className="text-sm text-gray-300 leading-relaxed mb-6">

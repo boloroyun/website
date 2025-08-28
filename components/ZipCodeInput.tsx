@@ -53,7 +53,7 @@ const ZipCodeInput = ({
       setFoundLocation(null);
       setIsValidZip(false);
     }
-  }, [value, country]); // Removed onLocationFound from dependencies
+  }, [value, country, onLocationFound]); // Include onLocationFound in dependencies
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let inputValue = e.target.value;

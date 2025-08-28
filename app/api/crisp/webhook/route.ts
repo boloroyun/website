@@ -108,7 +108,7 @@ function parseUnifiedQuoteRequest(message: string): UnifiedQuoteRequest {
   const result: UnifiedQuoteRequest = {};
 
   // Detect category
-  result.category = detectCategory(message);
+  result.category = detectCategory(message) || undefined;
 
   // COUNTERTOP PARSING
 

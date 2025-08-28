@@ -1,5 +1,6 @@
 import { getCrazyDeals } from '@/actions/offers.actions';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 
 export default async function CrazyDealsPage() {
   const crazyDealsResult = await getCrazyDeals();
@@ -32,9 +33,11 @@ export default async function CrazyDealsPage() {
                 className="bg-white rounded-lg shadow-md overflow-hidden"
               >
                 {deal.images && deal.images.length > 0 && (
-                  <img
+                  <Image
                     src={deal.images[0].url}
                     alt={deal.title}
+                    width={400}
+                    height={192}
                     className="w-full h-48 object-cover"
                   />
                 )}

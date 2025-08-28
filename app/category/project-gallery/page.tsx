@@ -13,7 +13,7 @@ export default async function ProjectGalleryPage() {
   // Fetch all products and filter for gallery pricing type
   const allProductsResult = await getAllProducts();
 
-  let galleryProducts = [];
+  let galleryProducts: any[] = [];
 
   if (allProductsResult.success && allProductsResult.data) {
     // Filter to only include gallery pricing type products

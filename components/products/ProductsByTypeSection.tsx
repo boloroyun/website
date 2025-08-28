@@ -1,6 +1,7 @@
 import React from 'react';
 import ProductCard from '@/components/home/ProductCard';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Sparkles, Home, Mountain, Package } from 'lucide-react';
 
 interface Product {
@@ -195,9 +196,11 @@ const ProductsByTypeSection: React.FC<ProductsByTypeSectionProps> = ({
                     className="group text-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 transform hover:scale-105"
                   >
                     {category.images.length > 0 && (
-                      <img
+                      <Image
                         src={category.images[0].url}
                         alt={category.name}
+                        width={64}
+                        height={64}
                         className="w-16 h-16 object-cover rounded-full mx-auto mb-3 group-hover:scale-110 transition-transform duration-200"
                       />
                     )}

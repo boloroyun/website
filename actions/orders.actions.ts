@@ -83,7 +83,7 @@ export async function createOrder(data: {
     ];
 
     for (const field of requiredFields) {
-      if (!data.shippingAddress[field]?.trim()) {
+      if (!(data.shippingAddress as any)[field]?.trim()) {
         return {
           success: false,
           error: `${field.replace(/([A-Z])/g, ' $1').toLowerCase()} is required`,

@@ -110,11 +110,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     4
   );
   const relatedPosts = relatedPostsResult.success
-    ? relatedPostsResult.data
+    ? relatedPostsResult.data || []
     : [];
 
-  const categories = categoriesResult.success ? categoriesResult.data : [];
-  const tags = tagsResult.success ? tagsResult.data : [];
+  const categories = categoriesResult.success ? categoriesResult.data || [] : [];
+  const tags = tagsResult.success ? tagsResult.data || [] : [];
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {

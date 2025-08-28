@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { MapPin, Wrench, Handshake, Target } from 'lucide-react';
 
 const KeyBenefits = () => {
@@ -39,9 +40,11 @@ const KeyBenefits = () => {
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
         {benefits.map((benefit, index) => (
           <div key={index} className="flex flex-col items-center text-center">
-            <img
+            <Image
               src={`/images/features/${benefit.imageIndex}.png`}
               alt={benefit.title}
+              width={50}
+              height={50}
               className="sm:w-[50px] sm:h-[50px] mb-[20px]"
             />
             <h3 className="text-sm sm:text-lg mb-1 sm:mb-2 textGap text-gray-700">

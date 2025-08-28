@@ -1,5 +1,6 @@
 /* eslint no-use-before-define: 0 */
 import Link from 'next/link';
+import Image from 'next/image';
 import { getNavigationDataWithIcons } from '@/actions/navigation.actions';
 import MobileNavMenu from './MobileNavMenu';
 import NavbarSearch from './NavbarSearch';
@@ -26,7 +27,14 @@ const Navbar = async () => {
 
           <div className="flex-1 flex items-center justify-center lg:w-1/3">
             <Link href={'/'}>
-              <h1 className="text-2xl font-bold">LUX Cabinets & Stones</h1>
+              <Image
+                src="/images/logo.jpeg"
+                alt="LUX Cabinets & Stones"
+                width={540}
+                height={180}
+                className="h-36 w-auto"
+                priority
+              />
             </Link>
           </div>
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface CrazyDeal {
   id: string;
@@ -31,13 +32,15 @@ const CrazyDeals: React.FC<CrazyDealsProps> = ({ deals }) => {
                 className="flex-shrink-0 w-[80vw] sm:w-[347px] group"
               >
                 <div className="relative overflow-hidden rounded-lg shadow-md group-hover:shadow-lg transition-shadow duration-200">
-                  <img
+                  <Image
                     src={
                       deal.images.length > 0
                         ? deal.images[0].url
                         : '/images/placeholder-deal.jpg'
                     }
                     alt={deal.title}
+                    width={347}
+                    height={200}
                     className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-200"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
