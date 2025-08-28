@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -7,16 +8,18 @@ import { User, ShoppingCart, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
 import CartDrawer from './CartDrawer';
+import AccountPopUp from './AccountPopUp';
 
 const UserNavSection = () => {
   const router = useRouter();
   const { isAuthenticated, user, isLoading } = useAuth();
+  const [isAccountPopUpOpen, setIsAccountPopUpOpen] = useState(false);
 
   const handleUserClick = () => {
     if (isAuthenticated) {
       router.push('/profile');
     } else {
-      router.push('/auth');
+      setIsAccountPopUpOpen(true);
     }
   };
 
@@ -73,6 +76,12 @@ const UserNavSection = () => {
           <User size={24} />
         </Button>
       )}
+
+      {/* Account PopUp Modal */}
+      <AccountPopUp 
+        isOpen={isAccountPopUpOpen} 
+        onClose={() => setIsAccountPopUpOpen(false)} 
+      />
     </div>
   );
 };

@@ -5,7 +5,15 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { sendEmail, generateVerificationEmailHtml } from '@/lib/email';
 
-const prisma = new PrismaClient();
+// Lazy Prisma initialization
+let prisma: PrismaClient;
+
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 
 // Generate 4-digit code
 function generateVerificationCode(): string {
@@ -23,7 +31,7 @@ export async function sendVerificationCode(username: string, email: string) {
     expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
 
     // Store code in database first (upsert to handle existing records)
-    await prisma.verificationCode.upsert({
+    await getPrisma().verificationCode.upsert({
       where: { email },
       update: {
         code,
@@ -52,7 +60,7 @@ export async function sendVerificationCode(username: string, email: string) {
   // Try to send email (but don't fail if email service is not configured)
   try {
     // Generate email HTML
-    const emailHtml = generateVerificationEmailHtml(username, code);
+    const emailHtml = await generateVerificationEmailHtml(username, code);
 
     // Send email using the email service
     await sendEmail({
@@ -79,7 +87,7 @@ export async function sendVerificationCode(username: string, email: string) {
 export async function verifyCode(email: string, code: string) {
   try {
     // Find verification code in database
-    const storedData = await prisma.verificationCode.findUnique({
+    const storedData = await getPrisma().verificationCode.findUnique({
       where: { email },
     });
 
@@ -93,7 +101,7 @@ export async function verifyCode(email: string, code: string) {
     // Check if code has expired
     if (new Date() > storedData.expiresAt) {
       // Delete expired code
-      await prisma.verificationCode.delete({
+      await getPrisma().verificationCode.delete({
         where: { email },
       });
       return {
@@ -113,7 +121,7 @@ export async function verifyCode(email: string, code: string) {
     console.log(`✅ Verification successful for ${email}`);
 
     // Code is valid, now handle user authentication
-    let user = await prisma.user.findUnique({
+    let user = await getPrisma().user.findUnique({
       where: { email },
     });
 
@@ -122,7 +130,7 @@ export async function verifyCode(email: string, code: string) {
       let finalUsername = storedData.username;
 
       // Check if username is already taken
-      const existingUserWithUsername = await prisma.user.findUnique({
+      const existingUserWithUsername = await getPrisma().user.findUnique({
         where: { username: storedData.username },
       });
 
@@ -133,7 +141,7 @@ export async function verifyCode(email: string, code: string) {
 
         while (!isUnique && counter <= 100) {
           const testUsername = `${storedData.username}${counter}`;
-          const existingUser = await prisma.user.findUnique({
+          const existingUser = await getPrisma().user.findUnique({
             where: { username: testUsername },
           });
 
@@ -155,7 +163,7 @@ export async function verifyCode(email: string, code: string) {
         );
       }
 
-      user = await prisma.user.create({
+      user = await getPrisma().user.create({
         data: {
           email,
           username: finalUsername,
@@ -167,7 +175,7 @@ export async function verifyCode(email: string, code: string) {
       // Update username if different and not taken by another user
       if (user.username !== storedData.username) {
         // Check if the new username is already taken by another user
-        const existingUserWithUsername = await prisma.user.findFirst({
+        const existingUserWithUsername = await getPrisma().user.findFirst({
           where: {
             username: storedData.username,
             id: { not: user.id },
@@ -181,7 +189,7 @@ export async function verifyCode(email: string, code: string) {
           );
         } else {
           // Update username if it's available
-          user = await prisma.user.update({
+          user = await getPrisma().user.update({
             where: { id: user.id },
             data: { username: storedData.username },
           });
@@ -191,7 +199,7 @@ export async function verifyCode(email: string, code: string) {
     }
 
     // Clear the verification code from database
-    await prisma.verificationCode.delete({
+    await getPrisma().verificationCode.delete({
       where: { email },
     });
 
@@ -238,7 +246,7 @@ export async function verifyCode(email: string, code: string) {
 export async function resendVerificationCode(email: string) {
   try {
     // Find existing verification code in database
-    const storedData = await prisma.verificationCode.findUnique({
+    const storedData = await getPrisma().verificationCode.findUnique({
       where: { email },
     });
 
@@ -254,7 +262,7 @@ export async function resendVerificationCode(email: string) {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
 
     // Update the verification code in database
-    await prisma.verificationCode.update({
+    await getPrisma().verificationCode.update({
       where: { email },
       data: {
         code,
@@ -265,7 +273,7 @@ export async function resendVerificationCode(email: string) {
     console.log(`🔄 New verification code generated for ${email}: ${code}`);
 
     // Generate email HTML
-    const emailHtml = generateVerificationEmailHtml(storedData.username, code);
+    const emailHtml = await generateVerificationEmailHtml(storedData.username, code);
 
     // Send email using the email service
     await sendEmail({

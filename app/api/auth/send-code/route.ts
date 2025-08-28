@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendVerificationCode } from '@/actions/auth.actions';
 
+// Force dynamic rendering to prevent static analysis issues
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
+
 export async function POST(request: NextRequest) {
   try {
     const { username, email } = await request.json();
