@@ -242,11 +242,7 @@ const AuthPage = () => {
   };
 
   // Don't render if user is already authenticated
-  if (isAuthenticated) {
-    return null;
-  }
-
-  return (
+  return !isAuthenticated ? (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Header */}
@@ -497,7 +493,7 @@ const AuthPage = () => {
         </div>
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default AuthPage;

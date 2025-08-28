@@ -499,12 +499,10 @@ const CheckoutPage = () => {
     );
   }
 
-  // Don't render if not authenticated (will redirect)
   if (!isAuthenticated) {
     return null;
   }
 
-  // Don't render if cart is not hydrated yet
   if (!hasHydrated) {
     return (
       <div className="min-h-screen flex items-center justify-center">
