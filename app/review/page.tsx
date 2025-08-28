@@ -90,12 +90,12 @@ const IndividualProductReviewPage = ({}) => {
   };
 
   const totalRatings = Object.values(ratingCounts).reduce(
-    (a: any, b: any) => a + b,
+    (a: number, b: any) => a + (b as number),
     0
   );
   const averageRating = (
     Object.entries(ratingCounts).reduce(
-      (acc, [rating, count]) => acc + Number(rating) * count,
+      (acc, [rating, count]) => acc + Number(rating) * (count as number),
       0
     ) / totalRatings
   ).toFixed(1);

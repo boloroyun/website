@@ -94,7 +94,7 @@ export const useCartStore = create<CartState>()(
           'slug',
         ];
         for (const field of requiredFields) {
-          if (newItem[field] === undefined || newItem[field] === null) {
+          if ((newItem as any)[field] === undefined || (newItem as any)[field] === null) {
             console.error(`❌ Missing required field: ${field}`, newItem);
             throw new Error(`Missing required field: ${field}`);
           }
@@ -121,9 +121,9 @@ export const useCartStore = create<CartState>()(
             uid,
             quantity: Math.min(newItem.quantity, newItem.maxQuantity),
             // Ensure optional properties are defined (with defaults if not provided)
-            vendor: newItem.vendor || null,
-            color: newItem.color || null,
-            sku: newItem.sku || null,
+            vendor: newItem.vendor || undefined,
+            color: newItem.color || undefined,
+            sku: newItem.sku || undefined,
             discount: newItem.discount || 0,
             originalPrice: newItem.originalPrice || newItem.price,
           };

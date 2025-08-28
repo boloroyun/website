@@ -52,17 +52,11 @@ async function submitContactForm(formData: FormData) {
     // - Resend
     // - Or save to database
 
-    return {
-      success: true,
-      message:
-        "Thank you for your message! We'll get back to you within 24 hours.",
-    };
+    // Success - form submission completed
+    console.log('Contact form submitted successfully');
   } catch (error) {
     console.error('Contact form error:', error);
-    return {
-      success: false,
-      message: 'Something went wrong. Please try again or call us directly.',
-    };
+    // Error handling could be improved with proper error reporting
   }
 }
 

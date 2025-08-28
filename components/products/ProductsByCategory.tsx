@@ -163,7 +163,9 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({
           {/* Products Grid */}
           <ProductCard
             heading=""
-            products={section.products.slice(0, 8)} // Show first 8 products per category
+            products={section.products
+              .filter((product) => product.category)
+              .slice(0, 8) as any} // Show first 8 products per category
           />
 
           {/* Show More Link if there are more products */}

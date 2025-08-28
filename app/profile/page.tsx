@@ -98,30 +98,6 @@ export default function MyAccount() {
     }
   }, [isAuthenticated, isLoading, router]);
 
-  // Load orders when orders tab is active
-  useEffect(() => {
-    if (activeTab === 'orders' && isAuthenticated) {
-      loadOrders();
-    }
-  }, [activeTab, isAuthenticated, loadOrders]);
-
-  // Load shipping address when address tab is active
-  useEffect(() => {
-    if (activeTab === 'address' && isAuthenticated) {
-      loadShippingAddress();
-    }
-  }, [activeTab, isAuthenticated, loadShippingAddress]);
-
-  // Clear messages after 5 seconds
-  useEffect(() => {
-    if (message.text) {
-      const timer = setTimeout(() => {
-        setMessage({ type: '', text: '' });
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [message]);
-
   // Load user orders
   const loadOrders = useCallback(async () => {
     setIsLoadingOrders(true);
@@ -163,6 +139,32 @@ export default function MyAccount() {
       setIsLoadingAddress(false);
     }
   }, []);
+
+  // Load orders when orders tab is active
+  useEffect(() => {
+    if (activeTab === 'orders' && isAuthenticated) {
+      loadOrders();
+    }
+  }, [activeTab, isAuthenticated, loadOrders]);
+
+  // Load shipping address when address tab is active
+  useEffect(() => {
+    if (activeTab === 'address' && isAuthenticated) {
+      loadShippingAddress();
+    }
+  }, [activeTab, isAuthenticated, loadShippingAddress]);
+
+  // Clear messages after 5 seconds
+  useEffect(() => {
+    if (message.text) {
+      const timer = setTimeout(() => {
+        setMessage({ type: '', text: '' });
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+
+
 
   // Handle username update
   const handleUpdateUsername = async () => {

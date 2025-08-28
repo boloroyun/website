@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { useCartStore } from '@/lib/cart-store';
 import { handleOrderSuccess, handleOrderError } from '@/lib/order-utils';
 
-export default function StripeSuccessPage() {
+function StripeSuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { clearCart } = useCartStore();
@@ -98,4 +98,21 @@ export default function StripeSuccessPage() {
   }
 
   return null;
+}
+
+export default function StripeSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <p className="text-gray-600">Processing payment...</p>
+          </div>
+        </div>
+      }
+    >
+      <StripeSuccessContent />
+    </Suspense>
+  );
 }

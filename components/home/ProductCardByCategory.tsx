@@ -109,7 +109,9 @@ const ProductCardByCategory: React.FC<ProductCardByCategoryProps> = ({
             {/* Products for this category */}
             <ProductCard
               heading=""
-              products={section.products.slice(0, maxProductsPerCategory)}
+              products={section.products
+                .filter((product) => product.category) // Only include products with category
+                .slice(0, maxProductsPerCategory) as any}
             />
 
             {/* Show More Link if there are more products */}

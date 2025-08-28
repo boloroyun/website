@@ -87,9 +87,27 @@ const HomePage = async () => {
   const bestSellersData = bestSellers.success ? (bestSellers.data ?? []) : [];
   const newArrivalsData = newArrivals.success ? (newArrivals.data ?? []) : [];
 
-  // Data is already properly formatted from the actions
-  const bestSellersFormatted = bestSellersData;
-  const newArrivalsFormatted = newArrivalsData;
+  // Transform null values to undefined for compatibility with Product interface
+  const bestSellersFormatted = bestSellersData.map((product) => ({
+    ...product,
+    brand: product.brand ?? undefined,
+    sold: product.sold ?? undefined,
+    discount: product.discount ?? undefined,
+    colors: product.colors.map((color) => ({
+      ...color,
+      image: color.image ?? undefined,
+    })),
+  }));
+  const newArrivalsFormatted = newArrivalsData.map((product) => ({
+    ...product,
+    brand: product.brand ?? undefined,
+    sold: product.sold ?? undefined,
+    discount: product.discount ?? undefined,
+    colors: product.colors.map((color) => ({
+      ...color,
+      image: color.image ?? undefined,
+    })),
+  }));
 
   // Organize by categories with different strategies
   const bestSellersByCategory = organizeProductsByCategory(

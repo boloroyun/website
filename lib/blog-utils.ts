@@ -183,7 +183,7 @@ export function generateKeywords(
   ];
 
   // Remove duplicates and join
-  const uniqueKeywords = [...new Set(allKeywords)];
+  const uniqueKeywords = Array.from(new Set(allKeywords));
   return uniqueKeywords.slice(0, 10).join(', ');
 }
 
