@@ -1,13 +1,22 @@
 'use server';
 
-import prisma from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
+
+// Lazy Prisma initialization
+let prisma: PrismaClient;
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 
 // Best Sellers (products sorted by sold count)
 export async function getBestSellers(limit: number = 10) {
   try {
     console.log(`🏆 Fetching best seller products (limit: ${limit})...`);
 
-    const bestSellers = await prisma.product.findMany({
+    const bestSellers = await getPrisma().product.findMany({
       orderBy: [
         { featured: 'desc' },
         { bestSeller: 'desc' },
@@ -92,7 +101,7 @@ export async function getFeaturedProducts(limit: number = 8) {
   try {
     console.log(`⭐ Fetching featured products (limit: ${limit})...`);
 
-    const featuredProducts = await prisma.product.findMany({
+    const featuredProducts = await getPrisma().product.findMany({
       where: {
         featured: true,
       },
@@ -157,7 +166,7 @@ export async function getNewArrivals(limit: number = 10) {
     // Fetch more products to ensure good distribution across categories
     const fetchLimit = Math.max(limit * 2, 30); // Fetch at least 30 or double the limit
 
-    const newArrivals = await prisma.product.findMany({
+    const newArrivals = await getPrisma().product.findMany({
       orderBy: [
         { createdAt: 'desc' },
         { featured: 'desc' },
@@ -302,7 +311,7 @@ export async function getAllProducts(options?: {
       whereClause.bestSeller = options.bestSeller;
     }
 
-    const products = await prisma.product.findMany({
+    const products = await getPrisma().product.findMany({
       where: whereClause,
       orderBy: [{ rating: 'desc' }, { sold: 'desc' }, { createdAt: 'desc' }],
       take: options?.limit,
@@ -343,7 +352,7 @@ export async function searchProducts(keyword: string, limit: number = 20) {
       };
     }
 
-    const searchResults = await prisma.product.findMany({
+    const searchResults = await getPrisma().product.findMany({
       where: {
         OR: [
           {
@@ -442,7 +451,7 @@ export async function getPopularColors() {
     console.log('🎨 Fetching popular colors from products...');
 
     // Get products that have colors and are popular
-    const productsWithColors = await prisma.product.findMany({
+    const productsWithColors = await getPrisma().product.findMany({
       where: {
         colors: {
           isEmpty: false, // Only products that have colors
@@ -523,7 +532,7 @@ export async function getPopularColors() {
 export async function getTrendingSearches() {
   try {
     // Get top brands from best-selling products
-    const topBrands = await prisma.product.findMany({
+    const topBrands = await getPrisma().product.findMany({
       where: {
         brand: {
           not: null,
@@ -560,7 +569,7 @@ export async function getTrendingSearches() {
       .map(([brand]) => brand);
 
     // Get popular product keywords from best sellers
-    const bestSellingProducts = await prisma.product.findMany({
+    const bestSellingProducts = await getPrisma().product.findMany({
       where: {
         OR: [{ bestSeller: true }, { featured: true }, { sold: { gt: 5 } }],
       },

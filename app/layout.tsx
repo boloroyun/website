@@ -8,6 +8,9 @@ import Footer from '@/components/Footer';
 import { Toaster } from 'sonner';
 import CrispChat from '@/components/CrispChat';
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
   variable: '--font-geist-sans',

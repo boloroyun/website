@@ -1,13 +1,22 @@
 'use server';
 
-import prisma from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
+
+// Lazy Prisma initialization
+let prisma: PrismaClient;
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 
 // Special Combos (homescreen offers with type 'specialCombo')
 export async function getSpecialCombos() {
   try {
     console.log('🎁 Fetching special combos from database...');
 
-    const specialCombos = await prisma.homeScreenOffer.findMany({
+    const specialCombos = await getPrisma().homeScreenOffer.findMany({
       where: {
         type: 'specialCombo',
       },
@@ -51,7 +60,7 @@ export async function getCrazyDeals() {
   try {
     console.log('🔥 Fetching crazy deals from database...');
 
-    const crazyDeals = await prisma.homeScreenOffer.findMany({
+    const crazyDeals = await getPrisma().homeScreenOffer.findMany({
       where: {
         type: 'crazyDeal',
       },
@@ -91,7 +100,7 @@ export async function getAllHomescreenOffers() {
   try {
     console.log('🏠 Fetching all homescreen offers from database...');
 
-    const offers = await prisma.homeScreenOffer.findMany({
+    const offers = await getPrisma().homeScreenOffer.findMany({
       orderBy: { createdAt: 'desc' },
     });
 

@@ -1,13 +1,22 @@
 'use server';
 
-import prisma from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
+
+// Lazy Prisma initialization
+let prisma: PrismaClient;
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 
 // Get all topbars for display
 export async function getAllTopBars() {
   try {
     console.log('📊 Fetching all topbars...');
 
-    const topbars = await prisma.topBar.findMany({
+    const topbars = await getPrisma().topBar.findMany({
       orderBy: { createdAt: 'asc' }, // Show in creation order
     });
 
@@ -81,7 +90,7 @@ export async function getTopBarById(id: string) {
   try {
     console.log(`📊 Fetching topbar by ID: ${id}`);
 
-    const topbar = await prisma.topBar.findUnique({
+    const topbar = await getPrisma().topBar.findUnique({
       where: { id },
     });
 

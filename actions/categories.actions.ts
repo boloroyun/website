@@ -1,13 +1,22 @@
 'use server';
 
-import prisma from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
+
+// Lazy Prisma initialization
+let prisma: PrismaClient;
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 
 // Get all categories with their subcategories
 export async function getAllCategories() {
   try {
     console.log('📂 Fetching all categories with subcategories...');
 
-    const categories = await prisma.category.findMany({
+    const categories = await getPrisma().category.findMany({
       include: {
         subCategories: {
           orderBy: { name: 'asc' },
@@ -66,7 +75,7 @@ export async function getAllSubCategories() {
   try {
     console.log('📂 Fetching all subcategories...');
 
-    const subCategories = await prisma.subCategory.findMany({
+    const subCategories = await getPrisma().subCategory.findMany({
       include: {
         parent: {
           select: {
@@ -118,7 +127,7 @@ export async function getCategoriesForNav() {
   try {
     console.log('🧭 Fetching categories for navigation...');
 
-    const categories = await prisma.category.findMany({
+    const categories = await getPrisma().category.findMany({
       select: {
         id: true,
         name: true,
@@ -158,7 +167,7 @@ export async function getCategoryWithProducts(slug: string) {
   try {
     console.log(`📂 Fetching category by slug: ${slug}`);
 
-    const category = await prisma.category.findUnique({
+    const category = await getPrisma().category.findUnique({
       where: { slug },
       include: {
         products: {

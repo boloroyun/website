@@ -1,6 +1,15 @@
 'use server';
 
-import prisma from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
+
+// Lazy Prisma initialization
+let prisma: PrismaClient;
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 import { getBestSellers } from './products.actions';
 import { getCrazyDeals } from './offers.actions';
 import { getAllCategories } from './categories.actions';
