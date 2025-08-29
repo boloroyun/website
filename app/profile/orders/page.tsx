@@ -2,6 +2,9 @@
 import { Tabs } from '@/components/ui/tabs';
 import { TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 import React from 'react';
+
+// Force dynamic rendering to prevent build-time analysis issues
+export const dynamic = 'force-dynamic';
 import {
   Table,
   TableBody,
