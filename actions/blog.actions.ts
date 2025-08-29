@@ -1,6 +1,15 @@
 'use server';
 
-import prisma from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
+
+// Lazy Prisma initialization
+let prisma: PrismaClient;
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 
 export interface BlogPost {
   id: string;
@@ -126,7 +135,7 @@ export async function getBlogPosts(options?: {
     }
 
     const [posts, totalCount] = await Promise.all([
-      prisma.blogPost.findMany({
+      getPrisma().blogPost.findMany({
         where: whereClause,
         include: {
           category: {
@@ -159,7 +168,7 @@ export async function getBlogPosts(options?: {
         skip,
         take: limit,
       }),
-      prisma.blogPost.count({ where: whereClause }),
+      getPrisma().blogPost.count({ where: whereClause }),
     ]);
 
     const formattedPosts: BlogPost[] = posts.map((post) => ({
@@ -248,7 +257,7 @@ export async function getBlogPostBySlug(slug: string) {
   try {
     console.log(`📖 Fetching blog post: ${slug}`);
 
-    const post = await prisma.blogPost.findUnique({
+    const post = await getPrisma().blogPost.findUnique({
       where: {
         slug,
         published: true,
@@ -297,7 +306,7 @@ export async function getBlogPostBySlug(slug: string) {
     }
 
     // Increment view count
-    await prisma.blogPost.update({
+    await getPrisma().blogPost.update({
       where: { id: post.id },
       data: { views: post.views + 1 },
     });
@@ -374,7 +383,7 @@ export async function getFeaturedBlogPosts(limit: number = 6) {
   try {
     console.log(`⭐ Fetching featured blog posts (limit: ${limit})`);
 
-    const posts = await prisma.blogPost.findMany({
+    const posts = await getPrisma().blogPost.findMany({
       where: {
         published: true,
         status: 'published',
@@ -479,7 +488,7 @@ export async function getBlogCategories() {
   try {
     console.log('📂 Fetching blog categories...');
 
-    const categories = await prisma.blogCategory.findMany({
+    const categories = await getPrisma().blogCategory.findMany({
       include: {
         _count: {
           select: {
@@ -531,7 +540,7 @@ export async function getBlogTags() {
   try {
     console.log('🏷️ Fetching blog tags...');
 
-    const tags = await prisma.blogTag.findMany({
+    const tags = await getPrisma().blogTag.findMany({
       include: {
         _count: {
           select: {
@@ -582,7 +591,7 @@ export async function getRelatedBlogPosts(
   try {
     console.log(`🔗 Fetching related blog posts for post: ${postId}`);
 
-    const relatedPosts = await prisma.blogPost.findMany({
+    const relatedPosts = await getPrisma().blogPost.findMany({
       where: {
         published: true,
         status: 'published',
@@ -688,7 +697,7 @@ export async function searchBlogPosts(query: string, limit: number = 10) {
   try {
     console.log(`🔍 Searching blog posts: "${query}"`);
 
-    const posts = await prisma.blogPost.findMany({
+    const posts = await getPrisma().blogPost.findMany({
       where: {
         published: true,
         status: 'published',
