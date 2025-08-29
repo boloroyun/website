@@ -6,6 +6,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+
+// Force dynamic rendering to prevent build-time function execution
+export const dynamic = 'force-dynamic';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
