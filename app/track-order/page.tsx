@@ -1,5 +1,8 @@
 "use client";
 
+// Force dynamic rendering to prevent build-time analysis issues
+export const dynamic = 'force-dynamic';
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader, SearchIcon } from "lucide-react";
