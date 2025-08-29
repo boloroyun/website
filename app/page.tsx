@@ -25,6 +25,9 @@ import {
   getAllCategories,
 } from '@/actions';
 
+// Make this page dynamic to avoid build-time issues with Prisma imports
+export const dynamic = 'force-dynamic';
+
 const HomePage = async () => {
   // Fetch all required data for the homepage
   console.log('🏠 Fetching homepage data...');

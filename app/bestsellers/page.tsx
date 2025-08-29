@@ -1,15 +1,81 @@
-import { getBestSellers } from '@/actions/products.actions';
 import ProductCardByCategory from '@/components/home/ProductCardByCategory';
 import {
   organizeProductsByCategory,
   getFeaturedCategorySections,
 } from '@/lib/organize-products';
 
+// Make this page dynamic to avoid build-time issues
+export const dynamic = 'force-dynamic';
+
 export default async function BestSellersPage() {
-  const bestSellersResult = await getBestSellers(48); // Get more for the dedicated page (8 products × 6 categories)
-  const bestSellers = bestSellersResult.success
-    ? bestSellersResult.data || []
-    : [];
+  // Lazy import Prisma inside the page component
+  const { PrismaClient } = await import('@prisma/client');
+  const prisma = new PrismaClient();
+
+  console.log('🏆 Fetching best seller products (limit: 48)...');
+
+  const bestSellersData = await prisma.product.findMany({
+    orderBy: [
+      { featured: 'desc' },
+      { bestSeller: 'desc' },
+      { sold: 'desc' },
+      { numReviews: 'desc' },
+      { rating: 'desc' },
+    ],
+    take: 48,
+    include: {
+      category: {
+        select: {
+          name: true,
+          slug: true,
+        },
+      },
+      productSubCategories: {
+        include: {
+          subCategory: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // Transform data for frontend use
+  const bestSellers = bestSellersData.map((product) => ({
+    id: product.id,
+    title: product.title,
+    description: product.description,
+    slug: product.slug,
+    brand: product.brand,
+    rating: product.rating,
+    numReviews: product.numReviews,
+    sold: product.sold,
+    discount: product.discount,
+    pricingType: product.pricingType,
+    images: product.images
+      .map((image: any) => ({
+        url: image.url || '',
+        public_id: image.public_id || '',
+      }))
+      .filter((image: any) => image.url),
+    sizes: product.sizes,
+    colors: product.colors,
+    category: product.category,
+    subCategories:
+      product.productSubCategories?.map((psc) => ({
+        id: psc.subCategory.id,
+        name: psc.subCategory.name,
+        slug: psc.subCategory.slug,
+      })) || [],
+    featured: product.featured,
+    bestSeller: product.bestSeller,
+  }));
+
+  console.log(`📈 Found ${bestSellers.length} best seller products`);
 
   // Transform null values to undefined for compatibility with Product interface
   const bestSellersFormatted = bestSellers.map((product) => ({
