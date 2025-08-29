@@ -16,13 +16,19 @@
 - [ ] `NEXT_PUBLIC_APP_URL` - App URL for internal links
   - Same as `NEXT_PUBLIC_SITE_URL`
 
+### **🔐 Authentication (CRITICAL)**
+- [ ] `NEXTAUTH_SECRET` - NextAuth secret key
+  - Generate: `openssl rand -base64 32`
+  - **REQUIRED** for JWT signing and encryption
+- [ ] `NEXTAUTH_URL` - Auth callback URL
+  - Production: `https://yourdomain.com`
+  - Preview: `https://your-preview-domain.vercel.app`
+
 ### **🔐 API Security (CRITICAL)**
 - [ ] `INTERNAL_API_TOKEN` - Server-side API authentication
   - Generate: Strong random string (32+ chars)
 - [ ] `NEXT_PUBLIC_INTERNAL_API_TOKEN` - Client-side API authentication
   - Generate: Strong random string (32+ chars)
-- [ ] `NEXTAUTH_URL` - Auth callback URL
-  - Same as `NEXT_PUBLIC_SITE_URL`
 
 ---
 

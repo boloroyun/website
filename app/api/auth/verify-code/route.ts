@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { Role } from '@prisma/client';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -115,9 +116,11 @@ export async function POST(req: Request) {
 
       user = await prisma.user.create({
         data: {
+          name: finalUsername, // Use username as name for now
           email,
+          password: '', // Empty password for verification-based auth
           username: finalUsername,
-          role: 'user',
+          role: Role.CLIENT,
         },
       });
       console.log(`👤 New user created: ${user.username} (${user.email})`);

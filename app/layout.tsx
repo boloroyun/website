@@ -7,6 +7,7 @@ import MobileBottomBar from '@/components/MobileBottomBar';
 import Footer from '@/components/Footer';
 import { Toaster } from 'sonner';
 import CrispChat from '@/components/CrispChat';
+import SessionProvider from '@/components/auth/SessionProvider';
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -53,13 +54,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TopBarWrapper />
-        <Navbar />
-        {children}
-        <MobileBottomBar />
-        <Footer />
-        <Toaster position="top-right" richColors />
-        <CrispChat />
+        <SessionProvider>
+          <TopBarWrapper />
+          <Navbar />
+          {children}
+          <MobileBottomBar />
+          <Footer />
+          <Toaster position="top-right" richColors />
+          <CrispChat />
+        </SessionProvider>
       </body>
     </html>
   );

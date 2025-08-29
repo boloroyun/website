@@ -1,6 +1,6 @@
 'use server';
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Role } from '@prisma/client';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { sendEmail, generateVerificationEmailHtml } from '@/lib/email';
@@ -168,9 +168,11 @@ export async function verifyCode(email: string, code: string) {
 
       user = await getPrisma().user.create({
         data: {
+          name: finalUsername, // Use username as name for now
           email,
+          password: '', // Empty password for verification-based auth
           username: finalUsername,
-          role: 'user',
+          role: Role.CLIENT,
         },
       });
       console.log(`👤 New user created: ${user.username} (${user.email})`);

@@ -1,38 +1,71 @@
+import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import type { NextRequestWithAuth } from 'next-auth/middleware';
 
-export function middleware(request: NextRequest) {
-  const authToken = request.cookies.get('auth-token');
-  const { pathname } = request.nextUrl;
+export default withAuth(
+  function middleware(req: NextRequestWithAuth) {
+    const { pathname } = req.nextUrl;
+    const token = req.nextauth.token;
 
-  // Define protected routes (routes that require authentication)
-  const protectedRoutes = ['/profile', '/orders', '/checkout', '/order'];
+    // Define protected routes that require authentication
+    const protectedRoutes = ['/account', '/profile', '/orders', '/checkout', '/order'];
 
-  // Define auth routes (routes that authenticated users shouldn't access)
-  const authRoutes = ['/login', '/signup', '/auth'];
+    // Check if current path is protected
+    const isProtectedRoute = protectedRoutes.some((route) =>
+      pathname.startsWith(route)
+    );
 
-  // Check if current path is protected
-  const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
-  );
+    // If accessing protected route without authentication, redirect to signin
+    if (isProtectedRoute && !token) {
+      const signInUrl = new URL('/auth/signin', req.url);
+      signInUrl.searchParams.set('callbackUrl', pathname);
+      return NextResponse.redirect(signInUrl);
+    }
 
-  // Check if current path is an auth route
-  const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
+    // Role-based access control (if needed in the future)
+    // Example: Admin-only routes
+    const adminRoutes = ['/admin'];
+    const isAdminRoute = adminRoutes.some((route) => pathname.startsWith(route));
+    
+    if (isAdminRoute && token?.role !== 'ADMIN') {
+      return NextResponse.redirect(new URL('/account', req.url));
+    }
 
-  // If user is not authenticated and trying to access protected route
-  if (isProtectedRoute && !authToken) {
-    const loginUrl = new URL('/', request.url);
-    loginUrl.searchParams.set('login', 'true'); // Optional: trigger login modal
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.next();
+  },
+  {
+    callbacks: {
+      authorized: ({ token, req }) => {
+        const { pathname } = req.nextUrl;
+        
+        // Allow access to public routes
+        const publicRoutes = [
+          '/',
+          '/products',
+          '/category',
+          '/product',
+          '/about',
+          '/contact',
+          '/blog',
+          '/auth/signin',
+          '/api/auth',
+        ];
+
+        const isPublicRoute = publicRoutes.some((route) => 
+          pathname.startsWith(route)
+        );
+
+        // Allow access to public routes without authentication
+        if (isPublicRoute) {
+          return true;
+        }
+
+        // For protected routes, require authentication
+        return !!token;
+      },
+    },
   }
-
-  // If user is authenticated and trying to access auth routes
-  if (isAuthRoute && authToken) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-
-  return NextResponse.next();
-}
+);
 
 export const config = {
   matcher: [
