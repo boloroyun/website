@@ -12,6 +12,9 @@ import { getProductBySlug, getRelatedProductsByCategory } from '@/actions';
 import { getProductFeatures } from '@/lib/product-features';
 import { notFound } from 'next/navigation';
 
+// Force dynamic rendering to prevent build-time server action execution
+export const dynamic = 'force-dynamic';
+
 interface ProductPageProps {
   params: {
     slug: string;
