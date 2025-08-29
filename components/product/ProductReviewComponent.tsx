@@ -29,7 +29,7 @@ interface ProductReview {
   review: string;
   reviewCreatedAt: Date;
   verified: boolean;
-  reviewBy: string;
+  reviewBy: string | null;
 }
 
 interface ProductReviewComponentProps {
@@ -263,12 +263,12 @@ const ProductReviewComponent: React.FC<ProductReviewComponentProps> = ({
                 <div key={review.id} className="border-t pt-4">
                   <div className="flex items-start mb-3">
                     <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-sm font-semibold mr-3">
-                      {getInitials(review.reviewBy)}
+                      {getInitials(review.reviewBy || 'Anonymous')}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center mb-1">
                         <span className="font-semibold mr-2">
-                          {review.reviewBy}
+                          {review.reviewBy || 'Anonymous'}
                         </span>
                         {review.verified && (
                           <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">
