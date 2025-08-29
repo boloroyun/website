@@ -2,6 +2,7 @@
 
 // Force dynamic rendering for this page to prevent build-time issues
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

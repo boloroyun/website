@@ -5,6 +5,7 @@ import React from 'react';
 
 // Force dynamic rendering to prevent build-time analysis issues
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 import {
   Table,
   TableBody,

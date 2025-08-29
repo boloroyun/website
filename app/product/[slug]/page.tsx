@@ -14,6 +14,7 @@ import { notFound } from 'next/navigation';
 
 // Force dynamic rendering to prevent build-time server action execution
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface ProductPageProps {
   params: {

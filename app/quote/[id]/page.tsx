@@ -9,6 +9,7 @@ import {
 
 // Force dynamic rendering to prevent build-time function execution
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {

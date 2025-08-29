@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 
 // Force dynamic rendering to prevent build-time API calls
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 // Types for the About page data
 interface AboutPageData {

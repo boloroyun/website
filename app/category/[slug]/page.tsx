@@ -5,6 +5,7 @@ import Image from 'next/image';
 
 // Force dynamic rendering to prevent build-time server action execution
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface CategoryPageProps {
   params: {

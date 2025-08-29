@@ -5,6 +5,7 @@ import Link from "next/link";
 
 // Force dynamic rendering to prevent build-time analysis issues
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 const PaymentCancelPage = () => {
   return (

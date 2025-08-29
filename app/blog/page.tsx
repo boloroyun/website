@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 
 // Force dynamic rendering to prevent build-time server action execution
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 import BlogHero from '@/components/blog/BlogHero';
 import BlogGrid from '@/components/blog/BlogGrid';
 import BlogSidebar from '@/components/blog/BlogSidebar';
