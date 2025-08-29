@@ -1,6 +1,9 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
+// Force dynamic rendering to prevent build-time server action execution
+export const dynamic = 'force-dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { CalendarDays, Clock, Eye, Heart, User, ArrowLeft } from 'lucide-react';
