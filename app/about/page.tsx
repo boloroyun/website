@@ -2,6 +2,9 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 
+// Force dynamic rendering to prevent build-time API calls
+export const dynamic = 'force-dynamic';
+
 // Types for the About page data
 interface AboutPageData {
   id: string;
