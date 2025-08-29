@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-// Force static generation for this page
-export const dynamic = 'force-static';
+// Force dynamic rendering to prevent build-time analysis issues
+export const dynamic = 'force-dynamic';
 
 export default function NotFound() {
   return (
