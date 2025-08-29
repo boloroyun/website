@@ -9,6 +9,9 @@ import {
 } from 'lucide-react';
 import SocialShare from '@/components/SocialShare';
 
+// Force dynamic rendering to prevent build-time analysis issues
+export const dynamic = 'force-dynamic';
+
 const TermsOfService = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
