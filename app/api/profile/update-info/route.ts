@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { updateUserInfo } from '@/actions/profile.actions';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

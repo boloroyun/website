@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getOrderById } from '@/actions/orders.actions';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { orderId: string } }

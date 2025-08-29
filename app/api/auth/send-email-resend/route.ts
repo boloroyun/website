@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import VerificationCodeEmail from '@/emails/verification-code';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
+
 export async function POST(request: NextRequest) {
   try {
     const { email, code, username } = await request.json();

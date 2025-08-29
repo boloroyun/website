@@ -3,6 +3,10 @@ import nodemailer from 'nodemailer';
 import { render } from '@react-email/render';
 import VerificationCodeEmail from '@/emails/verification-code';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
+
 // Create reusable transporter object using environment variables
 const createTransporter = () => {
   return nodemailer.createTransport({

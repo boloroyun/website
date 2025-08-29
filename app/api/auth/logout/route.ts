@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { handleLogout } from '@/actions/logout.actions';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
+
 export async function POST() {
   try {
     const result = await handleLogout();

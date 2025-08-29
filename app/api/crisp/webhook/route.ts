@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { sendMessage, verifyCrispWebhookSignature } from '@/lib/crisp';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
+
 // Zod schema for Crisp webhook payload
 const CrispWebhookSchema = z.object({
   website_id: z.string(),
