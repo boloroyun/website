@@ -1,13 +1,22 @@
 'use server';
 
-import prisma from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
+
+// Lazy Prisma initialization
+let prisma: PrismaClient;
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 
 // Get a single product by slug with all related data
 export async function getProductBySlug(slug: string) {
   try {
     console.log(`🔍 Fetching product by slug: ${slug}`);
 
-    const product = await prisma.product.findUnique({
+    const product = await getPrisma().product.findUnique({
       where: { slug },
       include: {
         category: {
@@ -113,7 +122,7 @@ export async function getRelatedProducts(
       `🔄 Fetching related products for category: ${categoryId}, excluding product: ${productId}`
     );
 
-    const relatedProducts = await prisma.product.findMany({
+    const relatedProducts = await getPrisma().product.findMany({
       where: {
         categoryId: categoryId,
         id: { not: productId }, // Exclude current product
@@ -146,7 +155,7 @@ export async function getRelatedProducts(
         `🔄 Not enough products in same category (${relatedProducts.length}/${limit}), fetching from other categories...`
       );
 
-      const additionalProducts = await prisma.product.findMany({
+      const additionalProducts = await getPrisma().product.findMany({
         where: {
           categoryId: { not: categoryId }, // Different category
           id: { not: productId }, // Exclude current product
@@ -226,7 +235,7 @@ export async function getRelatedProductsByCategory(
     );
 
     // First, get products from the same category (excluding current product)
-    const sameCategory = await prisma.product.findMany({
+    const sameCategory = await getPrisma().product.findMany({
       where: {
         categoryId: currentCategoryId,
         id: { not: productId },
@@ -249,7 +258,7 @@ export async function getRelatedProductsByCategory(
     });
 
     // Then get products from other categories
-    const otherCategories = await prisma.product.findMany({
+    const otherCategories = await getPrisma().product.findMany({
       where: {
         categoryId: { not: currentCategoryId },
         id: { not: productId },

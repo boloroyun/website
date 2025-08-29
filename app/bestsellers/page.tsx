@@ -6,6 +6,7 @@ import {
 
 // Make this page dynamic to avoid build-time issues
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function BestSellersPage() {
   // Lazy import Prisma inside the page component
