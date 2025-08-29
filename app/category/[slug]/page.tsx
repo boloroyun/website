@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation';
 import ProductCard from '@/components/home/ProductCard';
 import Image from 'next/image';
 
+// Force dynamic rendering to prevent build-time server action execution
+export const dynamic = 'force-dynamic';
+
 interface CategoryPageProps {
   params: {
     slug: string;
