@@ -4,6 +4,9 @@ import ProductsByTypeSection from '@/components/products/ProductsByTypeSection';
 import { Suspense } from 'react';
 import ProductsPageSkeleton from '@/components/products/ProductsPageSkeleton';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata = {
   title: 'All Products | LUX Cabinets & Stones',
   description:

@@ -1,6 +1,9 @@
 import { getAllProducts } from '@/actions/products.actions';
 import ProductCard from '@/components/home/ProductCard';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata = {
   title: 'Project Gallery | LUX Cabinets & Stones',
   description:

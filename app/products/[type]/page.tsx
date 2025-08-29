@@ -7,6 +7,9 @@ import ProductTypePageClient from '@/components/products/ProductTypePageClient';
 import { Suspense } from 'react';
 import ProductsPageSkeleton from '@/components/products/ProductsPageSkeleton';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 interface ProductTypePageProps {
   params: {
     type: 'cabinets' | 'stones' | 'other';
