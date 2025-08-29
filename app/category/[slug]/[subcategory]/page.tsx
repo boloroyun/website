@@ -1,11 +1,11 @@
 import { getAllProducts } from '@/actions/products.actions';
 import { notFound } from 'next/navigation';
 import ProductCard from '@/components/home/ProductCard';
-import prisma from '@/lib/prisma';
 import Image from 'next/image';
 
 // Force dynamic rendering to prevent build-time Prisma execution
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface SubCategoryPageProps {
   params: {
@@ -20,6 +20,10 @@ export default async function SubCategoryPage({
   const { slug, subcategory } = params;
 
   try {
+    // Lazy Prisma initialization
+    const { PrismaClient } = await import('@prisma/client');
+    const prisma = new PrismaClient();
+    
     // Get the subcategory info
     const subCategoryData = await prisma.subCategory.findUnique({
       where: { slug: subcategory },
