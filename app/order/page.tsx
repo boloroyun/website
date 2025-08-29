@@ -3,6 +3,9 @@ import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
+// Force dynamic rendering to prevent build-time analysis issues
+export const dynamic = 'force-dynamic';
+
 const OrderPage = () => {
   return (
     <div className="min-h-screen bg-gray-100">
