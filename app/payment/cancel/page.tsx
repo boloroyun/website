@@ -3,6 +3,9 @@ import { Card } from "@/components/ui/card";
 import { XCircle } from "lucide-react";
 import Link from "next/link";
 
+// Force dynamic rendering to prevent build-time analysis issues
+export const dynamic = 'force-dynamic';
+
 const PaymentCancelPage = () => {
   return (
     <section className="w-full min-h-[80vh] flex items-center justify-center bg-gray-100">
