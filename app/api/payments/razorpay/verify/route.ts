@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createOrder } from '@/actions/orders.actions';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
+
 // Verify Razorpay payment and create order
 export async function POST(request: NextRequest) {
   try {
