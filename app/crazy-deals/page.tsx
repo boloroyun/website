@@ -2,6 +2,9 @@ import { getCrazyDeals } from '@/actions/offers.actions';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 
+// Force dynamic rendering to prevent build-time server action execution
+export const dynamic = 'force-dynamic';
+
 export default async function CrazyDealsPage() {
   const crazyDealsResult = await getCrazyDeals();
 
