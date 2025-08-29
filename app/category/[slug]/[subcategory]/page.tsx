@@ -4,6 +4,9 @@ import ProductCard from '@/components/home/ProductCard';
 import prisma from '@/lib/prisma';
 import Image from 'next/image';
 
+// Force dynamic rendering to prevent build-time Prisma execution
+export const dynamic = 'force-dynamic';
+
 interface SubCategoryPageProps {
   params: {
     slug: string;
