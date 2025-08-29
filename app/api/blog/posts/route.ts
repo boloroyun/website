@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
 
 // Get blog posts with pagination and filtering
 export async function GET(request: NextRequest) {
   try {
+    // Lazy import Prisma inside handler
+    const { PrismaClient } = await import('@prisma/client');
+    const prisma = new PrismaClient();
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1', 10);
     const limit = parseInt(searchParams.get('limit') || '10', 10);
@@ -109,6 +115,10 @@ export async function GET(request: NextRequest) {
 // Create a new blog post (for admin use)
 export async function POST(request: NextRequest) {
   try {
+    // Lazy import Prisma inside handler
+    const { PrismaClient } = await import('@prisma/client');
+    const prisma = new PrismaClient();
+
     const body = await request.json();
     const {
       title,

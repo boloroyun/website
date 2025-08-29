@@ -2,7 +2,15 @@
 
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+// Lazy Prisma initialization
+let prisma: PrismaClient;
+
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 
 // Validate and apply coupon
 export async function validateCoupon(couponCode: string) {
@@ -12,7 +20,7 @@ export async function validateCoupon(couponCode: string) {
     }
 
     // Find the coupon by code (case-insensitive)
-    const coupon = await prisma.coupon.findFirst({
+    const coupon = await getPrisma().coupon.findFirst({
       where: {
         coupon: {
           equals: couponCode.trim(),
@@ -93,7 +101,7 @@ export async function getActiveCoupons() {
   try {
     const currentDate = new Date();
 
-    const coupons = await prisma.coupon.findMany({
+    const coupons = await getPrisma().coupon.findMany({
       where: {
         endDate: {
           gte: currentDate.toISOString(),

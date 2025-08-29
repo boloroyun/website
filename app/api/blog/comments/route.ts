@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
 
 // Get comments for a blog post
 export async function GET(request: NextRequest) {
   try {
+    // Lazy import Prisma inside handler
+    const { PrismaClient } = await import('@prisma/client');
+    const prisma = new PrismaClient();
     const { searchParams } = new URL(request.url);
     const postId = searchParams.get('postId');
 
@@ -42,6 +48,10 @@ export async function GET(request: NextRequest) {
 // Create a new comment
 export async function POST(request: NextRequest) {
   try {
+    // Lazy import Prisma inside handler
+    const { PrismaClient } = await import('@prisma/client');
+    const prisma = new PrismaClient();
+
     const body = await request.json();
     const { postId, name, email, website, content, parentId } = body;
 

@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
 
 // Get all blog tags
 export async function GET() {
   try {
+    // Lazy import Prisma inside handler
+    const { PrismaClient } = await import('@prisma/client');
+    const prisma = new PrismaClient();
     const tags = await prisma.blogTag.findMany({
       include: {
         _count: {
@@ -46,6 +52,10 @@ export async function GET() {
 // Create a new blog tag
 export async function POST(request: NextRequest) {
   try {
+    // Lazy import Prisma inside handler
+    const { PrismaClient } = await import('@prisma/client');
+    const prisma = new PrismaClient();
+
     const body = await request.json();
     const { name, slug, color } = body;
 

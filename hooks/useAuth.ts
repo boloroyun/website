@@ -57,19 +57,21 @@ export const useAuth = () => {
 
   // Listen for cookie changes using polling
   useEffect(() => {
+    let lastCookieValue = Cookies.get('auth-user') || '';
+
     const interval = setInterval(() => {
-      const currentAuthUser = Cookies.get('auth-user');
-      const currentUserString = user ? JSON.stringify(user) : null;
+      const currentCookieValue = Cookies.get('auth-user') || '';
 
       // Check if cookie state has changed
-      if (currentAuthUser !== currentUserString) {
+      if (currentCookieValue !== lastCookieValue) {
         console.log('🔄 Cookie change detected, refreshing auth state...');
+        lastCookieValue = currentCookieValue;
         checkAuthStatus();
       }
     }, 500); // Check every 500ms for faster updates
 
     return () => clearInterval(interval);
-  }, [user, checkAuthStatus]);
+  }, [checkAuthStatus]);
 
   // Listen for custom auth events
   useEffect(() => {

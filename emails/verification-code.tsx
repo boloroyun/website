@@ -26,7 +26,7 @@ export const VerificationCodeEmail = ({
       <Container style={container}>
         {/* Header */}
         <Section style={header}>
-          <Heading style={h1}>Welcome to Lux Store!</Heading>
+          <Heading style={h1}>Welcome to LUX Cabinets & Stones!</Heading>
         </Section>
 
         {/* Main Content */}
@@ -34,8 +34,8 @@ export const VerificationCodeEmail = ({
           <Text style={greeting}>Hi {username},</Text>
 
           <Text style={paragraph}>
-            Thank you for signing up with Lux Store! To complete your account
-            setup, please use the verification code below:
+            Thank you for choosing LUX Cabinets & Stones! To complete your
+            account setup, please use the verification code below:
           </Text>
 
           {/* Verification Code */}
@@ -53,7 +53,7 @@ export const VerificationCodeEmail = ({
           <Text style={footer}>
             Best regards,
             <br />
-            The Lux Store Team
+            The LUX Cabinets & Stones Team
           </Text>
         </Section>
       </Container>

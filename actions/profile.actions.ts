@@ -4,7 +4,15 @@ import { PrismaClient } from '@prisma/client';
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 
-const prisma = new PrismaClient();
+// Lazy Prisma initialization
+let prisma: PrismaClient;
+
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 
 // Get current user from cookies
 async function getCurrentUser() {
@@ -38,7 +46,7 @@ export async function updateUserInfo(username: string) {
     }
 
     // Check if username is already taken by another user
-    const existingUser = await prisma.user.findFirst({
+    const existingUser = await getPrisma().user.findFirst({
       where: {
         username: username.trim(),
         id: { not: currentUser.id },
@@ -50,7 +58,7 @@ export async function updateUserInfo(username: string) {
     }
 
     // Update user in database
-    const updatedUser = await prisma.user.update({
+    const updatedUser = await getPrisma().user.update({
       where: { id: currentUser.id },
       data: { username: username.trim() },
     });
@@ -106,7 +114,7 @@ export async function getUserOrders() {
       return { success: false, error: 'Not authenticated' };
     }
 
-    const orders = await prisma.order.findMany({
+    const orders = await getPrisma().order.findMany({
       where: { userId: currentUser.id },
       orderBy: { createdAt: 'desc' },
     });
@@ -127,7 +135,7 @@ export async function getUserShippingAddress() {
       return { success: false, error: 'Not authenticated' };
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await getPrisma().user.findUnique({
       where: { id: currentUser.id },
       select: { address: true },
     });
@@ -179,7 +187,7 @@ export async function updateShippingAddress(addressData: {
     }
 
     // Update user address
-    await prisma.user.update({
+    await getPrisma().user.update({
       where: { id: currentUser.id },
       data: {
         address: {

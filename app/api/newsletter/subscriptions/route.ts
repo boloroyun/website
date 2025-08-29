@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+// Lazy Prisma initialization
+let prisma: PrismaClient;
+
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,7 +28,7 @@ export async function GET(request: NextRequest) {
 
     // Get subscriptions with pagination
     const [subscriptions, total] = await Promise.all([
-      prisma.newsletterSubscription.findMany({
+      getPrisma().newsletterSubscription.findMany({
         where,
         orderBy: { subscribedAt: 'desc' },
         skip,
@@ -34,11 +42,11 @@ export async function GET(request: NextRequest) {
           unsubscribedAt: true,
         },
       }),
-      prisma.newsletterSubscription.count({ where }),
+      getPrisma().newsletterSubscription.count({ where }),
     ]);
 
     // Get stats
-    const stats = await prisma.newsletterSubscription.groupBy({
+    const stats = await getPrisma().newsletterSubscription.groupBy({
       by: ['isActive'],
       _count: {
         id: true,

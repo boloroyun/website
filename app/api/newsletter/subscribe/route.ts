@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+// Lazy Prisma initialization
+let prisma: PrismaClient;
+
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,11 +33,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if email already exists
-    const existingSubscription = await prisma.newsletterSubscription.findUnique(
-      {
+    const existingSubscription =
+      await getPrisma().newsletterSubscription.findUnique({
         where: { email: email.toLowerCase() },
-      }
-    );
+      });
 
     if (existingSubscription) {
       return NextResponse.json(
@@ -39,7 +46,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create new subscription
-    const subscription = await prisma.newsletterSubscription.create({
+    const subscription = await getPrisma().newsletterSubscription.create({
       data: {
         email: email.toLowerCase(),
         subscribedAt: new Date(),

@@ -5,7 +5,15 @@ import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { CartItem } from '@/lib/cart-store';
 
-const prisma = new PrismaClient();
+// Lazy Prisma initialization
+let prisma: PrismaClient;
+
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 
 // Get current user from cookies
 async function getCurrentUser() {
@@ -104,7 +112,7 @@ export async function createOrder(data: {
     }));
 
     // Create the order
-    const order = await prisma.order.create({
+    const order = await getPrisma().order.create({
       data: {
         userId: currentUser.id,
         products: orderProducts,
@@ -170,7 +178,7 @@ export async function getOrderById(orderId: string) {
       return { success: false, error: 'Invalid order ID' };
     }
 
-    const order = await prisma.order.findFirst({
+    const order = await getPrisma().order.findFirst({
       where: {
         id: orderId,
         userId: currentUser.id, // Ensure user can only access their own orders
@@ -205,7 +213,7 @@ export async function updateOrderStatus(orderId: string, status: string) {
       return { success: false, error: 'Not authorized' };
     }
 
-    const order = await prisma.order.update({
+    const order = await getPrisma().order.update({
       where: { id: orderId },
       data: { status },
     });
