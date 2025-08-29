@@ -27,6 +27,7 @@ import {
 
 // Make this page dynamic to avoid build-time issues with Prisma imports
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 const HomePage = async () => {
   // Fetch all required data for the homepage

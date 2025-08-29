@@ -1,17 +1,26 @@
 'use server';
 
-import prisma from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
+
+// Lazy Prisma initialization
+let prisma: PrismaClient;
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 // Website Banners
 export async function getWebsiteBanners() {
   try {
     console.log('🌐 Fetching website banners from database...');
 
-    const websiteRecordCount = await prisma.websiteBanner.count();
+    const websiteRecordCount = await getPrisma().websiteBanner.count();
     console.log(
       `📊 Total WebsiteBanner records in database: ${websiteRecordCount}`
     );
 
-    const websiteBanners = await prisma.websiteBanner.findMany({
+    const websiteBanners = await getPrisma().websiteBanner.findMany({
       orderBy: { createdAt: 'desc' },
     });
     console.log(
@@ -55,10 +64,10 @@ export async function getAppBanners() {
 
     // Try to count records first to check connectivity
     console.log('🔍 Checking database connectivity...');
-    const recordCount = await prisma.appBanner.count();
+    const recordCount = await getPrisma().appBanner.count();
     console.log(`📊 Total AppBanner records in database: ${recordCount}`);
 
-    const appBanners = await prisma.appBanner.findMany({
+    const appBanners = await getPrisma().appBanner.findMany({
       orderBy: { createdAt: 'desc' },
     });
     console.log('🗃️ Raw appBanners data:', JSON.stringify(appBanners, null, 2));

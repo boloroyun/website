@@ -1,6 +1,15 @@
 'use server';
 
-import prisma from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
+
+// Lazy Prisma initialization
+let prisma: PrismaClient;
+function getPrisma() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
 
 // Define product type sections
 export interface ProductTypeSection {
@@ -123,7 +132,7 @@ export async function getAllProductsByType() {
     console.log('🏗️ Fetching all products organized by type sections...');
 
     // Fetch all categories with their products
-    const categories = await prisma.category.findMany({
+    const categories = await getPrisma().category.findMany({
       include: {
         subCategories: {
           orderBy: { name: 'asc' },
