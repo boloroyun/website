@@ -1,10 +1,14 @@
 'use client';
 import { useState } from 'react';
-import { FileUploader as CustomFileUploader, UploadedImage } from '@/components/FileUploader';
+// Use direct imports without the @ alias
+import {
+  FileUploader as CustomFileUploader,
+  UploadedImage,
+} from '../../components/FileUploader';
 import { Loader2 } from 'lucide-react';
-import { openChat, sendVisitorMessage, setSessionData } from '@/lib/crisp';
-import { addSessionTags as tagSession } from '@/lib/crisp';
-import { toast } from '@/components/ui/use-toast';
+import { openChat, sendVisitorMessage, setSessionData } from '../../lib/crisp';
+import { addSessionTags as tagSession } from '../../lib/crisp';
+import { toast } from '../../components/ui/use-toast';
 
 export default function QuoteForm({
   productName,
