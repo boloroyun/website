@@ -21,12 +21,14 @@ import { MdFace4 } from 'react-icons/md';
 import { useAtom } from 'jotai';
 import { hamburgerMenuState } from './store';
 import Link from 'next/link';
+import Image from 'next/image';
 
-interface NavItem {
+export interface NavItem {
   name: string;
   href: string;
   iconComponent?: string;
   hasSubmenu?: boolean;
+  hasLogo?: boolean;
   submenu?: Array<{
     name: string;
     href: string;
@@ -139,7 +141,19 @@ const MobileNavMenu: React.FC<MobileNavMenuProps> = ({ navItems }) => {
                   className="flex text-black items-center space-x-4 flex-1"
                   onClick={() => !item.hasSubmenu && setHamMenuOpen(false)}
                 >
-                  {getIconComponent(item.iconComponent)}
+                  {item.hasLogo ? (
+                    <div className="relative w-6 h-6 mr-2">
+                      <Image
+                        src="/images/logo.jpeg"
+                        alt="Logo"
+                        width={24}
+                        height={24}
+                        className="rounded-sm object-contain"
+                      />
+                    </div>
+                  ) : (
+                    getIconComponent(item.iconComponent)
+                  )}
                   <span className="font-medium">{item.name}</span>
                 </Link>
                 {item.hasSubmenu && (
