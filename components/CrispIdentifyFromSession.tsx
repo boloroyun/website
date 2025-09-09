@@ -22,7 +22,7 @@ export default function CrispIdentifyFromSession() {
       const { email, name } = session.user;
 
       if (email) {
-        console.log('🔐 Identifying authenticated user in Crisp:', {
+        console.log('🔐 Identifying authenticated user in Crisp chat:', {
           email,
           name,
         });
