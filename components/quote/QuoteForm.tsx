@@ -86,7 +86,6 @@ ${message}
       setPhone('');
       setMessage('');
       setUploadedImages([]);
-
     } catch (error) {
       console.error('Error submitting quote request:', error);
       toast({
@@ -165,8 +164,6 @@ ${message}
         <label className="text-sm font-medium">Add Photos (Optional)</label>
         <CustomFileUploader
           onImagesUploaded={setUploadedImages}
-          existingImages={uploadedImages}
-          maxImages={5}
         />
         <p className="text-xs text-gray-500">
           Upload photos of your space or inspiration images (max 5 images).
