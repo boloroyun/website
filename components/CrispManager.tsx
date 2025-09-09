@@ -1,6 +1,6 @@
 'use client';
 
-import { useCrispTriggers } from '@/hooks/useCrispTriggers';
+import useCrispTriggers from '@/hooks/useCrispTriggers';
 import CrispIdentifyFromSession from './CrispIdentifyFromSession';
 
 /**
