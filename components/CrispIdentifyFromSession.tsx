@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { identifyUser, addSessionTag } from '@/lib/crisp';
+import { identifyUser, addSessionTags } from '@/lib/crisp';
 
 /**
  * Component that automatically identifies users in Crisp chat based on NextAuth session
@@ -28,10 +28,10 @@ export default function CrispIdentifyFromSession() {
         });
 
         // Identify user in Crisp
-        identifyUser(email, name || undefined);
+        identifyUser({ email, name: name || undefined });
 
         // Add authenticated tag
-        addSessionTag('authenticated');
+        addSessionTags(['authenticated']);
       }
     } else if (status === 'unauthenticated') {
       console.log('👤 User is not authenticated - Crisp will remain anonymous');
