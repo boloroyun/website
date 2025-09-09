@@ -183,9 +183,22 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model PasswordResetToken {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  tokenHash String   @unique
+  expires   DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
 model User {
   id                   String   @id @default(auto()) @map("_id") @db.ObjectId
-  name                 String
+  name                 String?
   email                String   @unique
   password             String
   username             String?  @unique
@@ -196,11 +209,12 @@ model User {
   image                String?
 
   // Relations
-  cart     Cart?
-  orders   Order[]
-  reviews  Review[]
-  accounts Account[]
-  sessions Session[]
+  cart                Cart?
+  orders              Order[]
+  reviews             Review[]
+  accounts            Account[]
+  sessions            Session[]
+  passwordResetTokens PasswordResetToken[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -543,4 +557,22 @@ model BlogComment {
 
   @@index([postId])
   @@index([approved])
+}
+
+// ======================================
+// CRISP INTEGRATION MODELS
+// ======================================
+
+model CrispActivity {
+  id        String   @id @default(cuid()) @map("_id")
+  event     String
+  email     String?
+  sessionId String?
+  payload   Json
+  createdAt DateTime @default(now())
+
+  @@index([event])
+  @@index([email])
+  @@index([sessionId])
+  @@index([createdAt])
 }

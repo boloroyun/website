@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface BannerImage {
   url: string;
@@ -40,22 +41,16 @@ const BannerCarousel = ({
         ? mobileImages
         : [];
 
+  const totalSlides = images.length;
+
   // 🎯 useCallback hooks - ALL conditional logic inside callbacks
   const nextSlide = useCallback(() => {
-    // ✅ Condition INSIDE the callback
-    if (images.length > 0) {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }
-  }, [images.length]);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+  }, [totalSlides]);
 
   const prevSlide = useCallback(() => {
-    // ✅ Condition INSIDE the callback
-    if (images.length > 0) {
-      setCurrentIndex(
-        (prevIndex) => (prevIndex - 1 + images.length) % images.length
-      );
-    }
-  }, [images.length]);
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + totalSlides) % totalSlides);
+  }, [totalSlides]);
 
   const handleImageError = useCallback((index: number) => {
     setImageError((prev) => ({ ...prev, [index]: true }));
@@ -70,7 +65,18 @@ const BannerCarousel = ({
     const handleResize = () => {
       const screenWidth = window.innerWidth;
       const isMobileScreen = screenWidth <= 768;
-      console.log('📏 Screen width:', screenWidth, 'isMobile:', isMobileScreen);
+      // Only log when debug mode is enabled
+      if (
+        process.env.NODE_ENV === 'development' &&
+        process.env.DEBUG_LOGS === '1'
+      ) {
+        console.log(
+          '📏 Screen width:',
+          screenWidth,
+          'isMobile:',
+          isMobileScreen
+        );
+      }
       setIsMobile(isMobileScreen);
     };
 
@@ -88,44 +94,42 @@ const BannerCarousel = ({
   useEffect(() => {
     // ✅ Conditional auto-slide logic INSIDE useEffect
     let interval: NodeJS.Timeout | null = null;
-    if (images.length > 0) {
-      interval = setInterval(nextSlide, 5000);
+    if (totalSlides > 0) {
+      interval = setInterval(nextSlide, 8000);
     }
 
     // Cleanup function
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [nextSlide, images.length]); // ✅ Proper dependencies for auto-slide
+  }, [nextSlide, totalSlides]); // ✅ Proper dependencies for auto-slide
 
-  // Debug logging for mobile detection and image selection
-  console.log('🔍 BannerCarousel Debug Info:');
-  console.log('📱 isMobile:', isMobile);
-  console.log('🖥️ desktopImages count:', desktopImages.length);
-  console.log('📱 mobileImages count:', mobileImages.length);
-  console.log('🖥️ desktopImages:', desktopImages);
-  console.log('📱 mobileImages:', mobileImages);
-  console.log('🎯 Selected images for display:', images);
-  console.log('📊 Final image count:', images.length);
-
-  // Render empty state or carousel based on available images
-  if (images.length === 0) {
-    return (
-      <div className="w-full h-[400px] bg-gray-100 flex items-center justify-center mb-[20px]">
-        <div className="text-center text-gray-500">
-          <p className="text-lg font-medium">No banners available</p>
-          <p className="text-sm">Please add banners to display the carousel</p>
-        </div>
-      </div>
-    );
+  // Debug logging using our safer logger
+  // These logs will only show when DEBUG_LOGS=1 in .env.local
+  if (
+    process.env.NODE_ENV === 'development' &&
+    process.env.DEBUG_LOGS === '1'
+  ) {
+    console.log('🔍 BannerCarousel Debug Info:');
+    console.log('📱 isMobile:', isMobile);
+    console.log('🖥️ desktopImages count:', desktopImages.length);
+    console.log('📱 mobileImages count:', mobileImages.length);
+    // Avoid logging large arrays that clutter the console
+    // console.log('🖥️ desktopImages:', desktopImages);
+    // console.log('📱 mobileImages:', mobileImages);
+    console.log('🎯 Selected image count:', images.length);
   }
+
+  // Always show the carousel now since we have static slides
+  // The empty state is no longer needed
 
   return (
     <div
       className={`relative w-full ${
-        isMobile ? 'h-[400px]' : 'h-[400px]'
+        isMobile ? 'h-[500px]' : 'h-[80vh]'
       } overflow-hidden mb-[20px]`}
     >
+      {/* Carousel slides with text overlays for the first two slides */}
       {images.map((src, index) => (
         <div
           key={index}
@@ -133,6 +137,15 @@ const BannerCarousel = ({
             index === currentIndex ? 'opacity-100' : 'opacity-0'
           }`}
         >
+          {/* Dark overlay for the first two slides */}
+          {index < 2 && (
+            <div
+              className="absolute inset-0 bg-black/25 pointer-events-none z-10"
+              aria-hidden="true"
+            ></div>
+          )}
+
+          {/* Image */}
           {!imageError[index] ? (
             <Image
               src={src}
@@ -147,6 +160,40 @@ const BannerCarousel = ({
               <div className="text-center text-gray-500">
                 <p className="text-sm">Image failed to load</p>
               </div>
+            </div>
+          )}
+
+          {/* Text overlay for the first slide - Countertops */}
+          {index === 0 && (
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center h-full text-center px-4 text-white">
+              <h2 className="text-4xl md:text-6xl font-bold mb-4">
+                Premium Quartz & Granite Countertops
+              </h2>
+              <p className="max-w-2xl mx-auto text-lg md:text-xl mb-8">
+                Beautiful, durable, and expertly installed in Northern Virginia.
+              </p>
+              <Link href="/request-a-quote">
+                <Button className="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-medium rounded-lg transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                  Get Free Estimate
+                </Button>
+              </Link>
+            </div>
+          )}
+
+          {/* Text overlay for the second slide - Cabinets */}
+          {index === 1 && (
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center h-full text-center px-4 text-white">
+              <h2 className="text-4xl md:text-6xl font-bold mb-4">
+                Custom Kitchen Cabinets for Every Home
+              </h2>
+              <p className="max-w-2xl mx-auto text-lg md:text-xl mb-8">
+                Transform your kitchen with modern, classic, and luxury designs.
+              </p>
+              <Link href="/category/cabinets">
+                <Button className="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-medium rounded-lg transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                  View Cabinets
+                </Button>
+              </Link>
             </div>
           )}
         </div>
@@ -177,7 +224,7 @@ const BannerCarousel = ({
               index === currentIndex ? 'bg-white' : 'bg-white/50'
             }`}
             onClick={() => goToSlide(index)}
-            aria-label={`Go to slide ${index + 1}`}
+            aria-label={`Go to slide ${index + 1}${index === 0 ? ' - Countertops' : index === 1 ? ' - Cabinets' : ''}`}
           />
         ))}
       </div>

@@ -19,7 +19,7 @@ const BlogImages = () => {
         className="w-[300px] h-[300px]"
       />
       <Image
-        src="/images/i4.jpeg"
+        src="/images/i14.jpeg"
         alt="Interior Design"
         width={300}
         height={300}
@@ -33,7 +33,7 @@ const BlogImages = () => {
         className="w-[300px] h-[300px]"
       />
       <Image
-        src="/images/i5.jpeg"
+        src="/images/i11.jpeg"
         alt="Cabinet Design"
         width={300}
         height={300}

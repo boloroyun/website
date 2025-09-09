@@ -1,29 +1,29 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn, getSession } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
-
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Loader2, Eye, EyeOff } from 'lucide-react';
 
 export default function SignInPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/account';
-  
+  const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false);
-  
+  const [success, setSuccess] = useState('');
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -32,16 +32,56 @@ export default function SignInPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    // Clear error when user starts typing
-    if (error) setError('');
+    if (error) setError(''); // Clear error on input change
+    if (success) setSuccess(''); // Clear success on input change
+  };
+
+  const validateSignInForm = () => {
+    if (!formData.email || !formData.password) {
+      setError('Please fill in all fields.');
+      return false;
+    }
+
+    if (!formData.email.includes('@')) {
+      setError('Please enter a valid email address.');
+      return false;
+    }
+
+    return true;
+  };
+
+  const validateSignUpForm = () => {
+    if (!formData.name || !formData.email || !formData.password) {
+      setError('Please fill in all fields.');
+      return false;
+    }
+
+    if (formData.name.trim().length < 2) {
+      setError('Name must be at least 2 characters long.');
+      return false;
+    }
+
+    if (!formData.email.includes('@')) {
+      setError('Please enter a valid email address.');
+      return false;
+    }
+
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters long.');
+      return false;
+    }
+
+    return true;
   };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateSignInForm()) return;
+
     setIsLoading(true);
     setError('');
 
@@ -53,16 +93,24 @@ export default function SignInPage() {
       });
 
       if (result?.error) {
-        setError('Invalid email or password');
+        // Handle specific NextAuth errors
+        if (result.error === 'CredentialsSignin') {
+          setError('Invalid email or password. Please try again.');
+        } else if (result.error === 'AccessDenied') {
+          setError('Access denied. Please contact support.');
+        } else {
+          setError('Sign in failed. Please try again.');
+        }
       } else if (result?.ok) {
-        // Refresh session and redirect
-        await getSession();
-        router.push(callbackUrl);
+        // Successful sign in
+        router.push('/account');
         router.refresh();
+      } else {
+        setError('An unexpected error occurred. Please try again.');
       }
     } catch (error) {
       console.error('Sign in error:', error);
-      setError('Something went wrong. Please try again.');
+      setError('Network error. Please check your connection and try again.');
     } finally {
       setIsLoading(false);
     }
@@ -70,8 +118,11 @@ export default function SignInPage() {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateSignUpForm()) return;
+
     setIsLoading(true);
     setError('');
+    setSuccess('');
 
     try {
       const response = await fetch('/api/auth/signup', {
@@ -80,8 +131,8 @@ export default function SignInPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
           password: formData.password,
         }),
       });
@@ -89,27 +140,20 @@ export default function SignInPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Failed to create account');
+        if (response.status === 409) {
+          setError('An account with this email already exists.');
+        } else {
+          setError(data.error || 'Failed to create account. Please try again.');
+        }
         return;
       }
 
-      // Account created successfully, now sign in
-      const signInResult = await signIn('credentials', {
-        email: formData.email,
-        password: formData.password,
-        redirect: false,
-      });
-
-      if (signInResult?.ok) {
-        await getSession();
-        router.push(callbackUrl);
-        router.refresh();
-      } else {
-        setError('Account created but sign in failed. Please try signing in manually.');
-      }
+      setSuccess('Account created successfully! You can now sign in.');
+      setFormData({ name: '', email: '', password: '' });
+      setIsSignUp(false);
     } catch (error) {
       console.error('Sign up error:', error);
-      setError('Something went wrong. Please try again.');
+      setError('Network error. Please check your connection and try again.');
     } finally {
       setIsLoading(false);
     }
@@ -123,15 +167,17 @@ export default function SignInPage() {
             {isSignUp ? 'Create Account' : 'Sign In'}
           </CardTitle>
           <CardDescription className="text-center">
-            {isSignUp 
-              ? 'Create your account to get started' 
-              : 'Enter your credentials to access your account'
-            }
+            {isSignUp
+              ? 'Create a new account to get started'
+              : 'Enter your credentials to access your account'}
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent className="space-y-4">
-          <form onSubmit={isSignUp ? handleSignUp : handleSignIn} className="space-y-4">
+          <form
+            onSubmit={isSignUp ? handleSignUp : handleSignIn}
+            className="space-y-4"
+          >
             {isSignUp && (
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
@@ -139,29 +185,29 @@ export default function SignInPage() {
                   id="name"
                   name="name"
                   type="text"
-                  required={isSignUp}
-                  placeholder="Enter your full name"
+                  placeholder="John Doe"
                   value={formData.name}
                   onChange={handleInputChange}
+                  required
                   disabled={isLoading}
                 />
               </div>
             )}
-            
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
-                required
-                placeholder="Enter your email"
+                placeholder="your@email.com"
                 value={formData.email}
                 onChange={handleInputChange}
+                required
                 disabled={isLoading}
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
@@ -169,10 +215,10 @@ export default function SignInPage() {
                   id="password"
                   name="password"
                   type={showPassword ? 'text' : 'password'}
-                  required
-                  placeholder="Enter your password"
+                  placeholder="••••••••"
                   value={formData.password}
                   onChange={handleInputChange}
+                  required
                   disabled={isLoading}
                   className="pr-10"
                 />
@@ -190,8 +236,8 @@ export default function SignInPage() {
                 </button>
               </div>
               {isSignUp && (
-                <p className="text-sm text-gray-500">
-                  Password must be at least 6 characters long
+                <p className="text-xs text-gray-500">
+                  Must be at least 8 characters long
                 </p>
               )}
             </div>
@@ -202,50 +248,55 @@ export default function SignInPage() {
               </div>
             )}
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
+            {success && (
+              <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-md text-sm">
+                {success}
+              </div>
+            )}
+
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   {isSignUp ? 'Creating Account...' : 'Signing In...'}
                 </>
+              ) : isSignUp ? (
+                'Create Account'
               ) : (
-                isSignUp ? 'Create Account' : 'Sign In'
+                'Sign In'
               )}
             </Button>
           </form>
 
-          <Separator />
-
-          <div className="text-center">
+          <div className="text-center space-y-2">
+            <p className="text-sm text-gray-600">
+              {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+            </p>
             <button
               type="button"
               onClick={() => {
                 setIsSignUp(!isSignUp);
                 setError('');
+                setSuccess('');
                 setFormData({ name: '', email: '', password: '' });
               }}
-              className="text-sm text-blue-600 hover:text-blue-500"
+              className="text-sm text-blue-600 hover:text-blue-500 font-medium"
               disabled={isLoading}
             >
-              {isSignUp 
-                ? 'Already have an account? Sign in' 
-                : "Don't have an account? Create one"
-              }
+              {isSignUp ? 'Sign in instead' : 'Create an account'}
             </button>
           </div>
 
-          <div className="text-center">
-            <Link 
-              href="/"
-              className="text-sm text-gray-600 hover:text-gray-500"
-            >
-              ← Back to Home
-            </Link>
-          </div>
+          {!isSignUp && (
+            <div className="text-center">
+              <Link
+                href="/auth/forgot-password"
+                className="text-sm text-blue-600 hover:text-blue-500"
+              >
+                Forgot your password?
+              </Link>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

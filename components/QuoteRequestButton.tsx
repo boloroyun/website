@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Calculator, MessageCircle } from 'lucide-react';
 import QuoteRequestModal from './QuoteRequestModal';
+import { emitCrispEvent, CRISP_EVENTS } from '@/lib/crisp-events';
 
 interface QuoteRequestButtonProps {
   category?: 'countertop' | 'cabinet' | 'combo';
@@ -43,7 +44,18 @@ export default function QuoteRequestButton({
         variant={variant}
         size={size}
         className={className}
-        onClick={() => setShowModal(true)}
+        onClick={() => {
+          // Track quote builder opening with type-safe events
+          emitCrispEvent({
+            name: CRISP_EVENTS.Quote.OPENED,
+            data: {
+              source: 'product_page',
+              productId: productIds?.[0], // Use first product ID if available
+            },
+          });
+
+          setShowModal(true);
+        }}
       >
         <Calculator className="mr-2 h-4 w-4" />
         {children || defaultText}

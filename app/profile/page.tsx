@@ -1,8 +1,5 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -166,8 +163,6 @@ export default function MyAccount() {
       return () => clearTimeout(timer);
     }
   }, [message]);
-
-
 
   // Handle username update
   const handleUpdateUsername = async () => {

@@ -3,6 +3,11 @@
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
+  emitCrispEvent,
+  CRISP_EVENTS,
+  setQuoteSubmittedFlag,
+} from '@/lib/crisp-events';
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -111,8 +116,56 @@ export default function QuoteRequestModal({
     zipcode: '',
   });
 
+  const calculateItemsCount = useCallback(() => {
+    let count = 0;
+
+    // Count countertop items
+    if (formData.category === 'countertop' || formData.category === 'combo') {
+      if (formData.material) count++;
+      if (formData.sqft) count++;
+      if (formData.edgeProfile) count++;
+      if (formData.sinkCutouts) count++;
+      if (formData.backsplashLf) count++;
+    }
+
+    // Count cabinet items
+    if (formData.category === 'cabinet' || formData.category === 'combo') {
+      if (formData.baseLf) count++;
+      if (formData.wallLf) count++;
+      if (formData.tallUnits) count++;
+      if (formData.drawerStacks) count++;
+    }
+
+    return Math.max(count, 1); // At least 1 item
+  }, [formData]);
+
   const updateFormData = useCallback((updates: Partial<QuoteFormData>) => {
-    setFormData((prev) => ({ ...prev, ...updates }));
+    setFormData((prev) => {
+      const newData = { ...prev, ...updates };
+
+      // Track step changes when category changes
+      if (updates.category && updates.category !== prev.category) {
+        const stepMap = {
+          countertop: { step: 1, stepKey: 'material' as const },
+          cabinet: { step: 2, stepKey: 'dimensions' as const },
+          combo: { step: 3, stepKey: 'summary' as const },
+        };
+
+        const stepInfo = stepMap[updates.category];
+        if (stepInfo) {
+          emitCrispEvent({
+            name: CRISP_EVENTS.Quote.STEP_CHANGED,
+            data: {
+              step: stepInfo.step,
+              stepKey: stepInfo.stepKey,
+              quoteId: undefined, // No quote ID yet in modal
+            },
+          });
+        }
+      }
+
+      return newData;
+    });
   }, []);
 
   const handleSubmit = async () => {
@@ -191,6 +244,22 @@ export default function QuoteRequestModal({
 
       const result = await response.json();
       console.log('✅ Quote generated:', result);
+
+      // Track quote submission success
+      const itemsCount = calculateItemsCount();
+      emitCrispEvent({
+        name: CRISP_EVENTS.Quote.SUBMITTED,
+        data: {
+          quoteId: result.quoteId,
+          itemsCount,
+          total: result.total,
+          city: result.city,
+          zipcode: formData.zipcode || undefined,
+        },
+      });
+
+      // Set quote submitted flag for campaign targeting
+      setQuoteSubmittedFlag();
 
       // Close modal and navigate to quote page
       onClose();
