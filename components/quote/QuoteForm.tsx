@@ -1,10 +1,10 @@
 'use client';
 import { useState } from 'react';
-import { FileUploader, UploadedImage } from '../quote/FileUploader';
+import { FileUploader as CustomFileUploader, UploadedImage } from '@/components/FileUploader';
 import { Loader2 } from 'lucide-react';
 import { openChat, sendVisitorMessage, setSessionData } from '@/lib/crisp';
 import { addSessionTags as tagSession } from '@/lib/crisp';
-import { toast } from '../ui/use-toast';
+import { toast } from '@/components/ui/use-toast';
 
 export default function QuoteForm({
   productName,
@@ -82,6 +82,7 @@ ${message}
       setPhone('');
       setMessage('');
       setUploadedImages([]);
+
     } catch (error) {
       console.error('Error submitting quote request:', error);
       toast({
@@ -158,7 +159,7 @@ ${message}
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Add Photos (Optional)</label>
-        <FileUploader
+        <CustomFileUploader
           onImagesUploaded={setUploadedImages}
           existingImages={uploadedImages}
           maxImages={5}
