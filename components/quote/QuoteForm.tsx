@@ -1,118 +1,205 @@
 'use client';
 import { useState } from 'react';
-import PhotoUploader from '@/components/common/PhotoUploader';
+import { FileUploader, UploadedImage } from '@/components/quote/FileUploader';
+import { Loader2 } from 'lucide-react';
 import {
   openChat,
   sendVisitorMessage,
-  addSessionTags,
   setSessionData,
 } from '@/lib/crisp';
+import { addSessionTags as tagSession } from '@/lib/crisp';
+import { toast } from '@/components/ui/use-toast';
 
-export default function QuoteForm({ productName }: { productName?: string }) {
-  const [v, setV] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    zip: '',
-    material: productName ?? '',
-    dimensions: '',
-    notes: '',
-    photos: [] as string[],
-  });
-  const set = (k: keyof typeof v) => (e: any) =>
-    setV((s) => ({ ...s, [k]: e.target.value }));
-  const addPhotos = (urls: string[]) =>
-    setV((s) => ({ ...s, photos: [...s.photos, ...urls] }));
+export default function QuoteForm({
+  productName,
+  productId,
+}: {
+  productName?: string;
+  productId?: string;
+}) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState(
+    productName ? `I'm interested in getting a quote for ${productName}.` : ''
+  );
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
-  const submit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!v.name || !v.email) return alert('Name & email required.');
-    addSessionTags(['quote-request']);
-    setSessionData({ zip: v.zip || 'n/a', material: v.material || 'n/a' });
-    const msg = [
-      '🧾 *New Quote Request*',
-      `• Name: ${v.name}`,
-      `• Email: ${v.email}`,
-      v.phone && `• Phone: ${v.phone}`,
-      v.zip && `• ZIP: ${v.zip}`,
-      v.material && `• Material: ${v.material}`,
-      v.dimensions && `• Dimensions: ${v.dimensions}`,
-      v.notes && `• Notes: ${v.notes}`,
-      v.photos.length
-        ? `• Photos:\n${v.photos.map((u) => `  - ${u}`).join('\n')}`
-        : '',
-    ]
-      .filter(Boolean)
-      .join('\n');
-    openChat();
-    sendVisitorMessage(msg);
-    sendVisitorMessage('Thanks! Could you estimate this project?');
-  };
+    
+    if (!name || !email || !message) {
+      toast({
+        title: "Missing information",
+        description: "Please fill out all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      // Track this quote request
+      tagSession(['quote-request']);
+      
+      // Set session data for the customer
+      setSessionData({
+        name,
+        email,
+        phone,
+        product_of_interest: productName || 'Not specified',
+        product_id: productId || 'Not specified',
+      });
+      
+      // Open chat
+      openChat();
+      
+      // Prepare message with images if present
+      let fullMessage = `
+Name: ${name}
+Email: ${email}
+Phone: ${phone || 'Not provided'}
+${productName ? `Product: ${productName}` : ''}
 
+${message}
+      `.trim();
+      
+      if (uploadedImages.length > 0) {
+        fullMessage += `\n\n${uploadedImages.length} image(s) uploaded. Please check the attachments.`;
+      }
+      
+      // Send the message with a slight delay to ensure chat is open
+      setTimeout(() => {
+        sendVisitorMessage(fullMessage);
+      }, 500);
+      
+      toast({
+        title: "Quote request sent",
+        description: "Our team will get back to you shortly.",
+      });
+      
+      // Reset form fields
+      setName('');
+      setEmail('');
+      setPhone('');
+      setMessage('');
+      setUploadedImages([]);
+      
+    } catch (error) {
+      console.error("Error submitting quote request:", error);
+      toast({
+        title: "Something went wrong",
+        description: "Please try again or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
   return (
-    <form
-      onSubmit={submit}
-      className="grid gap-3 border rounded-md p-4 bg-white"
-    >
-      <div className="grid md:grid-cols-2 gap-3">
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label htmlFor="name" className="text-sm font-medium">
+            Name <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+            placeholder="Your name"
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <label htmlFor="email" className="text-sm font-medium">
+            Email <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+            placeholder="your.email@example.com"
+          />
+        </div>
+      </div>
+      
+      <div className="space-y-2">
+        <label htmlFor="phone" className="text-sm font-medium">
+          Phone Number
+        </label>
         <input
-          className="input"
-          placeholder="Full name *"
-          value={v.name}
-          onChange={set('name')}
-        />
-        <input
-          className="input"
-          type="email"
-          placeholder="Email *"
-          value={v.email}
-          onChange={set('email')}
-        />
-        <input
-          className="input"
-          placeholder="Phone"
-          value={v.phone}
-          onChange={set('phone')}
-        />
-        <input
-          className="input"
-          placeholder="ZIP"
-          value={v.zip}
-          onChange={set('zip')}
+          id="phone"
+          type="tel"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="(Optional) Your phone number"
         />
       </div>
-      <input
-        className="input"
-        placeholder="Material (Quartz, Granite…)"
-        value={v.material}
-        onChange={set('material')}
-      />
-      <input
-        className="input"
-        placeholder="Dimensions (e.g., 10ft + island 60x36)"
-        value={v.dimensions}
-        onChange={set('dimensions')}
-      />
-      <PhotoUploader onDone={addPhotos} />
-      {!!v.photos.length && (
-        <ul className="text-sm text-gray-600 list-disc pl-5">
-          {v.photos.map((u, i) => (
-            <li key={i} className="truncate">
-              {u}
-            </li>
-          ))}
-        </ul>
+      
+      <div className="space-y-2">
+        <label htmlFor="message" className="text-sm font-medium">
+          Message <span className="text-red-500">*</span>
+        </label>
+        <textarea
+          id="message"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[120px]"
+          required
+          placeholder="Please describe what you're looking for..."
+        />
+      </div>
+      
+      <div className="space-y-2">
+        <label className="text-sm font-medium">
+          Add Photos (Optional)
+        </label>
+        <FileUploader
+          onImagesUploaded={setUploadedImages}
+          existingImages={uploadedImages}
+          maxImages={5}
+        />
+        <p className="text-xs text-gray-500">
+          Upload photos of your space or inspiration images (max 5 images).
+        </p>
+      </div>
+      
+      {productName && (
+        <div className="px-4 py-3 bg-blue-50 border border-blue-100 rounded-md">
+          <p className="text-sm text-blue-800">
+            You are requesting a quote for <strong>{productName}</strong>. 
+            Our team will provide pricing and availability information.
+          </p>
+        </div>
       )}
-      <textarea
-        className="textarea"
-        rows={4}
-        placeholder="Notes"
-        value={v.notes}
-        onChange={set('notes')}
-      />
-      <button className="btn btn-primary" type="submit">
-        Send to Chat
-      </button>
+      
+      <div className="flex justify-center">
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:pointer-events-none min-w-[180px]"
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin inline" />
+              Sending...
+            </>
+          ) : (
+            "Submit Quote Request"
+          )}
+        </button>
+      </div>
     </form>
   );
 }
