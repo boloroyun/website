@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { openChat, sendVisitorMessage, addSessionTag } from '@/lib/crisp';
+import { openChat, sendVisitorMessage } from '@/lib/crisp';
+import { addSessionTags as tagSession } from '@/lib/crisp';
 
 interface RequestQuoteButtonProps {
   /** Optional product name to include in the quote request message */
@@ -27,7 +28,7 @@ export default function RequestQuoteButton({
     console.log('🎯 Request Quote button clicked', { productName });
 
     // Add session tag for tracking
-    addSessionTag('request-quote-click');
+    tagSession(['request-quote-click']);
 
     // Open chat
     openChat();
