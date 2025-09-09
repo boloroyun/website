@@ -202,7 +202,7 @@ export const retryPendingQuotes = async (): Promise<void> => {
 
   for (const quote of pendingQuotes) {
     // Skip quotes that have exceeded max retry count
-    if (quote.retryCount >= MAX_RETRIES) {
+    if ((quote.retryCount || 0) >= MAX_RETRIES) {
       console.log(
         `Quote ${quote.timestamp} has exceeded max retries (${MAX_RETRIES})`
       );
