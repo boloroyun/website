@@ -110,7 +110,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2">
+          <div className="order-2 lg:order-1 lg:col-span-2">
             {/* Search Results Header */}
             {(category || tag || search) && (
               <div className="mb-8 p-6 bg-white rounded-lg shadow-sm border">
@@ -181,7 +181,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           </div>
 
           {/* Sidebar */}
-          <div className="lg:col-span-1">
+          <div className="order-1 lg:order-2 lg:col-span-1">
             <BlogSidebar
               categories={categories}
               tags={tags}
