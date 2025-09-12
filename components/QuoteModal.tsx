@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { openChat, sendVisitorMessage } from '@/lib/crisp';
 import { storePendingQuote } from '@/lib/quote-fallback';
 import { FileUploader, UploadedImage } from '@/components/FileUploader';
-import { Image, CheckCircle, Loader2 } from 'lucide-react';
+import { ImageIcon, CheckCircle, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 interface QuoteModalProps {
@@ -352,7 +352,7 @@ export default function QuoteModal({
               {/* Project Photos Upload */}
               <div className="space-y-2">
                 <Label htmlFor="photos" className="flex items-center gap-2">
-                  <Image className="h-4 w-4" alt="Upload" />
+                  <ImageIcon className="h-4 w-4" />
                   Project Photos (optional)
                 </Label>
                 <FileUploader

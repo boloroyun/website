@@ -43,7 +43,7 @@ import {
   Home,
   Ruler,
   Camera,
-  Image,
+  ImageIcon,
 } from 'lucide-react';
 import { FileUploader, UploadedImage } from '@/components/FileUploader';
 
@@ -568,7 +568,7 @@ export default function QuoteRequestModal({
           <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
-                <Image className="h-5 w-5" alt="Upload" />
+                <ImageIcon className="h-5 w-5" />
                 Project Photos (optional)
               </CardTitle>
               <CardDescription>
