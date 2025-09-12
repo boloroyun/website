@@ -75,12 +75,12 @@ export default function GetFreeEstimateButton({
         console.error('Failed to send email notification:', errorData);
         // Don't show error to user, the quote was still created
       } else {
-          toast({
-            title: 'Quote Request Sent',
-            description:
-              "Your quote request has been sent to our team. We'll get back to you soon!",
-            duration: 5000,
-          });
+        toast({
+          title: 'Quote Request Sent',
+          description:
+            "Your quote request has been sent to our team. We'll get back to you soon!",
+          duration: 5000,
+        });
       }
     } catch (error) {
       console.error('Error sending email notification:', error);
@@ -94,7 +94,7 @@ export default function GetFreeEstimateButton({
     emitCrispEvent({
       name: CRISP_EVENTS.Quote.OPENED,
       data: {
-        source: 'free_estimate_button',
+        source: 'homepage', // Using one of the allowed values: 'product_page', 'homepage', 'campaign', or 'direct'
       },
     });
 
