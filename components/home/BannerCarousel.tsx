@@ -137,10 +137,10 @@ const BannerCarousel = ({
             index === currentIndex ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          {/* Dark overlay for the first two slides */}
+          {/* Very light overlay for the first two slides */}
           {index < 2 && (
             <div
-              className="absolute inset-0 bg-black/25 pointer-events-none z-10"
+              className="absolute inset-0 bg-black/10 pointer-events-none z-10"
               aria-hidden="true"
             ></div>
           )}
