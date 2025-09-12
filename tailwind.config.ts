@@ -123,23 +123,32 @@ const config: Config = {
   					transform: 'translateY(-10px)'
   				}
   			},
-  			'background-shine': {
-  				'from': {
-  					backgroundPosition: '200% 0'
-  				},
-  				'to': {
-  					backgroundPosition: '-200% 0'
-  				}
-  			}
+			'background-shine': {
+				'from': {
+					backgroundPosition: '200% 0'
+				},
+				'to': {
+					backgroundPosition: '-200% 0'
+				}
+			},
+			'bounce-subtle': {
+				'0%, 100%': {
+					transform: 'translateY(0)'
+				},
+				'50%': {
+					transform: 'translateY(-5px)'
+				}
+			}
   		},
   		animation: {
-  			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out',
-  			'fade-in-up': 'fade-in-up 0.7s ease-out',
-  			'pulse-glow': 'pulse-glow 2s infinite ease-in-out',
-  			'blob': 'blob 7s infinite',
-  			'float': 'float 3s ease-in-out infinite',
-  			'background-shine': 'background-shine 8s linear infinite'
+			'accordion-down': 'accordion-down 0.2s ease-out',
+			'accordion-up': 'accordion-up 0.2s ease-out',
+			'fade-in-up': 'fade-in-up 0.7s ease-out',
+			'pulse-glow': 'pulse-glow 2s infinite ease-in-out',
+			'blob': 'blob 7s infinite',
+			'float': 'float 3s ease-in-out infinite',
+			'background-shine': 'background-shine 8s linear infinite',
+			'bounce-subtle': 'bounce-subtle 3s ease-in-out infinite'
   		}
   	}
   },
