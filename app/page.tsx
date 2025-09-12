@@ -2,12 +2,17 @@ import BannerCarousel from '@/components/home/BannerCarousel';
 import BlogImages from '@/components/home/BlogImages';
 import CategorySection from '@/components/home/CategorySection';
 import CrazyDeals from '@/components/home/CrazyDeals';
+import GoogleReviews from '@/components/home/GoogleReviews';
 import KeyBenefits from '@/components/home/KeyBenefits';
 import ProductCard from '@/components/home/ProductCard';
 import ProductCardByCategory from '@/components/home/ProductCardByCategory';
 import ReviewSection from '@/components/home/ReviewSection';
 import SpecialCombos from '@/components/home/SpecialCombos';
+import SupplierSection from '@/components/home/SupplierSection';
 import SocialShare from '@/components/SocialShare';
+import TransparentHeaderWrapper from '@/components/TransparentHeaderWrapper';
+import Navbar from '@/components/Navbar';
+import TopBarWrapper from '@/components/TopBarWrapper';
 import React from 'react';
 import {
   organizeProductsByCategory,
@@ -31,8 +36,6 @@ export const revalidate = 0;
 
 const HomePage = async () => {
   // Fetch all required data for the homepage
-  console.log('🏠 Fetching homepage data...');
-
   const [
     websiteBanners,
     appBanners,
@@ -52,40 +55,6 @@ const HomePage = async () => {
     getAllCategories(), // Fetch categories for luxury categories section
     getAllSubCategories(),
   ]);
-
-  console.log('📊 Homepage data fetched:');
-  console.log(
-    '- Website banners:',
-    websiteBanners.success ? (websiteBanners.data?.length ?? 0) : 0
-  );
-  console.log(
-    '- App banners:',
-    appBanners.success ? (appBanners.data?.length ?? 0) : 0
-  );
-  console.log(
-    '- Special combos:',
-    specialCombos.success ? (specialCombos.data?.length ?? 0) : 0
-  );
-  console.log(
-    '- Crazy deals:',
-    crazyDeals.success ? (crazyDeals.data?.length ?? 0) : 0
-  );
-  console.log(
-    '- Best sellers:',
-    bestSellers.success ? (bestSellers.data?.length ?? 0) : 0
-  );
-  console.log(
-    '- New arrivals:',
-    newArrivals.success ? (newArrivals.data?.length ?? 0) : 0
-  );
-  console.log(
-    '- Categories:',
-    categories.success ? (categories.data?.length ?? 0) : 0
-  );
-  console.log(
-    '- Sub categories:',
-    subCategories.success ? (subCategories.data?.length ?? 0) : 0
-  );
 
   // Organize products by categories for best sellers and new arrivals
   const bestSellersData = bestSellers.success ? (bestSellers.data ?? []) : [];
@@ -135,61 +104,28 @@ const HomePage = async () => {
     6 // max 6 categories
   );
 
-  console.log(
-    '🏆 Best sellers organized into',
-    bestSellersByCategory.length,
-    'categories (prioritizing featured products)'
-  );
-  console.log(
-    '🆕 New arrivals organized into',
-    newArrivalsByCategory.length,
-    'categories'
-  );
-  console.log(
-    '⭐ Best sellers featured sections:',
-    bestSellersBalanced.length,
-    'with total products:',
-    bestSellersBalanced.reduce(
-      (total, section) => total + section.products.length,
-      0
-    )
-  );
-  console.log(
-    '🆕 New arrivals category sections:',
-    newArrivalsBalanced.length,
-    'with total products:',
-    newArrivalsBalanced.reduce(
-      (total, section) => total + section.products.length,
-      0
-    )
-  );
-
-  // Debug cabinet categories specifically
+  // Filter cabinet sections for specific layout handling if needed
   const cabinetSections = bestSellersBalanced.filter(
     (section) =>
       section.categoryName.toLowerCase().includes('cabinet') ||
       section.categorySlug.toLowerCase().includes('cabinet')
   );
-  if (cabinetSections.length > 0) {
-    console.log('🗄️ Cabinet sections found:', cabinetSections.length);
-    cabinetSections.forEach((section) => {
-      const featuredCount = section.products.filter((p) => p.featured).length;
-      console.log(
-        `   - ${section.categoryName}: ${section.products.length} products, ${featuredCount} featured`
-      );
-    });
-  } else {
-    console.log('⚠️ No cabinet sections found in best sellers');
-  }
 
   return (
-    <div>
-      <BannerCarousel
-        websiteBanners={
-          websiteBanners.success ? (websiteBanners.data ?? []) : []
-        }
-        appBanners={appBanners.success ? (appBanners.data ?? []) : []}
-      />
+    <div className="relative">
+      {/* Standard Navigation */}
+      <TopBarWrapper />
+      <Navbar />
+
+      {/* Adding padding-top to the carousel to account for the transparent header */}
+      <div>
+        <BannerCarousel
+          websiteBanners={
+            websiteBanners.success ? (websiteBanners.data ?? []) : []
+          }
+          appBanners={appBanners.success ? (appBanners.data ?? []) : []}
+        />
+      </div>
       <SpecialCombos
         data={specialCombos.success ? (specialCombos.data ?? []) : []}
       />
@@ -198,17 +134,18 @@ const HomePage = async () => {
         sections={bestSellersBalanced}
         maxProductsPerCategory={4}
       />
+      <CrazyDeals deals={crazyDeals.success ? (crazyDeals.data ?? []) : []} />
       <CategorySection
         categories={categories.success ? (categories.data ?? []) : []}
       />
-      <CrazyDeals deals={crazyDeals.success ? (crazyDeals.data ?? []) : []} />
-      <ProductCardByCategory
-        heading="NEW ARRIVALS"
-        sections={newArrivalsBalanced}
-        maxProductsPerCategory={4}
-      />
+
       <KeyBenefits />
       <BlogImages />
+      
+      {/* Google Reviews Section */}
+      <GoogleReviews placeId="YOUR_GOOGLE_PLACE_ID" />
+
+      {/* Display suppliers section */}
 
       {/* Floating Social Share Button */}
       <SocialShare
