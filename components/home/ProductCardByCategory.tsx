@@ -13,6 +13,8 @@ interface Product {
   sold?: number;
   discount?: number;
   pricingType: string;
+  finish?: string;
+  location?: string;
   images: Array<{
     url: string;
     public_id: string;
@@ -79,9 +81,12 @@ const ProductCardByCategory: React.FC<ProductCardByCategoryProps> = ({
                 <h3 className="text-2xl font-semibold text-gray-900">
                   {section.categoryName}
                 </h3>
-                <span className="text-sm text-gray-600 bg-white px-3 py-1 rounded-full shadow-sm border">
-                  {section.products.length} products
-                </span>
+                {/* Hide "4 products" but show other product counts */}
+                {section.products.length !== 4 && (
+                  <span className="text-sm text-gray-600 bg-white px-3 py-1 rounded-full shadow-sm border">
+                    {section.products.length} products
+                  </span>
+                )}
               </div>
 
               {/* View All Link */}
@@ -109,9 +114,11 @@ const ProductCardByCategory: React.FC<ProductCardByCategoryProps> = ({
             {/* Products for this category */}
             <ProductCard
               heading=""
-              products={section.products
-                .filter((product) => product.category) // Only include products with category
-                .slice(0, maxProductsPerCategory) as any}
+              products={
+                section.products
+                  .filter((product) => product.category) // Only include products with category
+                  .slice(0, maxProductsPerCategory) as any
+              }
             />
 
             {/* Show More Link if there are more products */}
