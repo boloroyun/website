@@ -174,8 +174,8 @@ const NavbarClient = () => {
             </div>
           </div>
 
-          {/* Desktop Navigation Menu */}
-          <div
+          {/* Desktop Navigation Menu - Hidden as requested */}
+          {/* <div
             className={`hidden lg:flex justify-center mt-2 transition-all duration-300 ${
               scrolled ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'
             }`}
@@ -195,7 +195,7 @@ const NavbarClient = () => {
                 </Link>
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
       </nav>
     </>
