@@ -141,9 +141,9 @@ const HomePage = async () => {
 
       <KeyBenefits />
       <BlogImages />
-      
-      {/* Google Reviews Section */}
-      <GoogleReviews placeId="YOUR_GOOGLE_PLACE_ID" />
+
+      {/* Google Reviews Section - Replace with your actual Google Place ID when ready */}
+      <GoogleReviews placeId="ChIJgUbEo8pZwokR5oXTcr_zNvE" />
 
       {/* Display suppliers section */}
 
