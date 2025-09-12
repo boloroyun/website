@@ -56,7 +56,7 @@ export default function GetFreeEstimateButton({
   const handleQuoteSubmitted = async (quoteData: any) => {
     try {
       setIsSubmitting(true);
-      
+
       // Send email notification to info@luxcabistones.com
       const response = await fetch('/api/quotes/email-notification', {
         method: 'POST',
@@ -69,17 +69,18 @@ export default function GetFreeEstimateButton({
           notificationEmail: 'info@luxcabistones.com',
         }),
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Failed to send email notification:', errorData);
         // Don't show error to user, the quote was still created
       } else {
-        toast({
-          title: "Quote Request Sent",
-          description: "Your estimate request has been sent to our team. We'll get back to you soon!",
-          duration: 5000,
-        });
+          toast({
+            title: 'Quote Request Sent',
+            description:
+              "Your quote request has been sent to our team. We'll get back to you soon!",
+            duration: 5000,
+          });
       }
     } catch (error) {
       console.error('Error sending email notification:', error);
@@ -115,7 +116,7 @@ export default function GetFreeEstimateButton({
         {showIcon && (
           <Calculator className={`${showArrow ? 'mr-2' : 'mr-2'} h-5 w-5`} />
         )}
-        Get Free Estimate
+        Get a Quote
         {showArrow && <ArrowRight className="ml-2 h-5 w-5" />}
       </Button>
 
