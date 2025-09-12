@@ -137,7 +137,7 @@ const BannerCarousel = ({
             index === currentIndex ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          {/* Removed full-width overlay */}
+          {/* No full-width overlay, using targeted text backgrounds instead */}
 
           {/* Image */}
           {!imageError[index] ? (
@@ -165,7 +165,8 @@ const BannerCarousel = ({
                   Premium Quartz & Granite Countertops
                 </h2>
                 <p className="max-w-2xl mx-auto text-lg md:text-xl mb-8">
-                  Beautiful, durable, and expertly installed in Northern Virginia.
+                  Beautiful, durable, and expertly installed in Northern
+                  Virginia.
                 </p>
                 <Link href="/request-a-quote">
                   <Button className="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-medium rounded-lg transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
@@ -184,11 +185,31 @@ const BannerCarousel = ({
                   Custom Kitchen Cabinets for Every Home
                 </h2>
                 <p className="max-w-2xl mx-auto text-lg md:text-xl mb-8">
-                  Transform your kitchen with modern, classic, and luxury designs.
+                  Transform your kitchen with modern, classic, and luxury
+                  designs.
                 </p>
                 <Link href="/category/cabinets">
                   <Button className="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-medium rounded-lg transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                     View Cabinets
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
+          
+          {/* Text overlay for the third slide - Custom Closets */}
+          {index === 2 && (
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center h-full text-center px-4 text-white">
+              <div className="bg-black/30 p-6 rounded-lg backdrop-blur-sm max-w-3xl">
+                <h2 className="text-4xl md:text-6xl font-bold mb-4">
+                  Elegant Custom Closets
+                </h2>
+                <p className="max-w-2xl mx-auto text-lg md:text-xl mb-8">
+                  Maximize your space with beautifully designed storage solutions.
+                </p>
+                <Link href="/category/closets">
+                  <Button className="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-medium rounded-lg transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                    Explore Closets
                   </Button>
                 </Link>
               </div>
