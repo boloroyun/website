@@ -191,7 +191,7 @@ const NavbarClient = () => {
                       : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
                   }`}
                 >
-                  {item.title}
+                  {item.name}
                 </Link>
               ))}
             </div>
