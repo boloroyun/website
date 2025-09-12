@@ -140,10 +140,11 @@ const BannerCarousel = ({
       
       {/* Hero Overlay - Always visible regardless of slide */}
       <HeroOverlay 
-        title="Transform Your Space with Premium Solutions"
+        title="Premium Cabinets & Stone Surfaces"
         subtitle="Explore our collection of high-quality cabinets, countertops, and custom designs for your dream home."
         ctaText="Get Free Estimate"
         ctaLink="/request-a-quote"
+        showClosets={true}
       />
       
       {/* Carousel slides */}
