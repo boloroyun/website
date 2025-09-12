@@ -2,6 +2,28 @@
 
 import React, { useEffect, useState } from 'react';
 
+// Add type declarations for the Google Maps API
+declare global {
+  interface Window {
+    google: {
+      maps: {
+        Map: new (element: Element, options: any) => any;
+        places: {
+          PlacesService: new (map: any) => any;
+          PlacesServiceStatus: {
+            OK: string;
+            ZERO_RESULTS: string;
+            OVER_QUERY_LIMIT: string;
+            REQUEST_DENIED: string;
+            INVALID_REQUEST: string;
+            UNKNOWN_ERROR: string;
+          };
+        };
+      };
+    };
+  }
+}
+
 interface GoogleReviewsProps {
   placeId: string; // Google Maps Place ID for your business
 }
@@ -25,93 +47,11 @@ interface SimplePlaceResult {
 const GoogleReviews: React.FC<GoogleReviewsProps> = ({ placeId }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [placeData, setPlaceData] = useState<SimplePlaceResult | null>(null);
 
-  useEffect(() => {
-    // Create a container for the map
-    const mapContainer = document.getElementById('google-map-reviews');
-    if (!mapContainer) return;
-
-    // Function to initialize reviews when Google Maps API is loaded
-    const initializeReviews = () => {
-      try {
-        // @ts-ignore - Google Maps API is loaded dynamically
-        if (
-          !window.google ||
-          !window.google.maps ||
-          !window.google.maps.places
-        ) {
-          setError('Google Maps API failed to load properly');
-          setIsLoading(false);
-          return;
-        }
-
-        // @ts-ignore - Create a map instance (hidden)
-        const map = new window.google.maps.Map(mapContainer, {
-          center: { lat: 0, lng: 0 },
-          zoom: 1,
-        });
-
-        // @ts-ignore - Create a PlacesService instance
-        const service = new window.google.maps.places.PlacesService(map);
-        service.getDetails(
-          {
-            placeId: placeId,
-            fields: ['name', 'rating', 'review', 'user_ratings_total'],
-          },
-          (result: any, status: any) => {
-            // @ts-ignore - Status is dynamically loaded
-            if (
-              status === window.google.maps.places.PlacesServiceStatus.OK &&
-              result
-            ) {
-              const place: SimplePlaceResult = {
-                name: result.name,
-                rating: result.rating,
-                user_ratings_total: result.user_ratings_total,
-                reviews: result.reviews,
-              };
-              displayReviews(place);
-            } else {
-              setError('Failed to load reviews');
-              console.error('Error fetching Google reviews:', status);
-            }
-            setIsLoading(false);
-          }
-        );
-      } catch (err) {
-        setError('Error initializing Google reviews');
-        console.error('Error initializing Google reviews:', err);
-        setIsLoading(false);
-      }
-    };
-
-    // Load Google Maps API
-    const loadGoogleMapsAPI = () => {
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}&libraries=places`;
-      script.async = true;
-      script.defer = true;
-      script.onload = initializeReviews;
-      script.onerror = () => {
-        setError('Failed to load Google Maps API');
-        setIsLoading(false);
-      };
-      document.head.appendChild(script);
-
-      return () => {
-        if (document.head.contains(script)) {
-          document.head.removeChild(script);
-        }
-      };
-    };
-
-    // Load the API
-    const cleanup = loadGoogleMapsAPI();
-
-    return cleanup;
-  }, [placeId]);
-
+  // Function to display reviews
   const displayReviews = (place: SimplePlaceResult) => {
+    setPlaceData(place);
     const reviewsContainer = document.getElementById(
       'google-reviews-container'
     );
@@ -189,6 +129,89 @@ const GoogleReviews: React.FC<GoogleReviewsProps> = ({ placeId }) => {
       </div>
     `;
   };
+
+  useEffect(() => {
+    // Create a container for the map
+    const mapContainer = document.getElementById('google-map-reviews');
+    if (!mapContainer) return;
+
+    // Function to initialize reviews when Google Maps API is loaded
+    const initializeReviews = () => {
+      try {
+        if (
+          typeof window.google === 'undefined' ||
+          typeof window.google.maps === 'undefined' ||
+          typeof window.google.maps.places === 'undefined'
+        ) {
+          setError('Google Maps API failed to load properly');
+          setIsLoading(false);
+          return;
+        }
+
+        // Create a map instance (hidden)
+        const map = new window.google.maps.Map(mapContainer, {
+          center: { lat: 0, lng: 0 },
+          zoom: 1,
+        });
+
+        // Create a PlacesService instance
+        const service = new window.google.maps.places.PlacesService(map);
+        service.getDetails(
+          {
+            placeId: placeId,
+            fields: ['name', 'rating', 'review', 'user_ratings_total'],
+          },
+          (result: any, status: any) => {
+            if (
+              status === window.google.maps.places.PlacesServiceStatus.OK &&
+              result
+            ) {
+              const place: SimplePlaceResult = {
+                name: result.name,
+                rating: result.rating,
+                user_ratings_total: result.user_ratings_total,
+                reviews: result.reviews,
+              };
+              displayReviews(place);
+            } else {
+              setError('Failed to load reviews');
+              console.error('Error fetching Google reviews:', status);
+            }
+            setIsLoading(false);
+          }
+        );
+      } catch (err) {
+        setError('Error initializing Google reviews');
+        console.error('Error initializing Google reviews:', err);
+        setIsLoading(false);
+      }
+    };
+
+    // Load Google Maps API
+    const loadGoogleMapsAPI = () => {
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}&libraries=places`;
+      script.async = true;
+      script.defer = true;
+      script.onload = initializeReviews;
+      script.onerror = () => {
+        setError('Failed to load Google Maps API');
+        setIsLoading(false);
+      };
+      document.head.appendChild(script);
+
+      return () => {
+        if (document.head.contains(script)) {
+          document.head.removeChild(script);
+        }
+      };
+    };
+
+    // Load the API
+    const cleanup = loadGoogleMapsAPI();
+
+    return cleanup;
+  }, [placeId, displayReviews]);
 
   return (
     <div className="py-12 bg-gray-50">
