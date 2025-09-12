@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="100" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="100" rx="8" fill="white"/>
+  <rect x="30" y="40" width="140" height="20" rx="2" fill="#F97316"/>
+  <path d="M45 30L55 30C56.1046 30 57 30.8954 57 32V68C57 69.1046 56.1046 70 55 70H45C43.8954 70 43 69.1046 43 68V32C43 30.8954 43.8954 30 45 30Z" fill="#F97316"/>
+  <path d="M145 30L155 30C156.105 30 157 30.8954 157 32V68C157 69.1046 156.105 70 155 70H145C143.895 70 143 69.1046 143 68V32C143 30.8954 143.895 30 145 30Z" fill="#F97316"/>
+  <rect x="57" y="40" width="86" height="20" fill="#EA580C"/>
+  <text x="100" y="55" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">THE HOME DEPOT</text>
+  <text x="100" y="85" font-family="Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" fill="#EA580C">More saving. More doing.</text>
+</svg>

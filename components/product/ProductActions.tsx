@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { useParams } from 'next/navigation';
 import { useAtom } from 'jotai';
 import { cartMenuState } from '../store';
+import GetQuoteButton from './GetQuoteButton';
 
 interface ProductSize {
   size: string;
@@ -129,12 +130,16 @@ const ProductActions: React.FC<ProductActionsProps> = ({
   if (pricingType === 'quote' && (!sizes || sizes.length === 0)) {
     return (
       <div className="space-y-4">
-        <button
-          className="w-full bg-black text-white py-4 px-6 font-medium hover:bg-gray-800 transition-colors"
-          onClick={handleAddToCart}
-        >
-          GET QUOTE RIGHT NOW
-        </button>
+        {productData && (
+          <GetQuoteButton
+            productData={{
+              id: productData.id,
+              title: productData.title,
+              sku: productData?.slug || '', // Using slug as fallback if no SKU is available
+            }}
+            className="w-full"
+          />
+        )}
       </div>
     );
   }
@@ -207,28 +212,38 @@ const ProductActions: React.FC<ProductActionsProps> = ({
           </div>
         )}
 
-        {/* Add to Cart Button */}
-        <button
-          className={`w-full py-4 px-6 font-medium transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed ${
-            pricingType === 'gallery'
-              ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700'
-              : 'bg-black text-white hover:bg-gray-800'
-          }`}
-          onClick={handleAddToCart}
-          disabled={
-            pricingType === 'fixed' && (!selectedSize || selectedSize.qty === 0)
-          }
-        >
-          {pricingType === 'quote'
-            ? 'GET QUOTE RIGHT NOW'
-            : pricingType === 'gallery'
+        {/* Add to Cart Button or Quote Button */}
+        {pricingType === 'quote' && productData ? (
+          <GetQuoteButton
+            productData={{
+              id: productData.id,
+              title: productData.title,
+              sku: productData?.slug || '', // Using slug as fallback if no SKU is available
+            }}
+            className="w-full"
+          />
+        ) : (
+          <button
+            className={`w-full py-4 px-6 font-medium transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed ${
+              pricingType === 'gallery'
+                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700'
+                : 'bg-black text-white hover:bg-gray-800'
+            }`}
+            onClick={handleAddToCart}
+            disabled={
+              pricingType === 'fixed' &&
+              (!selectedSize || selectedSize.qty === 0)
+            }
+          >
+            {pricingType === 'gallery'
               ? 'VIEW GALLERY'
               : !selectedSize
                 ? 'SELECT SIZE'
                 : selectedSize.qty === 0
                   ? 'OUT OF STOCK'
                   : 'ADD TO CART'}
-        </button>
+          </button>
+        )}
       </div>
     </div>
   );

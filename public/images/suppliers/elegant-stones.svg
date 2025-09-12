@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="128" height="128" rx="8" fill="#F5F3FF"/>
+  <path d="M24 32H104V96H24V32Z" fill="#EDE9FE"/>
+  <path d="M24 32L64 96L104 32H24Z" fill="#DDD6FE"/>
+  <path d="M44 32L64 64L84 32H44Z" fill="#C4B5FD"/>
+  <path d="M64 48L74 32H54L64 48Z" fill="#8B5CF6"/>
+  <text x="64" y="112" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#5B21B6">ELEGANT STONES</text>
+</svg>

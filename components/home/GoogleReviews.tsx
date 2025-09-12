@@ -25,22 +25,26 @@ interface SimplePlaceResult {
 const GoogleReviews: React.FC<GoogleReviewsProps> = ({ placeId }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   useEffect(() => {
     // Create a container for the map
     const mapContainer = document.getElementById('google-map-reviews');
     if (!mapContainer) return;
-    
+
     // Function to initialize reviews when Google Maps API is loaded
     const initializeReviews = () => {
       try {
         // @ts-ignore - Google Maps API is loaded dynamically
-        if (!window.google || !window.google.maps || !window.google.maps.places) {
-          setError("Google Maps API failed to load properly");
+        if (
+          !window.google ||
+          !window.google.maps ||
+          !window.google.maps.places
+        ) {
+          setError('Google Maps API failed to load properly');
           setIsLoading(false);
           return;
         }
-        
+
         // @ts-ignore - Create a map instance (hidden)
         const map = new window.google.maps.Map(mapContainer, {
           center: { lat: 0, lng: 0 },
@@ -56,7 +60,10 @@ const GoogleReviews: React.FC<GoogleReviewsProps> = ({ placeId }) => {
           },
           (result: any, status: any) => {
             // @ts-ignore - Status is dynamically loaded
-            if (status === window.google.maps.places.PlacesServiceStatus.OK && result) {
+            if (
+              status === window.google.maps.places.PlacesServiceStatus.OK &&
+              result
+            ) {
               const place: SimplePlaceResult = {
                 name: result.name,
                 rating: result.rating,
@@ -65,15 +72,15 @@ const GoogleReviews: React.FC<GoogleReviewsProps> = ({ placeId }) => {
               };
               displayReviews(place);
             } else {
-              setError("Failed to load reviews");
+              setError('Failed to load reviews');
               console.error('Error fetching Google reviews:', status);
             }
             setIsLoading(false);
           }
         );
       } catch (err) {
-        setError("Error initializing Google reviews");
-        console.error("Error initializing Google reviews:", err);
+        setError('Error initializing Google reviews');
+        console.error('Error initializing Google reviews:', err);
         setIsLoading(false);
       }
     };
@@ -86,7 +93,7 @@ const GoogleReviews: React.FC<GoogleReviewsProps> = ({ placeId }) => {
       script.defer = true;
       script.onload = initializeReviews;
       script.onerror = () => {
-        setError("Failed to load Google Maps API");
+        setError('Failed to load Google Maps API');
         setIsLoading(false);
       };
       document.head.appendChild(script);
@@ -100,12 +107,14 @@ const GoogleReviews: React.FC<GoogleReviewsProps> = ({ placeId }) => {
 
     // Load the API
     const cleanup = loadGoogleMapsAPI();
-    
+
     return cleanup;
   }, [placeId]);
 
   const displayReviews = (place: SimplePlaceResult) => {
-    const reviewsContainer = document.getElementById('google-reviews-container');
+    const reviewsContainer = document.getElementById(
+      'google-reviews-container'
+    );
     if (!reviewsContainer || !place.reviews) return;
 
     const reviewsHtml = place.reviews
@@ -185,10 +194,10 @@ const GoogleReviews: React.FC<GoogleReviewsProps> = ({ placeId }) => {
     <div className="py-12 bg-gray-50">
       <div className="container mx-auto px-4">
         <h2 className="heading text-center mb-12">CUSTOMER REVIEWS</h2>
-        
+
         {/* Hidden map element needed for Places API */}
         <div id="google-map-reviews" style={{ display: 'none' }}></div>
-        
+
         {/* Container for rendered reviews */}
         <div id="google-reviews-container" className="max-w-6xl mx-auto">
           {isLoading ? (
@@ -200,7 +209,8 @@ const GoogleReviews: React.FC<GoogleReviewsProps> = ({ placeId }) => {
             <div className="text-center py-12">
               <p className="text-red-500">{error}</p>
               <p className="mt-2 text-gray-600">
-                Please make sure you've set up your Google Maps API Key in your environment variables.
+                Please make sure you've set up your Google Maps API Key in your
+                environment variables.
               </p>
             </div>
           ) : null}

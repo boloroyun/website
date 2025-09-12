@@ -1,0 +1,21 @@
+# Email Configuration Template
+# Copy this file to .env.local and update with your email credentials
+
+# SMTP Configuration (Gmail Example)
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT="587"
+SMTP_USER="your-email@gmail.com"
+SMTP_PASS="your-app-password"  # Use an App Password for Gmail, not your regular password
+
+# Alternative: Resend.com (Recommended)
+# RESEND_API_KEY="re_xxxxxxxxxx"
+
+# Development mode
+NODE_ENV="development"
+
+# Admin API Configuration
+NEXT_PUBLIC_ADMIN_API_BASE="https://admin.luxcabistones.com"
+ADMIN_API_KEY="your-admin-api-key"
+
+# Email notification settings
+QUOTE_NOTIFICATION_EMAIL="your-notification-email@example.com"

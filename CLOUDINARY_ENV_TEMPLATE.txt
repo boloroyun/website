@@ -1,0 +1,14 @@
+# Cloudinary Configuration
+# Copy these variables to .env.local with your actual values
+
+# Cloudinary credentials
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+CLOUDINARY_UPLOAD_FOLDER=lux/quote-requests
+
+# Client-side upload limits
+NEXT_PUBLIC_MAX_UPLOAD_MB=10
+NEXT_PUBLIC_MAX_UPLOAD_COUNT=8
+
+# IMPORTANT: Never expose the API_SECRET client-side

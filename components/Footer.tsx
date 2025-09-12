@@ -38,15 +38,9 @@ const Footer = () => {
         {/* Column 1: Company Information & Contact */}
         <div className="space-y-6">
           <div>
-            <div className="mb-4">
-              <Image
-                src="/images/logo.jpeg"
-                alt="LUX Cabinets & Stones"
-                width={150}
-                height={67}
-                className="h-33  w-auto filter brightness-100 invert"
-              />
-            </div>
+            <h3 className="text-xl font-semibold text-blue-400 mb-4">
+              LUX CABINETS & STONES
+            </h3>
 
             <p className="text-sm text-gray-300 leading-relaxed mb-6">
               Premium countertop fabrication and custom cabinetry solutions.
@@ -157,13 +151,13 @@ const Footer = () => {
               <div className="flex justify-between items-center">
                 <span className="text-gray-300">Mon - Fri:</span>
                 <span className="font-medium text-white">
-                  8:00 AM - 5:00 PM
+                  9:00 AM - 5:00 PM
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-300">Saturday:</span>
                 <span className="font-medium text-white">
-                  9:00 AM - 3:00 PM
+                  10:00 AM - 3:00 PM
                 </span>
               </div>
               <div className="flex justify-between items-center">

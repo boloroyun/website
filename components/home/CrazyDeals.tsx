@@ -24,7 +24,7 @@ const CrazyDeals: React.FC<CrazyDealsProps> = ({ deals }) => {
       </div>
       <div className="relative">
         {deals.length > 0 ? (
-          <div className="flex overflow-x-auto gap-[20px] sm:justify-center scroll-smooth no-scrollbar">
+          <div className="flex overflow-x-auto gap-[20px] pb-4 sm:justify-center scroll-smooth no-scrollbar">
             {deals.map((deal) => (
               <Link
                 key={deal.id}

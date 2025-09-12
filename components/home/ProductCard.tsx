@@ -14,6 +14,8 @@ interface DatabaseProduct {
   sold?: number;
   discount?: number;
   pricingType: string;
+  finish?: string;
+  location?: string;
   images: Array<{
     url: string;
     public_id: string;

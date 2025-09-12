@@ -23,12 +23,15 @@ export default function CrispIdentifyFromSession() {
 
       // Only proceed if we have an email
       if (email) {
-        console.log('🔐 Identifying authenticated user in Crisp:', { email, name });
+        console.log('🔐 Identifying authenticated user in Crisp:', {
+          email,
+          name,
+        });
 
         // Set user data in Crisp
-        identifyUser({ 
-          email, 
-          name: name || undefined 
+        identifyUser({
+          email,
+          name: name || undefined,
         });
 
         // Tag this session as authenticated

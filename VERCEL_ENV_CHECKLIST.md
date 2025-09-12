@@ -135,7 +135,10 @@ ADMIN_APP_URL=https://admin.example.com
 
 ### **Admin API (Optional)**
 
-- [ ] `ADMIN_API_BASE` - Admin API base URL
+- [ ] `ADMIN_API_BASE` - Admin API base URL (server-side)
+- [ ] `NEXT_PUBLIC_ADMIN_API_BASE` - Admin API base URL (client-side)
+  - Production: `https://admin.yourdomain.com`
+  - Preview: `https://admin-preview.yourdomain.com`
 
 ---
 

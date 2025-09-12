@@ -35,7 +35,7 @@ const KeyBenefits = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 mb-[20px] my-[10px]">
+    <div className="container mx-auto px-4 mb-[80px] my-[10px]">
       <h2 className="heading text-center my-[40px]">WHY CHOOSE US</h2>
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
         {benefits.map((benefit, index) => (

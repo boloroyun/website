@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="128" height="128" rx="8" fill="#F0F9FF"/>
+  <path d="M24 32H104V96H24V32Z" fill="#BFDBFE"/>
+  <path d="M24 64H104V96H24V64Z" fill="#93C5FD"/>
+  <path d="M44 52L64 32L84 52H44Z" fill="#60A5FA"/>
+  <text x="64" y="80" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#1E3A8A">STONE MASTERS</text>
+</svg>

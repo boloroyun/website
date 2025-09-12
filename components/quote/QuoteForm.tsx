@@ -162,9 +162,7 @@ ${message}
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Add Photos (Optional)</label>
-        <CustomFileUploader
-          onImagesUploaded={setUploadedImages}
-        />
+        <CustomFileUploader onImagesUploaded={setUploadedImages} />
         <p className="text-xs text-gray-500">
           Upload photos of your space or inspiration images (max 5 images).
         </p>

@@ -55,7 +55,7 @@ const ProductDetailsAccordian: React.FC<ProductDetailsAccordianProps> = ({
         </AccordionItem>
         <AccordionItem value="item-2">
           <AccordionTrigger className="uppercase subHeading tracking-[1px]">
-            MORE DETAIL
+            Product Usage
           </AccordionTrigger>
           <AccordionContent>
             <div className="space-y-2">
@@ -73,7 +73,7 @@ const ProductDetailsAccordian: React.FC<ProductDetailsAccordianProps> = ({
         </AccordionItem>
         <AccordionItem value="item-3">
           <AccordionTrigger className="uppercase subHeading tracking-[1px]">
-            MORE INFORMATION
+            Product Location
           </AccordionTrigger>
           <AccordionContent>
             <div className="space-y-2">

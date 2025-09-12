@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // USA locale configuration
-  i18n: {
-    locales: ['en-US'],
-    defaultLocale: 'en-US',
-  },
+  // Disable StrictMode to prevent double API calls during development
+  reactStrictMode: false,
+
+  // Note: i18n is not compatible with app directory
+  // Remove experimental settings that might be causing issues
 
   images: {
     remotePatterns: [
@@ -22,6 +22,16 @@ const nextConfig = {
       },
     ],
   },
+
+  // Configure logging - reduced but not silenced completely
+  logging: {
+    fetches: {
+      fullUrl: false,
+    },
+  },
+
+  // Telemetry is disabled via NEXT_TELEMETRY_DISABLED environment variable
+  // or by running: npx next telemetry disable
 };
 
 export default nextConfig;

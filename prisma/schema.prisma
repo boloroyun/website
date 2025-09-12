@@ -240,6 +240,8 @@ model Product {
   discount        Float?         @default(0)
   sold            Int?           @default(0)
   pricingType     PricingType    @default(fixed)
+  finish          String?
+  location        String?
 
   // Relations
   category      Category      @relation(fields: [categoryId], references: [id])
@@ -575,4 +577,50 @@ model CrispActivity {
   @@index([email])
   @@index([sessionId])
   @@index([createdAt])
+}
+
+// ======================================
+// QUOTE REQUEST MODELS
+// ======================================
+
+enum QuoteRequestStatus {
+  NEW
+  REVIEWING
+  SENT
+  APPROVED
+  REJECTED
+  CLOSED
+}
+
+model QuoteRequest {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  publicToken   String   @default(cuid()) @unique
+  productName   String?
+  productId     String?  @db.ObjectId
+  sku           String?
+  customerName  String?
+  email         String
+  phone         String?
+  zip           String?
+  dimensions    String?
+  material      String?
+  notes         String?
+  status        QuoteRequestStatus @default(NEW)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  images        QuoteRequestImage[]
+}
+
+model QuoteRequestImage {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  quoteRequestId String  @db.ObjectId
+  publicId       String
+  secureUrl      String
+  width          Int?
+  height         Int?
+  bytes          Int?
+  format         String?
+  originalName   String?
+
+  request        QuoteRequest @relation(fields: [quoteRequestId], references: [id])
 }

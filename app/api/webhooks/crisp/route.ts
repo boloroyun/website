@@ -3,7 +3,15 @@ import crypto from 'crypto';
 function valid(raw: string, secret: string, sig: string | null) {
   if (!sig) return false;
   const dig = crypto.createHmac('sha256', secret).update(raw).digest('hex');
-  return crypto.timingSafeEqual(Buffer.from(dig), Buffer.from(sig));
+
+  // Convert both to Uint8Array to avoid Buffer compatibility issues
+  const digBuffer = new Uint8Array(Buffer.from(dig));
+  const sigBuffer = new Uint8Array(Buffer.from(sig));
+
+  // Make sure they have the same length before comparison
+  if (digBuffer.length !== sigBuffer.length) return false;
+
+  return crypto.timingSafeEqual(digBuffer, sigBuffer);
 }
 
 export async function POST(req: Request) {

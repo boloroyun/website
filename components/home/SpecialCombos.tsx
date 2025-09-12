@@ -23,7 +23,7 @@ const SpecialCombos = ({ data = [] }: SpecialCombosProps) => {
         SPECIAL COMBOS
       </div>
       <div className="relative">
-        <div className="flex overflow-x-auto gap-[20px] sm:justify-center scroll-smooth no-scrollbar">
+        <div className="flex overflow-x-auto gap-[20px] pb-4 sm:justify-center scroll-smooth no-scrollbar">
           {data.length > 0 ? (
             data.map((combo) => {
               const mainImage =

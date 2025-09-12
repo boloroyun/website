@@ -74,6 +74,16 @@ export async function getProductBySlug(slug: string) {
       featured: product.featured,
       bestSeller: product.bestSeller,
       sku: product.sku,
+      // Include new fields with type safety
+      finish: (product as any).finish ?? undefined,
+      location: (product as any).location ?? undefined,
+      // Handle backward compatibility for older data
+      moreDetail:
+        (product as any).moreDetail ?? (product as any).finish ?? undefined,
+      moreInformation:
+        (product as any).moreInformation ??
+        (product as any).location ??
+        undefined,
       images: product.images
         .map((image) => ({
           url: image.url || '',
@@ -195,6 +205,9 @@ export async function getRelatedProducts(
       sold: product.sold ?? undefined,
       discount: product.discount ?? undefined,
       pricingType: product.pricingType,
+      // Include new fields with type safety
+      finish: (product as any).finish ?? undefined,
+      location: (product as any).location ?? undefined,
       images: product.images
         .map((image) => ({
           url: image.url || '',
@@ -331,6 +344,9 @@ export async function getRelatedProductsByCategory(
           sold: product.sold ?? undefined,
           discount: product.discount ?? undefined,
           pricingType: product.pricingType,
+          // Include new fields
+          finish: product.finish ?? undefined,
+          location: product.location ?? undefined,
           images: product.images
             .map((image: any) => ({
               url: image.url || '',

@@ -35,6 +35,21 @@ const UnifiedQuoteSchema = z.object({
   zipcode: z.string().optional(),
   website_id: z.string().optional(),
   session_id: z.string().optional(),
+
+  // Uploaded images
+  images: z
+    .array(
+      z.object({
+        publicId: z.string(),
+        secureUrl: z.string(),
+        width: z.number().optional(),
+        height: z.number().optional(),
+        bytes: z.number().optional(),
+        format: z.string().optional(),
+        originalName: z.string().optional(),
+      })
+    )
+    .optional(),
 });
 
 type UnifiedQuoteRequest = z.infer<typeof UnifiedQuoteSchema>;
@@ -374,6 +389,7 @@ async function submitQuoteToAdmin(
       website_id: request.website_id,
       session_id: request.session_id,
       subtotal,
+      images: request.images, // Include uploaded images if any
     };
 
     console.log(
@@ -428,6 +444,7 @@ function createFallbackQuote(
     lineItems,
     category: request.category,
     taxRate,
+    images: request.images, // Include uploaded images if any
     estimatedCompletion:
       request.category === 'combo' ? '4-6 weeks' : '2-3 weeks',
     validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),

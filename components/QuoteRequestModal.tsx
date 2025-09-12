@@ -42,7 +42,10 @@ import {
   AlertCircle,
   Home,
   Ruler,
+  Camera,
+  Image,
 } from 'lucide-react';
+import { FileUploader, UploadedImage } from '@/components/FileUploader';
 
 interface QuoteRequestModalProps {
   isOpen: boolean;
@@ -101,6 +104,8 @@ export default function QuoteRequestModal({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
+  const [hasUploadingFiles, setHasUploadingFiles] = useState(false);
 
   const [formData, setFormData] = useState<QuoteFormData>({
     category: initialCategory,
@@ -168,6 +173,20 @@ export default function QuoteRequestModal({
     });
   }, []);
 
+  // Handle file upload events
+  const handleImagesUploaded = useCallback((images: UploadedImage[]) => {
+    setUploadedImages(images);
+    setHasUploadingFiles(false);
+  }, []);
+
+  const handleUploadError = useCallback((errorMessage: string) => {
+    setError(`Upload error: ${errorMessage}`);
+  }, []);
+
+  const handleUploadStatusChange = useCallback((isUploading: boolean) => {
+    setHasUploadingFiles(isUploading);
+  }, []);
+
   const handleSubmit = async () => {
     setIsLoading(true);
     setError('');
@@ -202,6 +221,11 @@ export default function QuoteRequestModal({
       // Add product IDs if provided
       if (productIds.length > 0) {
         payload.products = productIds.map((id) => ({ id, qty: 1 }));
+      }
+
+      // Add uploaded images if any
+      if (uploadedImages.length > 0) {
+        payload.images = uploadedImages;
       }
 
       // Add countertop fields
@@ -540,6 +564,39 @@ export default function QuoteRequestModal({
             </CardContent>
           </Card>
 
+          {/* Project Photos Upload */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Image className="h-5 w-5" />
+                Project Photos (optional)
+              </CardTitle>
+              <CardDescription>
+                Upload photos of your space to help us provide a more accurate
+                quote
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <FileUploader
+                onImagesUploaded={handleImagesUploaded}
+                onError={handleUploadError}
+                onUploadStatusChange={handleUploadStatusChange}
+              />
+              <p className="text-xs text-gray-500 mt-3">
+                Up to 8 photos, max 10 MB each. You can take photos with your
+                phone.
+              </p>
+              {uploadedImages.length > 0 && (
+                <p className="text-sm text-green-600 mt-2 flex items-center gap-1">
+                  <CheckCircle className="h-4 w-4" />
+                  {uploadedImages.length}{' '}
+                  {uploadedImages.length === 1 ? 'image' : 'images'} uploaded
+                  successfully
+                </p>
+              )}
+            </CardContent>
+          </Card>
+
           {/* Error Message */}
           {error && (
             <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-800">
@@ -550,14 +607,31 @@ export default function QuoteRequestModal({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={isLoading}>
+          <Button
+            variant="outline"
+            onClick={onClose}
+            disabled={isLoading || hasUploadingFiles}
+          >
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={isLoading}>
+          <Button
+            onClick={handleSubmit}
+            disabled={isLoading || hasUploadingFiles}
+            title={
+              hasUploadingFiles
+                ? 'Please wait for all files to upload'
+                : undefined
+            }
+          >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Generating Quote...
+              </>
+            ) : hasUploadingFiles ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Uploading Files...
               </>
             ) : (
               <>

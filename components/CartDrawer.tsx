@@ -35,17 +35,24 @@ const CartDrawer = () => {
 
   useEffect(() => {
     const fetchRecommendedProducts = async () => {
-      const result = await getBestSellers(4);
-      console.log(result);
-      if (result.success && result.data) {
-        setRecommendedProducts(
-          result.data.map((product: any) => ({
-            id: product.id,
-            title: product.title,
-            images: product.images,
-            slug: product.slug,
-          }))
-        );
+      try {
+        const result = await getBestSellers(4);
+        // Only log in debug mode
+        if (process.env.DEBUG_LOGS === '1') {
+          console.log('CartDrawer - Recommended products:', result);
+        }
+        if (result.success && result.data) {
+          setRecommendedProducts(
+            result.data.map((product: any) => ({
+              id: product.id,
+              title: product.title,
+              images: product.images,
+              slug: product.slug,
+            }))
+          );
+        }
+      } catch (error) {
+        // Silent error handling to avoid console spam
       }
     };
     fetchRecommendedProducts();
@@ -55,7 +62,13 @@ const CartDrawer = () => {
     (sum: number, item: any) => sum + item.price * item.quantity,
     0
   );
-  console.log(recommendedProducts);
+  // Only log in debug mode
+  if (process.env.DEBUG_LOGS === '1') {
+    console.log(
+      'CartDrawer - Current recommended products:',
+      recommendedProducts
+    );
+  }
 
   const handleOnClickCartMenu = () => {
     setCartMenuOpen(true);
@@ -253,14 +266,14 @@ const CartDrawer = () => {
                 </p>
 
                 <div className="space-y-2">
-                  <Link href={'/checkout'}>
+                  <a href="/checkout">
                     <Button
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold"
                       onClick={() => setCartMenuOpen(false)}
                     >
                       Proceed to Checkout
                     </Button>
-                  </Link>
+                  </a>
 
                   <Button
                     variant="outline"

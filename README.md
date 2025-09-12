@@ -68,6 +68,9 @@ All environment variables are documented in `.env.example`. Make sure to set the
 
 - `ADMIN_API_BASE` - Base URL for admin API calls
 - `INTERNAL_API_TOKEN` - Token for internal API authentication
+- `NEXT_PUBLIC_ADMIN_API_BASE` - Admin API base URL for client-side requests
+  - Local: `http://localhost:3001` (or whatever port your admin API runs on)
+  - Production: `https://admin.yourdomain.com`
 - `NEXT_PUBLIC_CRISP_WEBSITE_ID` - Crisp chat widget ID (optional)
 - `CRISP_IDENTIFIER` - Crisp API identifier
 - `CRISP_KEY` - Crisp API key

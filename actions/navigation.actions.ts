@@ -20,6 +20,7 @@ export interface NavItem {
   href: string;
   icon?: React.ReactNode;
   hasSubmenu?: boolean;
+  hasLogo?: boolean; // Flag to indicate if this item should display a logo
   submenu?: NavSubmenuItem[];
 }
 
@@ -31,8 +32,6 @@ export interface NavSubmenuItem {
 // Get navigation data with real categories and special sections
 export async function getNavigationData() {
   try {
-    console.log('🧭 Fetching navigation data...');
-
     // Fetch all categories with subcategories
     const categoriesResult = await getAllCategories();
     const categories = categoriesResult.success ? categoriesResult.data : [];
@@ -46,10 +45,6 @@ export async function getNavigationData() {
     const bestSellersResult = await getBestSellers(1);
     const hasBestSellers =
       bestSellersResult.success && (bestSellersResult.data?.length ?? 0) > 0;
-
-    console.log(
-      `📊 Found ${categories?.length ?? 0} categories, crazy deals: ${hasCrazyDeals}, best sellers: ${hasBestSellers}`
-    );
 
     // Build navigation items array
     const navItems: NavItem[] = [];
@@ -76,10 +71,11 @@ export async function getNavigationData() {
       });
     }
 
-    // Add Blog
+    // Add Blog with special logo indicator
     navItems.push({
       name: 'BLOG',
       href: '/blog',
+      hasLogo: true, // Special flag to indicate this item should have a logo
     });
 
     // Add categories with subcategories
@@ -101,7 +97,7 @@ export async function getNavigationData() {
       navItems.push(categoryNavItem);
     });
 
-    console.log(`🔗 Built ${navItems.length} navigation items`);
+    // Navigation items built successfully
 
     return { success: true, data: navItems };
   } catch (error) {

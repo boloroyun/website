@@ -23,43 +23,60 @@ export default async function SubCategoryPage({
     // Lazy Prisma initialization
     const { PrismaClient } = await import('@prisma/client');
     const prisma = new PrismaClient();
-    
-    // Get the subcategory info
+
+    // Get the subcategory info with safer querying approach
     const subCategoryData = await prisma.subCategory.findUnique({
       where: { slug: subcategory },
       include: {
         parent: true,
-        productSubCategories: {
-          include: {
-            product: {
-              include: {
-                category: true,
-                productSubCategories: {
-                  include: {
-                    subCategory: {
-                      select: {
-                        id: true,
-                        name: true,
-                        slug: true,
-                      },
+      },
+    });
+
+    if (!subCategoryData || subCategoryData.parent.slug !== slug) {
+      console.error(
+        `Subcategory not found or parent mismatch: ${slug}/${subcategory}`
+      );
+      notFound();
+    }
+
+    // Separately fetch products to avoid relation issues
+    const productSubCategories = await prisma.productSubCategory.findMany({
+      where: {
+        subCategoryId: subCategoryData.id,
+      },
+      select: {
+        productId: true,
+      },
+    });
+
+    // Get unique product IDs using Array.from instead of spread syntax
+    const productIds = Array.from(
+      new Set(productSubCategories.map((psc) => psc.productId))
+    );
+
+    // Now fetch the products separately
+    const products =
+      productIds.length > 0
+        ? await prisma.product.findMany({
+            where: {
+              id: { in: productIds },
+            },
+            include: {
+              category: true,
+              productSubCategories: {
+                include: {
+                  subCategory: {
+                    select: {
+                      id: true,
+                      name: true,
+                      slug: true,
                     },
                   },
                 },
               },
             },
-          },
-        },
-      },
-    });
-
-    if (!subCategoryData || subCategoryData.parent.slug !== slug) {
-      notFound();
-    }
-
-    // Get products for this subcategory
-    const products = subCategoryData.productSubCategories.map(
-      (psc) => psc.product
-    );
+          })
+        : [];
 
     return (
       <div className="min-h-screen bg-gray-50">
@@ -85,17 +102,17 @@ export default async function SubCategoryPage({
           {/* Subcategory Header */}
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4">{subCategoryData.name}</h1>
-            {subCategoryData.images && 
-             subCategoryData.images.length > 0 && 
-             subCategoryData.images[0].url && (
-              <Image
-                src={subCategoryData.images[0].url}
-                alt={subCategoryData.name}
-                width={768}
-                height={256}
-                className="w-full h-64 object-cover rounded-lg mx-auto max-w-2xl"
-              />
-            )}
+            {subCategoryData.images &&
+              subCategoryData.images.length > 0 &&
+              subCategoryData.images[0].url && (
+                <Image
+                  src={subCategoryData.images[0].url}
+                  alt={subCategoryData.name}
+                  width={768}
+                  height={256}
+                  className="w-full h-64 object-cover rounded-lg mx-auto max-w-2xl"
+                />
+              )}
           </div>
 
           {/* Products */}
@@ -113,6 +130,9 @@ export default async function SubCategoryPage({
                 sold: product.sold ?? undefined,
                 discount: product.discount ?? undefined,
                 pricingType: product.pricingType,
+                // Include new fields with type safety
+                finish: (product as any).finish ?? undefined,
+                location: (product as any).location ?? undefined,
                 images: product.images
                   .map((image) => ({
                     url: image.url || '',

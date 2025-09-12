@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Orders Directly</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+          Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      h1 {
+        color: #2563eb;
+      }
+      .card {
+        background-color: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      button {
+        background-color: #2563eb;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      button:hover {
+        background-color: #1d4ed8;
+      }
+      button:disabled {
+        background-color: #93c5fd;
+        cursor: not-allowed;
+      }
+      .success {
+        color: #16a34a;
+        font-weight: bold;
+      }
+      .error {
+        color: #dc2626;
+        font-weight: bold;
+      }
+      .loading {
+        color: #2563eb;
+        font-weight: bold;
+      }
+      .spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top-color: #2563eb;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid #e5e7eb;
+        text-align: left;
+      }
+      th {
+        background-color: #f1f5f9;
+        font-weight: 600;
+      }
+      tr:nth-child(even) {
+        background-color: #f9fafb;
+      }
+      .order-row {
+        cursor: pointer;
+      }
+      .order-row:hover {
+        background-color: #e5e7eb;
+      }
+      .order-details {
+        display: none;
+        padding: 10px;
+        background-color: #f1f5f9;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        margin-top: 10px;
+      }
+      .paid {
+        color: #16a34a;
+      }
+      .unpaid {
+        color: #dc2626;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>View Orders Directly</h1>
+
+    <div class="card">
+      <h2>What This Does</h2>
+      <p>
+        This page fetches orders directly from the database, bypassing
+        authentication checks.
+      </p>
+      <p>
+        Use this to view your orders even if you're having authentication
+        issues.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Orders</h2>
+      <button id="loadButton">Load Orders</button>
+      <div id="status"></div>
+      <div id="ordersContainer"></div>
+    </div>
+
+    <script>
+      document
+        .getElementById('loadButton')
+        .addEventListener('click', async function () {
+          const button = document.getElementById('loadButton');
+          const statusEl = document.getElementById('status');
+          const ordersContainer = document.getElementById('ordersContainer');
+
+          // Disable button and show loading
+          button.disabled = true;
+          statusEl.innerHTML =
+            '<span class="loading"><div class="spinner"></div> Loading orders...</span>';
+          ordersContainer.innerHTML = '';
+
+          try {
+            // Call the server API endpoint to get orders directly
+            const response = await fetch('/api/debug/direct-orders');
+
+            if (response.ok) {
+              const data = await response.json();
+
+              if (data.success && data.orders && data.orders.length > 0) {
+                statusEl.innerHTML = `<span class="success">✅ Found ${data.orders.length} orders!</span>`;
+
+                // Create a table to display orders
+                const table = document.createElement('table');
+                table.innerHTML = `
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Date</th>
+                      <th>Total</th>
+                      <th>Status</th>
+                      <th>Paid</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ordersTableBody"></tbody>
+                `;
+
+                ordersContainer.appendChild(table);
+                const tableBody = document.getElementById('ordersTableBody');
+
+                // Add orders to the table
+                data.orders.forEach((order) => {
+                  const row = document.createElement('tr');
+                  row.className = 'order-row';
+                  row.dataset.orderId = order.id;
+
+                  const date = new Date(order.createdAt);
+                  const formattedDate = date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  });
+
+                  row.innerHTML = `
+                    <td>${order.id.substring(order.id.length - 8)}</td>
+                    <td>${formattedDate}</td>
+                    <td>$${order.total.toFixed(2)}</td>
+                    <td>${order.status || 'Processing'}</td>
+                    <td class="${order.isPaid ? 'paid' : 'unpaid'}">${order.isPaid ? 'Yes' : 'No'}</td>
+                  `;
+
+                  // Add click event to show order details
+                  row.addEventListener('click', function () {
+                    // Remove any existing details
+                    const existingDetails =
+                      document.querySelectorAll('.order-details');
+                    existingDetails.forEach((el) => el.remove());
+
+                    // Create details element
+                    const details = document.createElement('tr');
+                    details.className = 'order-details';
+                    details.innerHTML = `
+                      <td colspan="5">
+                        <h3>Order Details</h3>
+                        <p><strong>Order ID:</strong> ${order.id}</p>
+                        <p><strong>Date:</strong> ${formattedDate}</p>
+                        <p><strong>Total:</strong> $${order.total.toFixed(2)}</p>
+                        <p><strong>Status:</strong> ${order.status || 'Processing'}</p>
+                        <p><strong>Paid:</strong> ${order.isPaid ? 'Yes' : 'No'}</p>
+                        <p><strong>Payment Method:</strong> ${order.paymentMethod || 'Not specified'}</p>
+                        
+                        <h4>Products</h4>
+                        <ul>
+                          ${order.products
+                            .map(
+                              (product) => `
+                            <li>
+                              ${product.name || 'Unknown Product'} - $${product.price ? product.price.toFixed(2) : 'N/A'} 
+                              (Qty: ${product.qty || 1})
+                            </li>
+                          `
+                            )
+                            .join('')}
+                        </ul>
+                      </td>
+                    `;
+
+                    // Insert after the clicked row
+                    row.parentNode.insertBefore(details, row.nextSibling);
+                    details.style.display = 'table-row';
+                  });
+
+                  tableBody.appendChild(row);
+                });
+              } else {
+                statusEl.innerHTML =
+                  '<span class="error">❌ No orders found</span>';
+              }
+            } else {
+              const errorData = await response.json();
+              statusEl.innerHTML = `<span class="error">❌ Error: ${errorData.error || 'Failed to load orders'}</span>`;
+            }
+          } catch (error) {
+            statusEl.innerHTML =
+              `<span class="error">❌ Error: ${error.message || 'Failed to connect to server'}</span><br><br>` +
+              `<p>Make sure your development server is running at http://localhost:3007</p>`;
+          } finally {
+            button.disabled = false;
+          }
+        });
+    </script>
+  </body>
+</html>

@@ -17,7 +17,8 @@ const UserNavSection = () => {
 
   const handleUserClick = () => {
     if (isAuthenticated) {
-      router.push('/profile');
+      // Use direct window.location.href for navigation to avoid potential client-side routing issues
+      window.location.href = '/profile';
     } else {
       setIsAccountPopUpOpen(true);
     }
@@ -78,9 +79,9 @@ const UserNavSection = () => {
       )}
 
       {/* Account PopUp Modal */}
-      <AccountPopUp 
-        isOpen={isAccountPopUpOpen} 
-        onClose={() => setIsAccountPopUpOpen(false)} 
+      <AccountPopUp
+        isOpen={isAccountPopUpOpen}
+        onClose={() => setIsAccountPopUpOpen(false)}
       />
     </div>
   );

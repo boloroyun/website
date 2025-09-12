@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="128" height="128" rx="8" fill="#ECFDF5"/>
+  <path d="M24 32H104V96H24V32Z" fill="#D1FAE5"/>
+  <path d="M24 64L64 32L104 64L64 96L24 64Z" fill="#6EE7B7"/>
+  <path d="M44 64L64 48L84 64L64 80L44 64Z" fill="#10B981"/>
+  <text x="64" y="104" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#047857">MODERN SURFACES</text>
+</svg>

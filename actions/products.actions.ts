@@ -60,6 +60,9 @@ export async function getBestSellers(limit: number = 10) {
       sold: product.sold,
       discount: product.discount,
       pricingType: product.pricingType,
+      // Include new fields with type safety
+      finish: (product as any).finish ?? undefined,
+      location: (product as any).location ?? undefined,
       images: product.images
         .map((image) => ({
           url: image.url || '',
@@ -134,6 +137,9 @@ export async function getFeaturedProducts(limit: number = 8) {
       sold: product.sold,
       discount: product.discount,
       pricingType: product.pricingType,
+      // Include new fields with type safety
+      finish: (product as any).finish ?? undefined,
+      location: (product as any).location ?? undefined,
       images: product.images
         .map((image) => ({
           url: image.url || '',
@@ -250,6 +256,9 @@ export async function getNewArrivals(limit: number = 10) {
       sold: product.sold ?? undefined,
       discount: product.discount ?? undefined,
       pricingType: product.pricingType,
+      // Include new fields with type safety
+      finish: (product as any).finish ?? undefined,
+      location: (product as any).location ?? undefined,
       images: product.images
         .map((image) => ({
           url: image.url || '',
@@ -418,6 +427,9 @@ export async function searchProducts(keyword: string, limit: number = 20) {
       sold: product.sold ?? undefined,
       discount: product.discount ?? undefined,
       pricingType: product.pricingType,
+      // Include new fields with type safety
+      finish: (product as any).finish ?? undefined,
+      location: (product as any).location ?? undefined,
       images: product.images
         .map((image) => ({
           url: image.url || '',

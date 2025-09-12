@@ -14,6 +14,8 @@ interface Product {
   sold?: number;
   discount?: number;
   pricingType: string;
+  finish?: string;
+  location?: string;
   images: Array<{
     url: string;
     public_id: string;
@@ -163,9 +165,11 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({
           {/* Products Grid */}
           <ProductCard
             heading=""
-            products={section.products
-              .filter((product) => product.category)
-              .slice(0, 8) as any} // Show first 8 products per category
+            products={
+              section.products
+                .filter((product) => product.category)
+                .slice(0, 8) as any
+            } // Show first 8 products per category
           />
 
           {/* Show More Link if there are more products */}

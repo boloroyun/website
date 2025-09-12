@@ -3,18 +3,42 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 export const runtime = 'nodejs';
 
+// Import logger
+import { dlog, error as logError } from '@/lib/logger';
+
 // Create a completely isolated handler function
 async function createHandler() {
   try {
     // Dynamic imports to prevent build-time execution
-    const NextAuth = (await import('next-auth')).default;
+    const { default: NextAuth } = await import('next-auth');
 
     // Import auth options dynamically to avoid build-time Prisma initialization
-    const authModule = await import('@/lib/auth');
+    const { authOptions } = await import('@/lib/auth');
 
-    return NextAuth(authModule.authOptions);
+    // Create a wrapper handler that fixes the NextAuth query parameter issue
+    return async function handler(request: Request) {
+      try {
+        // Extract the nextauth segment from the URL path
+        const url = new URL(request.url);
+        const segments = url.pathname.split('/');
+        const nextauthSegment = segments[segments.length - 1];
+
+        // Fix the request URL to ensure NextAuth can extract query params properly
+        const fixedUrl = new URL(`/api/auth/${nextauthSegment}`, url.origin);
+        fixedUrl.search = url.search;
+
+        // Create a fixed request with the correct URL structure
+        const fixedRequest = new Request(fixedUrl, request);
+
+        // Call NextAuth with fixed request
+        return NextAuth(authOptions)(fixedRequest);
+      } catch (e) {
+        logError('Error in NextAuth handler wrapper:', e);
+        throw e;
+      }
+    };
   } catch (error) {
-    console.error('Failed to create NextAuth handler:', error);
+    logError('Failed to create NextAuth handler:', error);
 
     // Return a fallback handler that always returns an error
     return () =>
@@ -32,15 +56,52 @@ async function createHandler() {
 }
 
 // Simple handlers that only load NextAuth at runtime
+import { fallbackSession } from '../session-fallback';
+
 export async function GET(request: Request) {
   try {
+    const url = new URL(request.url);
+    const isSessionRequest = url.pathname.endsWith('/session');
+
+    // Create the handler
     const handler = await createHandler();
-    return handler(request);
+
+    try {
+      // Try to use the normal handler
+      return await handler(request);
+    } catch (error) {
+      // If this is a session request and failed, provide a fallback empty session
+      // This prevents client-side errors when session check fails
+      if (isSessionRequest) {
+        logError('Using fallback session due to error:', error);
+        return fallbackSession();
+      }
+
+      // For other auth endpoints, return error response
+      logError('NextAuth GET error:', error);
+      return new Response(
+        JSON.stringify({
+          error: 'Authentication service temporarily unavailable',
+          message: 'Please try again later',
+        }),
+        {
+          status: 503,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
   } catch (error) {
-    console.error('NextAuth GET error:', error);
+    // If we can't even create the handler, return fallback for session requests
+    const url = new URL(request.url);
+    if (url.pathname.endsWith('/session')) {
+      return fallbackSession();
+    }
+
+    // Otherwise return error
+    logError('NextAuth handler creation error:', error);
     return new Response(
       JSON.stringify({
-        error: 'Authentication service temporarily unavailable',
+        error: 'Authentication service unavailable',
         message: 'Please try again later',
       }),
       {
@@ -53,13 +114,49 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    // Check if this is a session-related request that should use fallback
+    const url = new URL(request.url);
+    const isSessionRelated =
+      url.pathname.endsWith('/session') || url.pathname.endsWith('/_log');
+
+    // Create the handler
     const handler = await createHandler();
-    return handler(request);
+
+    try {
+      // Try to use the normal handler
+      return await handler(request);
+    } catch (error) {
+      // If this is a session-related request and failed, provide empty 200 response
+      if (isSessionRelated) {
+        logError(
+          'Using empty response for session-related POST due to error:',
+          error
+        );
+        return new Response('{}', {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+
+      // For other auth endpoints, return error response
+      logError('NextAuth POST error:', error);
+      return new Response(
+        JSON.stringify({
+          error: 'Authentication service temporarily unavailable',
+          message: 'Please try again later',
+        }),
+        {
+          status: 503,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
   } catch (error) {
-    console.error('NextAuth POST error:', error);
+    // For any unhandled error, return a graceful error response
+    logError('NextAuth POST handler creation error:', error);
     return new Response(
       JSON.stringify({
-        error: 'Authentication service temporarily unavailable',
+        error: 'Authentication service unavailable',
         message: 'Please try again later',
       }),
       {

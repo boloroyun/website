@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="100" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="100" rx="8" fill="white"/>
+  <path d="M30 30H170V70H30V30Z" fill="#F5F3FF"/>
+  <path d="M30 30L170 70L30 70L30 30Z" fill="#DDD6FE"/>
+  <path d="M30 30L170 50L170 30L30 30Z" fill="#C4B5FD"/>
+  <path d="M100 30L170 40L170 30L100 30Z" fill="#A78BFA"/>
+  <text x="100" y="55" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#7C3AED">MARBLE EXPRESS</text>
+</svg>

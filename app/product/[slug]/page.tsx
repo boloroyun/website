@@ -146,6 +146,22 @@ const ProductPage = async ({ params }: ProductPageProps) => {
                   </span>
                 </div>
 
+                {/* Finish */}
+                {product.finish && (
+                  <div className="flex justify-between">
+                    <span className="font-medium text-gray-600">Finish:</span>
+                    <span className="text-gray-800">{product.finish}</span>
+                  </div>
+                )}
+
+                {/* Location */}
+                {product.location && (
+                  <div className="flex justify-between">
+                    <span className="font-medium text-gray-600">Location:</span>
+                    <span className="text-gray-800">{product.location}</span>
+                  </div>
+                )}
+
                 {/* Discount */}
                 {hasDiscount && (
                   <div className="flex justify-between">
