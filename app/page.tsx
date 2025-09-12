@@ -13,6 +13,7 @@ import SocialShare from '@/components/SocialShare';
 import TransparentHeaderWrapper from '@/components/TransparentHeaderWrapper';
 import Navbar from '@/components/Navbar';
 import TopBarWrapper from '@/components/TopBarWrapper';
+import SectionSeparator from '@/components/ui/SectionSeparator';
 import React from 'react';
 import {
   organizeProductsByCategory,
@@ -117,35 +118,73 @@ const HomePage = async () => {
       <TopBarWrapper />
       <Navbar />
 
-      {/* Adding padding-top to the carousel to account for the transparent header */}
-      <div>
+      {/* Hero Section with Banner Carousel */}
+      <div className="relative">
         <BannerCarousel
           websiteBanners={
             websiteBanners.success ? (websiteBanners.data ?? []) : []
           }
           appBanners={appBanners.success ? (appBanners.data ?? []) : []}
         />
+        
+        {/* Wave separator at the bottom of the carousel */}
+        <SectionSeparator variant="wave" position="bottom" color="#ffffff" height={50} />
       </div>
-      <SpecialCombos
-        data={specialCombos.success ? (specialCombos.data ?? []) : []}
-      />
-      <ProductCardByCategory
-        heading="BEST SELLERS"
-        sections={bestSellersBalanced}
-        maxProductsPerCategory={4}
-      />
-      <CrazyDeals deals={crazyDeals.success ? (crazyDeals.data ?? []) : []} />
-      <CategorySection
-        categories={categories.success ? (categories.data ?? []) : []}
-      />
-
-      <KeyBenefits />
-      <BlogImages />
-
-      {/* Google Reviews Section - Replace with your actual Google Place ID when ready */}
-      <GoogleReviews placeId="ChIJgUbEo8pZwokR5oXTcr_zNvE" />
-
-      {/* Display suppliers section */}
+      
+      {/* Special Combos Section */}
+      <div className="relative bg-white">
+        <SpecialCombos
+          data={specialCombos.success ? (specialCombos.data ?? []) : []}
+        />
+        <SectionSeparator variant="curve" position="bottom" color="#f9fafb" height={60} />
+      </div>
+      
+      {/* Best Sellers Section */}
+      <div className="relative bg-gray-50 pt-8">
+        <ProductCardByCategory
+          heading="BEST SELLERS"
+          sections={bestSellersBalanced}
+          maxProductsPerCategory={4}
+        />
+        <SectionSeparator variant="angle" position="bottom" color="#ffffff" height={60} />
+      </div>
+      
+      {/* Crazy Deals Section */}
+      <div className="relative bg-white pt-8">
+        <CrazyDeals deals={crazyDeals.success ? (crazyDeals.data ?? []) : []} />
+        <SectionSeparator variant="wave" position="bottom" color="#f9fafb" height={50} />
+      </div>
+      
+      {/* Categories Section */}
+      <div className="relative bg-gray-50 pt-8">
+        <CategorySection
+          categories={categories.success ? (categories.data ?? []) : []}
+        />
+        <SectionSeparator variant="curve" position="bottom" color="#ffffff" height={60} />
+      </div>
+      
+      {/* Key Benefits Section */}
+      <div className="relative">
+        <KeyBenefits />
+        <SectionSeparator variant="zigzag" position="bottom" color="#f9fafb" height={40} />
+      </div>
+      
+      {/* Blog Images Gallery Section */}
+      <div className="relative">
+        <BlogImages />
+        <SectionSeparator variant="wave" position="bottom" color="#ffffff" height={50} />
+      </div>
+      
+      {/* Google Reviews Section */}
+      <div className="relative bg-white">
+        <GoogleReviews placeId="ChIJgUbEo8pZwokR5oXTcr_zNvE" />
+        <SectionSeparator variant="curve" position="bottom" color="#f9fafb" height={60} />
+      </div>
+      
+      {/* Suppliers Section */}
+      <div className="relative">
+        <SupplierSection />
+      </div>
 
       {/* Floating Social Share Button */}
       <SocialShare

@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
+import HeroOverlay from './HeroOverlay';
 
 interface BannerImage {
   url: string;
@@ -127,18 +128,35 @@ const BannerCarousel = ({
     <div
       className={`relative w-full ${
         isMobile ? 'h-[500px]' : 'h-[80vh]'
-      } overflow-hidden mb-[20px]`}
+      } overflow-hidden`}
     >
-      {/* Carousel slides with text overlays for the first two slides */}
+      {/* Background Pattern */}
+      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
+        <div className="absolute inset-0" style={{ 
+          backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
+          backgroundSize: '20px 20px' 
+        }}></div>
+      </div>
+      
+      {/* Hero Overlay - Always visible regardless of slide */}
+      <HeroOverlay 
+        title="Transform Your Space with Premium Solutions"
+        subtitle="Explore our collection of high-quality cabinets, countertops, and custom designs for your dream home."
+        ctaText="Get Free Estimate"
+        ctaLink="/request-a-quote"
+      />
+      
+      {/* Carousel slides */}
       {images.map((src, index) => (
         <div
           key={index}
-          className={`absolute top-0 left-0 w-full h-full transition-opacity duration-500 ease-in-out ${
+          className={`absolute top-0 left-0 w-full h-full transition-opacity duration-700 ease-in-out ${
             index === currentIndex ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          {/* No full-width overlay, using targeted text backgrounds instead */}
-
+          {/* Dark overlay for better text contrast */}
+          <div className="absolute inset-0 bg-black/40 z-[1]"></div>
+          
           {/* Image */}
           {!imageError[index] ? (
             <Image
@@ -156,8 +174,6 @@ const BannerCarousel = ({
               </div>
             </div>
           )}
-
-          {/* Removed text overlays */}
         </div>
       ))}
       <Button
@@ -165,7 +181,7 @@ const BannerCarousel = ({
         size={'icon'}
         onClick={prevSlide}
         aria-label="Previous slide"
-        className="absolute top-1/2 left-4 transform -translate-y-1/2 text-black rounded-none"
+        className="absolute top-1/2 left-6 transform -translate-y-1/2 z-20 bg-white/20 backdrop-blur-sm text-white border-white/20 hover:bg-white/30 hover:text-white rounded-full w-12 h-12 shadow-lg"
       >
         <ChevronLeft size={24} />
       </Button>
@@ -174,16 +190,18 @@ const BannerCarousel = ({
         size={'icon'}
         onClick={nextSlide}
         aria-label="Next slide"
-        className="absolute top-1/2 right-4 transform -translate-y-1/2 text-black rounded-none"
+        className="absolute top-1/2 right-6 transform -translate-y-1/2 z-20 bg-white/20 backdrop-blur-sm text-white border-white/20 hover:bg-white/30 hover:text-white rounded-full w-12 h-12 shadow-lg"
       >
         <ChevronRight size={24} />
       </Button>
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
         {images.map((_, index) => (
           <button
             key={index}
-            className={`w-3 h-3 rounded-full ${
-              index === currentIndex ? 'bg-white' : 'bg-white/50'
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              index === currentIndex 
+                ? 'bg-white w-8' 
+                : 'bg-white/40 hover:bg-white/60'
             }`}
             onClick={() => goToSlide(index)}
             aria-label={`Go to slide ${index + 1}`}

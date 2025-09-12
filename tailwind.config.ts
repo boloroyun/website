@@ -16,6 +16,14 @@ const config: Config = {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
   			},
+  		utilities: {
+  			'.animation-delay-2000': {
+  				'animation-delay': '2s',
+  			},
+  			'.animation-delay-4000': {
+  				'animation-delay': '4s',
+  			},
+  		},
   			popover: {
   				DEFAULT: 'hsl(var(--popover))',
   				foreground: 'hsl(var(--popover-foreground))'
@@ -92,13 +100,46 @@ const config: Config = {
   					opacity: '0.8',
   					transform: 'scale(1.05)'
   				}
+  			},
+  			blob: {
+  				'0%': {
+  					transform: 'translate(0px, 0px) scale(1)'
+  				},
+  				'33%': {
+  					transform: 'translate(30px, -50px) scale(1.1)'
+  				},
+  				'66%': {
+  					transform: 'translate(-20px, 20px) scale(0.9)'
+  				},
+  				'100%': {
+  					transform: 'translate(0px, 0px) scale(1)'
+  				}
+  			},
+  			'float': {
+  				'0%, 100%': {
+  					transform: 'translateY(0)'
+  				},
+  				'50%': {
+  					transform: 'translateY(-10px)'
+  				}
+  			},
+  			'background-shine': {
+  				'from': {
+  					backgroundPosition: '200% 0'
+  				},
+  				'to': {
+  					backgroundPosition: '-200% 0'
+  				}
   			}
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
   			'fade-in-up': 'fade-in-up 0.7s ease-out',
-  			'pulse-glow': 'pulse-glow 2s infinite ease-in-out'
+  			'pulse-glow': 'pulse-glow 2s infinite ease-in-out',
+  			'blob': 'blob 7s infinite',
+  			'float': 'float 3s ease-in-out infinite',
+  			'background-shine': 'background-shine 8s linear infinite'
   		}
   	}
   },
