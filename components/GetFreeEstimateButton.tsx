@@ -1,10 +1,11 @@
 'use client';
 
-import React from 'react';
-import { Calculator, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calculator, ArrowRight, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import QuoteRequestModal from './QuoteRequestModal';
 import { emitCrispEvent, CRISP_EVENTS } from '@/lib/crisp-events';
+import { useToast } from '@/components/ui/use-toast';
 
 interface GetFreeEstimateButtonProps {
   variant?: 'primary' | 'secondary' | 'outline' | 'text';
@@ -21,7 +22,9 @@ export default function GetFreeEstimateButton({
   showArrow = false,
   className = '',
 }: GetFreeEstimateButtonProps) {
-  const [showModal, setShowModal] = React.useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
   // Map custom variants to shadcn button variants
   const buttonVariantMap = {
@@ -41,10 +44,48 @@ export default function GetFreeEstimateButton({
 
   // Generate variant-specific styles
   const variantStyles = {
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl',
-    secondary: 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg hover:shadow-xl',
+    primary:
+      'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl',
+    secondary:
+      'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg hover:shadow-xl',
     outline: 'border-2 border-blue-500 text-blue-600 hover:bg-blue-50',
     text: 'text-blue-600 hover:text-blue-800 underline-offset-4 hover:underline',
+  };
+
+  // Handle quote submission success
+  const handleQuoteSubmitted = async (quoteData: any) => {
+    try {
+      setIsSubmitting(true);
+      
+      // Send email notification to info@luxcabistones.com
+      const response = await fetch('/api/quotes/email-notification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_INTERNAL_API_TOKEN || 'dev-token'}`,
+        },
+        body: JSON.stringify({
+          ...quoteData,
+          notificationEmail: 'info@luxcabistones.com',
+        }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Failed to send email notification:', errorData);
+        // Don't show error to user, the quote was still created
+      } else {
+        toast({
+          title: "Quote Request Sent",
+          description: "Your estimate request has been sent to our team. We'll get back to you soon!",
+          duration: 5000,
+        });
+      }
+    } catch (error) {
+      console.error('Error sending email notification:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleClick = () => {
@@ -71,7 +112,9 @@ export default function GetFreeEstimateButton({
           ${className}
         `}
       >
-        {showIcon && <Calculator className={`${showArrow ? 'mr-2' : 'mr-2'} h-5 w-5`} />}
+        {showIcon && (
+          <Calculator className={`${showArrow ? 'mr-2' : 'mr-2'} h-5 w-5`} />
+        )}
         Get Free Estimate
         {showArrow && <ArrowRight className="ml-2 h-5 w-5" />}
       </Button>
@@ -80,6 +123,7 @@ export default function GetFreeEstimateButton({
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         initialCategory="combo"
+        onSubmitSuccess={handleQuoteSubmitted}
       />
     </>
   );
@@ -89,8 +133,8 @@ export default function GetFreeEstimateButton({
 export function FloatingEstimateButton() {
   return (
     <div className="fixed bottom-6 right-6 z-40">
-      <GetFreeEstimateButton 
-        variant="secondary" 
+      <GetFreeEstimateButton
+        variant="secondary"
         size="lg"
         showIcon={true}
         showArrow={true}

@@ -52,6 +52,7 @@ interface QuoteRequestModalProps {
   onClose: () => void;
   initialCategory?: 'countertop' | 'cabinet' | 'combo';
   productIds?: string[];
+  onSubmitSuccess?: (quoteData: any) => void;
 }
 
 interface QuoteFormData {
@@ -100,6 +101,7 @@ export default function QuoteRequestModal({
   onClose,
   initialCategory = 'countertop',
   productIds = [],
+  onSubmitSuccess,
 }: QuoteRequestModalProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -285,6 +287,11 @@ export default function QuoteRequestModal({
       // Set quote submitted flag for campaign targeting
       setQuoteSubmittedFlag();
 
+      // Call the onSubmitSuccess callback if provided
+      if (onSubmitSuccess) {
+        onSubmitSuccess(result);
+      }
+      
       // Close modal and navigate to quote page
       onClose();
       router.push(`/quote/${result.quoteId}`);
