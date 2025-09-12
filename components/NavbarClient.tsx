@@ -88,21 +88,34 @@ const NavbarClient = () => {
       <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-2 px-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-4 text-sm">
-            <a href="tel:+15713350118" className="flex items-center hover:text-blue-400 transition-colors">
+            <a
+              href="tel:+15713350118"
+              className="flex items-center hover:text-blue-400 transition-colors"
+            >
               <Phone size={14} className="mr-1" />
               <span>(571) 335-0118</span>
             </a>
             <span className="hidden md:inline text-gray-500">|</span>
-            <span className="hidden md:inline text-gray-300">Mon-Fri: 9AM-5PM</span>
+            <span className="hidden md:inline text-gray-300">
+              Mon-Fri: 9AM-5PM
+            </span>
             <span className="hidden md:inline text-gray-500">|</span>
-            <span className="hidden md:inline text-gray-300">Sat: 10AM-3PM</span>
+            <span className="hidden md:inline text-gray-300">
+              Sat: 10AM-3PM
+            </span>
           </div>
           <div className="hidden md:flex items-center space-x-4 text-sm">
-            <Link href="/request-a-quote" className="text-blue-400 hover:text-blue-300 transition-colors">
+            <Link
+              href="/request-a-quote"
+              className="text-blue-400 hover:text-blue-300 transition-colors"
+            >
               Get Free Estimate
             </Link>
             <span className="text-gray-500">|</span>
-            <Link href="/contact" className="text-gray-300 hover:text-white transition-colors">
+            <Link
+              href="/contact"
+              className="text-gray-300 hover:text-white transition-colors"
+            >
               Contact Us
             </Link>
           </div>
@@ -110,7 +123,7 @@ const NavbarClient = () => {
       </div>
 
       {/* Main navigation */}
-      <nav 
+      <nav
         className={`w-full bg-white shadow-sm sticky top-0 z-40 transition-all duration-300 ${
           scrolled ? 'shadow-md py-2' : 'py-4'
         }`}
@@ -120,9 +133,12 @@ const NavbarClient = () => {
             {/* Left section: Mobile menu and search */}
             <div className="flex items-center space-x-4">
               <MobileNavMenu navItems={navItems} />
-              
+
               <div className="hidden md:flex">
-                <button className="p-2 text-gray-500 hover:text-blue-600 transition-colors" aria-label="Search">
+                <button
+                  className="p-2 text-gray-500 hover:text-blue-600 transition-colors"
+                  aria-label="Search"
+                >
                   <Search size={20} />
                 </button>
               </div>
@@ -157,15 +173,17 @@ const NavbarClient = () => {
               <UserNavSection />
             </div>
           </div>
-          
+
           {/* Desktop Navigation Menu */}
-          <div className={`hidden lg:flex justify-center mt-2 transition-all duration-300 ${
-            scrolled ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'
-          }`}>
+          <div
+            className={`hidden lg:flex justify-center mt-2 transition-all duration-300 ${
+              scrolled ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'
+            }`}
+          >
             <div className="flex space-x-1">
-              {navItems.map((item) => (
+              {navItems.map((item, index) => (
                 <Link
-                  key={item.id}
+                  key={index}
                   href={item.href}
                   className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                     pathname === item.href
