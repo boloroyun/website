@@ -10,6 +10,7 @@ import {
   Eye,
   Heart,
   ArrowUpRight,
+  ArrowRight,
 } from 'lucide-react';
 import { BlogPost } from '@/actions/blog.actions';
 

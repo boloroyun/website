@@ -568,7 +568,7 @@ export default function QuoteRequestModal({
           <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
-                <Image className="h-5 w-5" />
+                <Image className="h-5 w-5" alt="Upload" />
                 Project Photos (optional)
               </CardTitle>
               <CardDescription>

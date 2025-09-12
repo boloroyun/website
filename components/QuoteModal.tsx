@@ -352,7 +352,7 @@ export default function QuoteModal({
               {/* Project Photos Upload */}
               <div className="space-y-2">
                 <Label htmlFor="photos" className="flex items-center gap-2">
-                  <Image className="h-4 w-4" />
+                  <Image className="h-4 w-4" alt="Upload" />
                   Project Photos (optional)
                 </Label>
                 <FileUploader
