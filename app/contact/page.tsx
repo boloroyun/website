@@ -9,6 +9,7 @@ import {
   Calendar,
   MessageSquare,
 } from 'lucide-react';
+import ContactForm from './ContactForm';
 
 export const metadata: Metadata = {
   title: `Contact Us | ${process.env.NEXT_PUBLIC_SITE_NAME || 'LUX Cabinets & Stones'}`,
@@ -18,47 +19,6 @@ export const metadata: Metadata = {
     'contact, custom cabinets, stone countertops, consultation, quote, cabinet installation',
 };
 
-interface ContactFormData {
-  name: string;
-  email: string;
-  phone: string;
-  subject: string;
-  message: string;
-  projectType: string;
-  budget: string;
-}
-
-async function submitContactForm(formData: FormData) {
-  'use server';
-
-  const data: ContactFormData = {
-    name: formData.get('name') as string,
-    email: formData.get('email') as string,
-    phone: formData.get('phone') as string,
-    subject: formData.get('subject') as string,
-    message: formData.get('message') as string,
-    projectType: formData.get('projectType') as string,
-    budget: formData.get('budget') as string,
-  };
-
-  try {
-    // Here you can add your contact form submission logic
-    // For now, we'll just log the data (in production, send to email service)
-    console.log('Contact form submission:', data);
-
-    // You could integrate with services like:
-    // - SendGrid
-    // - Nodemailer
-    // - Resend
-    // - Or save to database
-
-    // Success - form submission completed
-    console.log('Contact form submitted successfully');
-  } catch (error) {
-    console.error('Contact form error:', error);
-    // Error handling could be improved with proper error reporting
-  }
-}
 
 export default function ContactPage() {
   return (
@@ -227,171 +187,7 @@ export default function ContactPage() {
             </div>
 
             {/* Contact Form */}
-            <div id="contact-form">
-              <div className="bg-white rounded-xl shadow-lg p-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-8">
-                  Send Us a Message
-                </h2>
-
-                <form action={submitContactForm} className="space-y-6">
-                  {/* Name and Email Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                      >
-                        Full Name *
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Your full name"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                      >
-                        Email Address *
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="your.email@example.com"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Phone and Subject Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label
-                        htmlFor="phone"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                      >
-                        Phone Number
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="(555) 123-4567"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="subject"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                      >
-                        Subject *
-                      </label>
-                      <input
-                        type="text"
-                        id="subject"
-                        name="subject"
-                        required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="What can we help you with?"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Project Type and Budget Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label
-                        htmlFor="projectType"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                      >
-                        Project Type
-                      </label>
-                      <select
-                        id="projectType"
-                        name="projectType"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      >
-                        <option value="">Select project type</option>
-                        <option value="kitchen-cabinets">
-                          Kitchen Cabinets
-                        </option>
-                        <option value="bathroom-cabinets">
-                          Bathroom Cabinets
-                        </option>
-                        <option value="countertops">Countertops</option>
-                        <option value="full-remodel">Full Remodel</option>
-                        <option value="custom-millwork">Custom Millwork</option>
-                        <option value="consultation">Consultation Only</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="budget"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                      >
-                        Budget Range
-                      </label>
-                      <select
-                        id="budget"
-                        name="budget"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      >
-                        <option value="">Select budget range</option>
-                        <option value="under-10k">Under $10,000</option>
-                        <option value="10k-25k">$10,000 - $25,000</option>
-                        <option value="25k-50k">$25,000 - $50,000</option>
-                        <option value="50k-100k">$50,000 - $100,000</option>
-                        <option value="over-100k">Over $100,000</option>
-                        <option value="not-sure">Not sure yet</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Message */}
-                  <div>
-                    <label
-                      htmlFor="message"
-                      className="block text-sm font-medium text-gray-700 mb-2"
-                    >
-                      Message *
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      required
-                      rows={6}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Tell us about your project, timeline, and any specific requirements..."
-                    ></textarea>
-                  </div>
-
-                  {/* Submit Button */}
-                  <div>
-                    <button
-                      type="submit"
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center"
-                    >
-                      <MessageSquare className="w-5 h-5 mr-2" />
-                      Send Message
-                    </button>
-                  </div>
-
-                  <p className="text-sm text-gray-500 text-center">
-                    We typically respond within 24 hours. For urgent inquiries,
-                    please call us directly.
-                  </p>
-                </form>
-              </div>
-            </div>
+            <ContactForm />
           </div>
         </div>
       </div>
