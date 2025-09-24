@@ -150,10 +150,10 @@ export function HeroEstimateButton() {
   return (
     <GetFreeEstimateButton
       variant="secondary"
-      size="xl"
+      size="sm"
       showIcon={true}
-      showArrow={true}
-      className="font-bold tracking-wide"
+      showArrow={false}
+      className="font-medium tracking-wide w-full text-[10px] xs:text-xs sm:text-sm py-1.5 px-2 xs:py-2 xs:px-3 sm:py-2 sm:px-4 h-full"
     />
   );
 }

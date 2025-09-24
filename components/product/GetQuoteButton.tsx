@@ -22,14 +22,24 @@ export default function GetQuoteButton({
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  // Add debugging to help identify click issues
+  const handleButtonClick = (e: React.MouseEvent) => {
+    console.log('Quote button clicked!');
+    e.preventDefault(); // Prevent any default behavior
+    e.stopPropagation(); // Stop event propagation
+    openModal();
+  };
+
   return (
     <>
-      <Button
-        onClick={openModal}
-        className={`${className} bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded`}
+      {/* Use a regular button element instead of the shadcn Button component */}
+      <button
+        type="button"
+        onClick={handleButtonClick}
+        className={`${className} bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded font-medium cursor-pointer`}
       >
-        Get Quote Right Now
-      </Button>
+        Get a Quote Now
+      </button>
 
       <QuoteModal
         isOpen={isModalOpen}

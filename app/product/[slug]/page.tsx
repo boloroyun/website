@@ -11,10 +11,20 @@ import SocialShare from '@/components/SocialShare';
 import { getProductBySlug, getRelatedProductsByCategory } from '@/actions';
 import { getProductFeatures } from '@/lib/product-features';
 import { notFound } from 'next/navigation';
+import { default as dynamicImport } from 'next/dynamic';
+import { ProductJsonLd, BreadcrumbJsonLd } from '@/components/SEO/JsonLd';
 
 // Force dynamic rendering to prevent build-time server action execution
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+// Import the click debugger component with no SSR
+const ClickDebugger = dynamicImport(
+  () => import('@/components/debug/ClickDebugger'),
+  {
+    ssr: false,
+  }
+);
 
 interface ProductPageProps {
   params: {
@@ -89,8 +99,83 @@ const ProductPage = async ({ params }: ProductPageProps) => {
   // Get dynamic features based on product category
   const productFeatures = getProductFeatures(categoryName);
 
+  // Generate structured data for product
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://luxcabinetsandstones.com';
+  const productUrl = `${baseUrl}/product/${product.slug}`;
+  const productImages =
+    product.images && product.images.length > 0
+      ? product.images.map((img) => img.url)
+      : [`${baseUrl}/images/logo.jpeg`];
+
   return (
     <div>
+      {/* Structured data for product */}
+      <ProductJsonLd
+        name={product.title}
+        description={
+          product.description ||
+          `Premium ${categoryName} from Lux Cabinets & Stones`
+        }
+        sku={product.sku}
+        image={productImages}
+        brand={product.brand ? { name: product.brand } : undefined}
+        offers={{
+          price: product.pricingType === 'quote' ? 0 : minPrice,
+          priceCurrency: 'USD',
+          availability: 'https://schema.org/InStock',
+          url: productUrl,
+          priceValidUntil: new Date(
+            new Date().setFullYear(new Date().getFullYear() + 1)
+          )
+            .toISOString()
+            .split('T')[0],
+        }}
+        aggregateRating={
+          product.numReviews > 0
+            ? {
+                ratingValue: product.rating,
+                reviewCount: product.numReviews,
+              }
+            : undefined
+        }
+        reviews={
+          product.reviews && product.reviews.length > 0
+            ? product.reviews.map((review) => ({
+                author: review.reviewBy || 'Customer',
+                datePublished: (review.reviewCreatedAt
+                  ? review.reviewCreatedAt.toISOString()
+                  : new Date().toISOString()
+                ).split('T')[0],
+                reviewBody: review.review || '',
+                name: product.title,
+                ratingValue: review.rating,
+              }))
+            : undefined
+        }
+      />
+
+      {/* Breadcrumb structured data */}
+      <BreadcrumbJsonLd
+        items={[
+          {
+            name: 'Home',
+            item: baseUrl,
+          },
+          {
+            name: categoryName,
+            item: `${baseUrl}/category/${product.category.slug}`,
+          },
+          {
+            name: product.title,
+            item: productUrl,
+          },
+        ]}
+      />
+
+      {/* Click debugger tool (toggle with Shift+D) */}
+      <ClickDebugger />
+
       {/* Announcement Marquee */}
       <Marquee className="bg-[#81d8d0] flex justify-between gap-[50px] p-4 sm:hidden">
         <p className="para mx-4">
@@ -102,7 +187,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
           timelines.
         </p>
         <p className="para mx-4">
-          🏠 Click "Get Quote Right Now" to start your project today!
+          🏠 Click "Get a Quote Now" to start your project today!
         </p>
       </Marquee>
 

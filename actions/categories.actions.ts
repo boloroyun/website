@@ -1,14 +1,10 @@
 'use server';
 
-import { PrismaClient } from '@prisma/client';
+import { getPrismaClient } from '@/lib/mongodb';
 
-// Lazy Prisma initialization
-let prisma: PrismaClient;
+// Use the improved Prisma client with better connection handling
 function getPrisma() {
-  if (!prisma) {
-    prisma = new PrismaClient();
-  }
-  return prisma;
+  return getPrismaClient();
 }
 
 // Get all categories with their subcategories

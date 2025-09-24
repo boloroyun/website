@@ -9,7 +9,7 @@ The Quote Request System allows customers to request quotes for products directl
 ### Frontend Components
 
 1. **GetQuoteButton.tsx**
-   - Renders the "Get Quote Right Now" button on product pages
+   - Renders the "Get a Quote Now" button on product pages
    - Opens the quote request modal when clicked
 
 2. **QuoteModal.tsx**
@@ -50,7 +50,7 @@ The Quote Request System allows customers to request quotes for products directl
 
 ## Data Flow
 
-1. User clicks "Get Quote Right Now" button on a product page
+1. User clicks "Get a Quote Now" button on a product page
 2. Quote modal opens, user fills out the form and submits
 3. Frontend sends the data to `/api/quotes` endpoint
 4. Website API validates the data and attempts to forward it to the admin API

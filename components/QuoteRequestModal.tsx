@@ -291,7 +291,7 @@ export default function QuoteRequestModal({
       if (onSubmitSuccess) {
         onSubmitSuccess(result);
       }
-      
+
       // Close modal and navigate to quote page
       onClose();
       router.push(`/quote/${result.quoteId}`);
@@ -643,7 +643,7 @@ export default function QuoteRequestModal({
             ) : (
               <>
                 <Calculator className="mr-2 h-4 w-4" />
-                Get Quote
+                Get a Quote
               </>
             )}
           </Button>

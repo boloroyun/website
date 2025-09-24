@@ -155,10 +155,10 @@ const NavbarClient = () => {
                   <Image
                     src="/images/logo.jpeg"
                     alt="LUX Cabinets & Stones"
-                    width={400}
-                    height={120}
-                    className={`h-12 sm:h-14 w-auto transition-all duration-300 ${
-                      scrolled ? 'scale-90' : ''
+                    width={600}
+                    height={180}
+                    className={`h-16 sm:h-20 w-auto transition-all duration-300 ${
+                      scrolled ? 'scale-95' : ''
                     }`}
                     priority
                     style={{ objectFit: 'contain' }}

@@ -44,30 +44,67 @@ export const storePendingQuote = async (
     if (typeof window === 'undefined') return { success: false };
 
     // Try to create a fallback request in the database first
+    console.log('📤 Attempting to create fallback quote in database...');
     try {
+      // Add timeout to the fetch request
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      console.log('📤 Sending request to /api/quotes/fallback-create...');
+      console.log('📤 Quote data:', {
+        name: quoteData.name,
+        email: quoteData.email,
+        productId: quoteData.productId,
+        productName: quoteData.productName,
+      });
+
       const response = await fetch('/api/quotes/fallback-create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(quoteData),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+      console.log('✅ Received response from fallback-create:', {
+        status: response.status,
       });
 
       if (response.ok) {
         const result = await response.json();
+        console.log('📄 Fallback API response:', result);
+
         if (result.success && result.quoteId && result.publicToken) {
-          console.log('Created fallback quote request in database');
+          console.log(
+            '✅ Created fallback quote request in database, ID:',
+            result.quoteId
+          );
           return {
             success: true,
             quoteId: result.quoteId,
             publicToken: result.publicToken,
           };
+        } else {
+          console.warn(
+            '⚠️ Fallback API response missing expected data:',
+            result
+          );
         }
+      } else {
+        const errorText = await response.text().catch(() => 'No error details');
+        console.error('❌ Fallback API error:', {
+          status: response.status,
+          error: errorText,
+        });
       }
     } catch (dbError) {
-      console.error('Failed to create fallback quote in database:', dbError);
+      console.error('❌ Failed to create fallback quote in database:', dbError);
       // Continue with local storage fallback
     }
+
+    console.log('🔄 Falling back to local storage...');
 
     // If database fallback failed, store locally
     // Generate a client-side uuid for tracking

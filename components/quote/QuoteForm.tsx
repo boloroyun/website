@@ -1,21 +1,23 @@
 'use client';
 import { useState } from 'react';
-// Use direct imports without the @ alias
+// Use proper imports with @ alias to ensure correct path resolution
 import {
   FileUploader as CustomFileUploader,
   UploadedImage,
-} from '../../components/FileUploader';
+} from '@/components/FileUploader';
 import { Loader2 } from 'lucide-react';
-import { openChat, sendVisitorMessage, setSessionData } from '../../lib/crisp';
-import { addSessionTags as tagSession } from '../../lib/crisp';
-import { toast } from '../../components/ui/use-toast';
+import { openChat, sendVisitorMessage, setSessionData } from '@/lib/crisp';
+import { addSessionTags as tagSession } from '@/lib/crisp';
+import { toast } from '@/components/ui/use-toast';
 
 export default function QuoteForm({
   productName,
   productId,
+  sku,
 }: {
   productName?: string;
   productId?: string;
+  sku?: string;
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [name, setName] = useState('');
@@ -25,6 +27,7 @@ export default function QuoteForm({
     productName ? `I'm interested in getting a quote for ${productName}.` : ''
   );
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
+  const [uploadStatus, setUploadStatus] = useState<string>('idle');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,6 +54,7 @@ export default function QuoteForm({
         phone,
         product_of_interest: productName || 'Not specified',
         product_id: productId || 'Not specified',
+        product_sku: sku || 'Not specified',
       });
 
       // Open chat
@@ -62,6 +66,7 @@ Name: ${name}
 Email: ${email}
 Phone: ${phone || 'Not provided'}
 ${productName ? `Product: ${productName}` : ''}
+${sku ? `SKU: ${sku}` : ''}
 
 ${message}
       `.trim();
@@ -162,9 +167,38 @@ ${message}
 
       <div className="space-y-2">
         <label className="text-sm font-medium">Add Photos (Optional)</label>
-        <CustomFileUploader onImagesUploaded={setUploadedImages} />
+        <CustomFileUploader
+          onImagesUploaded={(images) => {
+            console.log('Images uploaded successfully:', images);
+            setUploadedImages(images);
+            setUploadStatus('success');
+            toast({
+              title: `${images.length} image(s) uploaded`,
+              description: 'Images uploaded successfully',
+              variant: 'default',
+            });
+          }}
+          onError={(error) => {
+            console.error('Upload error:', error);
+            setUploadStatus('error');
+            toast({
+              title: 'Upload Error',
+              description: error,
+              variant: 'destructive',
+            });
+          }}
+          onUploadStatusChange={(isUploading) => {
+            console.log(
+              'Upload status changed:',
+              isUploading ? 'uploading' : 'idle'
+            );
+            setUploadStatus(isUploading ? 'uploading' : 'idle');
+          }}
+          className="max-h-[300px]"
+        />
         <p className="text-xs text-gray-500">
-          Upload photos of your space or inspiration images (max 5 images).
+          Upload photos of your space or inspiration images (max 8 files, 10MB
+          each).
         </p>
       </div>
 
@@ -180,13 +214,18 @@ ${message}
       <div className="flex justify-center">
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || uploadStatus === 'uploading'}
           className="px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:pointer-events-none min-w-[180px]"
         >
           {isSubmitting ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin inline" />
               Sending...
+            </>
+          ) : uploadStatus === 'uploading' ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin inline" />
+              Uploading Images...
             </>
           ) : (
             'Submit Quote Request'

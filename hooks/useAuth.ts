@@ -50,9 +50,16 @@ export const useAuth = () => {
     }
   }, []);
 
-  // Initial auth check
+  // Initial auth check with timeout to prevent infinite loading
   useEffect(() => {
     checkAuthStatus();
+
+    // Add a timeout to ensure isLoading is set to false even if checkAuthStatus hangs
+    const timeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // 2 seconds max loading time
+
+    return () => clearTimeout(timeout);
   }, [checkAuthStatus]);
 
   // Listen for cookie changes using polling

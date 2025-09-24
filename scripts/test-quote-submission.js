@@ -1,57 +1,111 @@
-// Test script for quote submission
+// Test script for quote submission functionality
 require('dotenv').config();
-const { PrismaClient } = require('@prisma/client');
+const fetch = require('node-fetch');
 
-const prisma = new PrismaClient();
+// Generate a valid MongoDB ObjectID (24 hex characters)
+function generateValidObjectId() {
+  const hexChars = '0123456789abcdef';
+  let result = '';
+  for (let i = 0; i < 24; i++) {
+    result += hexChars[Math.floor(Math.random() * hexChars.length)];
+  }
+  return result;
+}
 
-async function testQuoteCreation() {
+const TEST_QUOTE_DATA = {
+  name: 'Test User',
+  email: 'test@example.com',
+  phone: '555-123-4567',
+  zipCode: '12345',
+  notes: 'This is a test quote submission from the test script.',
+  productId: generateValidObjectId(), // Valid ObjectID format
+  productName: 'Test Product',
+  sku: 'TEST-SKU-123',
+  timestamp: new Date().toISOString(),
+};
+
+async function testQuoteSubmission() {
+  console.log('🧪 Starting quote submission test...');
+  console.log('📦 Test data:', TEST_QUOTE_DATA);
+
   try {
-    console.log('Testing database connection and quote creation...');
+    // Step 1: Test the fallback-create endpoint directly
+    console.log('\n📝 Step 1: Testing fallback-create endpoint...');
+    const fallbackResponse = await fetch(
+      'http://localhost:3000/api/quotes/fallback-create',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(TEST_QUOTE_DATA),
+      }
+    );
 
-    // Test database connection
-    await prisma.$connect();
-    console.log('✅ Database connection successful');
+    const fallbackResult = await fallbackResponse.json();
 
-    // Create a test quote request
-    const testQuote = await prisma.quoteRequest.create({
-      data: {
-        email: 'test@example.com',
-        customerName: 'Test User',
-        phone: '555-1234',
-        zip: '12345',
-        productName: 'Test Product',
-        status: 'NEW',
+    if (fallbackResponse.ok) {
+      console.log('✅ Fallback endpoint test passed!');
+      console.log('📄 Response:', fallbackResult);
+
+      if (fallbackResult.quoteId) {
+        console.log(`🆔 Created quote ID: ${fallbackResult.quoteId}`);
+      }
+    } else {
+      console.error('❌ Fallback endpoint test failed!');
+      console.error('📄 Response:', fallbackResult);
+      return false;
+    }
+
+    // Step 2: Test the main quotes endpoint
+    console.log('\n📝 Step 2: Testing main quotes endpoint...');
+    const mainResponse = await fetch('http://localhost:3000/api/quotes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        ...TEST_QUOTE_DATA,
+        name: 'Test User (Main API)',
+        email: 'test-main@example.com',
+      }),
     });
 
-    console.log('✅ Test quote created successfully:', {
-      id: testQuote.id,
-      publicToken: testQuote.publicToken,
-      email: testQuote.email,
-    });
+    const mainResult = await mainResponse.json();
 
-    // Clean up - delete the test quote
-    await prisma.quoteRequest.delete({
-      where: { id: testQuote.id },
-    });
+    if (mainResponse.ok) {
+      console.log('✅ Main endpoint test passed!');
+      console.log('📄 Response:', mainResult);
 
-    console.log('✅ Test quote deleted successfully');
+      if (mainResult.quoteId) {
+        console.log(`🆔 Created quote ID: ${mainResult.quoteId}`);
+      }
+    } else {
+      console.error('❌ Main endpoint test failed!');
+      console.error('📄 Response:', mainResult);
+      return false;
+    }
 
+    console.log(
+      '\n🎉 All tests passed! Quote submission functionality is working correctly.'
+    );
     return true;
   } catch (error) {
-    console.error('❌ Error during test:', error);
+    console.error('❌ Test failed with error:', error);
     return false;
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
-testQuoteCreation()
+// Run the test
+testQuoteSubmission()
   .then((success) => {
-    console.log(success ? '✅ All tests passed!' : '❌ Test failed');
-    process.exit(success ? 0 : 1);
+    if (!success) {
+      console.error('\n❌ Quote submission test failed!');
+      process.exit(1);
+    }
+    console.log('\n✅ Quote submission test completed successfully!');
   })
   .catch((error) => {
-    console.error('Unhandled error:', error);
+    console.error('\n💥 Unhandled error in test script:', error);
     process.exit(1);
   });

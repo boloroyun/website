@@ -33,10 +33,10 @@ export default function QuoteRequestButton({
 
   const defaultText =
     category === 'combo'
-      ? 'Get Complete Quote'
+      ? 'Get a Quote Now'
       : category === 'cabinet'
-        ? 'Get Cabinet Quote'
-        : 'Get Countertop Quote';
+        ? 'Get a Quote Now'
+        : 'Get a Quote Now';
 
   return (
     <>

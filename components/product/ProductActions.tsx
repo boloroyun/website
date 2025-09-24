@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { useParams } from 'next/navigation';
 import { useAtom } from 'jotai';
 import { cartMenuState } from '../store';
-import GetQuoteButton from './GetQuoteButton';
+import QuoteButtonFixed from './QuoteButtonFixed';
 
 interface ProductSize {
   size: string;
@@ -131,7 +131,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({
     return (
       <div className="space-y-4">
         {productData && (
-          <GetQuoteButton
+          <QuoteButtonFixed
             productData={{
               id: productData.id,
               title: productData.title,
@@ -214,7 +214,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({
 
         {/* Add to Cart Button or Quote Button */}
         {pricingType === 'quote' && productData ? (
-          <GetQuoteButton
+          <QuoteButtonFixed
             productData={{
               id: productData.id,
               title: productData.title,

@@ -128,43 +128,52 @@ const BannerCarousel = ({
     <div
       className={`relative w-full ${
         isMobile ? 'h-[500px]' : 'h-[80vh]'
-      } overflow-hidden`}
+      } overflow-hidden shadow-lg`}
     >
       {/* Background Pattern */}
       <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
-        <div className="absolute inset-0" style={{ 
-          backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
-          backgroundSize: '20px 20px' 
-        }}></div>
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle, #ffffff 1px, transparent 1px)',
+            backgroundSize: '20px 20px',
+          }}
+        ></div>
       </div>
-      
+
       {/* Hero Overlay - Always visible regardless of slide */}
-      <HeroOverlay 
+      <HeroOverlay
         title="Premium Cabinets & Stone Surfaces"
         subtitle="Explore our collection of high-quality cabinets, countertops, and custom designs for your dream home."
         ctaText="Get Free Estimate"
         ctaLink="/request-a-quote"
         showClosets={true}
       />
-      
+
       {/* Carousel slides */}
       {images.map((src, index) => (
         <div
           key={index}
-          className={`absolute top-0 left-0 w-full h-full transition-opacity duration-700 ease-in-out ${
-            index === currentIndex ? 'opacity-100' : 'opacity-0'
+          className={`absolute top-0 left-0 w-full h-full transition-all duration-700 ease-in-out ${
+            index === currentIndex
+              ? 'opacity-100 scale-100'
+              : 'opacity-0 scale-105'
           }`}
         >
-          {/* Dark overlay for better text contrast */}
-          <div className="absolute inset-0 bg-black/40 z-[1]"></div>
-          
+          {/* Lighter overlay for better image visibility while maintaining text contrast */}
+          <div className="absolute inset-0 bg-black/25 z-[1]"></div>
+
           {/* Image */}
           {!imageError[index] ? (
             <Image
               src={src}
               alt={`Slide ${index + 1}`}
               fill
-              className="object-cover"
+              className="object-cover brightness-110"
+              style={{
+                filter: 'contrast(1.05) saturate(1.1)',
+              }}
               priority={index === 0}
               onError={() => handleImageError(index)}
             />
@@ -200,8 +209,8 @@ const BannerCarousel = ({
           <button
             key={index}
             className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentIndex 
-                ? 'bg-white w-8' 
+              index === currentIndex
+                ? 'bg-white w-8'
                 : 'bg-white/40 hover:bg-white/60'
             }`}
             onClick={() => goToSlide(index)}

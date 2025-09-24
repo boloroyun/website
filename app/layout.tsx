@@ -29,17 +29,65 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Lux Cabinets & Stones | Countertops & Cabinets in Virginia',
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://luxcabinetsandstones.com'
+  ),
+  title: {
+    default:
+      'Lux Cabinets & Stones | Premium Countertops & Cabinets in Virginia',
+    template: '%s | Lux Cabinets & Stones',
+  },
   description:
-    'description: Lux Cabinets & Stones specializes in premium kitchen and bath countertops, cabinets, and stone fabrication in Northern Virginia. Get expert design, free estimates, and professional installation for your home or business.',
-
-  keywords:
-    'keywords: best contractor in Virginia, trending kitchen design, countertops Virginia, kitchen countertops Northern Virginia, bathroom countertops Northern Virginia, cabinets Virginia, kitchen cabinets Northern Virginia, granite countertops Virginia, quartz countertops Virginia, marble countertops Virginia, stone fabrication Chantilly VA, custom kitchen cabinets, countertop installation Virginia, cabinet installation Northern Virginia',
+    'Lux Cabinets & Stones specializes in premium kitchen and bath countertops, cabinets, and stone fabrication in Northern Virginia. Get expert design, free estimates, and professional installation for your home or business.',
+  keywords: [
+    'kitchen countertops Virginia',
+    'bathroom countertops Northern Virginia',
+    'cabinets Virginia',
+    'kitchen cabinets Northern Virginia',
+    'granite countertops Virginia',
+    'quartz countertops Virginia',
+    'marble countertops Virginia',
+    'stone fabrication Chantilly VA',
+    'custom kitchen cabinets',
+    'countertop installation Virginia',
+    'cabinet installation Northern Virginia',
+    'kitchen remodeling Virginia',
+    'bathroom renovation Northern Virginia',
+    'premium countertops',
+    'luxury kitchen design',
+  ],
+  authors: [{ name: 'Lux Cabinets & Stones' }],
+  creator: 'Lux Cabinets & Stones',
+  publisher: 'Lux Cabinets & Stones',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   openGraph: {
-    title: 'LUX - Premium Products & Services | USA',
-    description: 'Premium products and services across the United States',
-    locale: 'en_US',
     type: 'website',
+    locale: 'en_US',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://luxcabinetsandstones.com',
+    siteName: 'Lux Cabinets & Stones',
+    title: 'Premium Countertops & Cabinets in Northern Virginia',
+    description:
+      'Expert design, fabrication and installation of premium countertops and cabinets for kitchens and bathrooms in Northern Virginia.',
+    images: [
+      {
+        url: '/images/logo.jpeg',
+        width: 1200,
+        height: 630,
+        alt: 'Lux Cabinets & Stones Logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Lux Cabinets & Stones | Premium Countertops & Cabinets',
+    description:
+      'Expert design, fabrication and installation of premium countertops and cabinets for kitchens and bathrooms in Northern Virginia.',
+    images: ['/images/logo.jpeg'],
+    creator: '@luxcabinets',
   },
   icons: {
     icon: '/images/logo.jpeg',
@@ -49,9 +97,21 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    canonical:
+      process.env.NEXT_PUBLIC_SITE_URL || 'https://luxcabinetsandstones.com',
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
+    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
   },
 };
 

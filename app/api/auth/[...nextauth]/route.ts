@@ -21,17 +21,34 @@ async function createHandler() {
         // Extract the nextauth segment from the URL path
         const url = new URL(request.url);
         const segments = url.pathname.split('/');
+
+        // Get the last segment of the path (after /api/auth/...)
         const nextauthSegment = segments[segments.length - 1];
 
-        // Fix the request URL to ensure NextAuth can extract query params properly
-        const fixedUrl = new URL(`/api/auth/${nextauthSegment}`, url.origin);
-        fixedUrl.search = url.search;
+        // Create a mock query object with nextauth parameter
+        // This simulates the structure that NextAuth expects
+        const mockQuery = { nextauth: [nextauthSegment] };
 
-        // Create a fixed request with the correct URL structure
-        const fixedRequest = new Request(fixedUrl, request);
+        // Add this to the authOptions for this request
+        const enhancedAuthOptions = {
+          ...authOptions,
+          // Temporary debug property to help identify the issue
+          debug: process.env.NODE_ENV === 'development',
+          // Add the request context with our mock query
+          req: {
+            query: mockQuery,
+            cookies: request.headers.get('cookie') || '',
+            body: await request
+              .clone()
+              .text()
+              .catch(() => ''),
+            method: request.method,
+            headers: Object.fromEntries(request.headers.entries()),
+          },
+        };
 
-        // Call NextAuth with fixed request
-        return NextAuth(authOptions)(fixedRequest);
+        // Call NextAuth with the enhanced options
+        return NextAuth(enhancedAuthOptions)(request);
       } catch (e) {
         logError('Error in NextAuth handler wrapper:', e);
         throw e;

@@ -75,6 +75,8 @@ export default function QuoteModal({
     setIsSubmitting(true);
     setError(null);
 
+    console.log('🚀 Starting quote submission process...');
+
     try {
       // Prepare data with product information
       const quoteRequestData = {
@@ -87,17 +89,24 @@ export default function QuoteModal({
       };
 
       // Send data to API with timeout
+      console.log('📤 Sending quote request to API...', {
+        productId: quoteRequestData.productId,
+        productName: quoteRequestData.productName,
+      });
+
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout (increased)
 
       let response;
       try {
+        console.log('🔄 Fetching /api/quotes endpoint...');
         response = await fetch('/api/quotes', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(quoteRequestData),
           signal: controller.signal,
         });
+        console.log('✅ API response received:', { status: response.status });
 
         clearTimeout(timeoutId);
       } catch (fetchError: unknown) {
@@ -107,14 +116,27 @@ export default function QuoteModal({
         throw fetchError;
       }
 
-      const responseData = await response.json().catch(() => ({}));
+      let responseData;
+      try {
+        responseData = await response.json();
+        console.log('📄 API response data:', responseData);
+      } catch (jsonError) {
+        console.error('❌ Failed to parse response as JSON:', jsonError);
+        responseData = {};
+      }
 
       if (!response.ok) {
         // Extract error message from response if available
         const errorMessage =
           responseData?.error || 'Failed to submit quote request';
+        console.error('❌ API error response:', {
+          status: response.status,
+          errorMessage,
+        });
         throw new Error(errorMessage);
       }
+
+      console.log('✅ Quote submission successful!');
 
       // Check for warning messages (fallback processing)
       if (responseData.warning) {
@@ -172,12 +194,14 @@ export default function QuoteModal({
         }, 2000);
       }
     } catch (err) {
-      console.error('Error submitting quote request:', err);
+      console.error('❌ Error submitting quote request:', err);
 
       // Log more detailed error information
       if (err instanceof Error) {
-        console.error('Error message:', err.message);
+        console.error('❌ Error message:', err.message);
       }
+
+      console.log('🔄 Attempting fallback quote storage...');
 
       // Store the quote data locally as a fallback
       try {
@@ -194,7 +218,9 @@ export default function QuoteModal({
           timestamp: new Date().toISOString(),
           images: uploadedImages,
         };
+        console.log('📤 Storing quote using fallback mechanism...');
         const fallbackResult = await storePendingQuote(fallbackData);
+        console.log('✅ Fallback storage result:', fallbackResult);
 
         // Show success message
         toast({
@@ -267,12 +293,26 @@ export default function QuoteModal({
     };
   }, [onClose, isSubmitting, isSuccess]);
 
+  // Log when modal state changes
+  useEffect(() => {
+    console.log('QuoteModal: isOpen state changed to:', isOpen);
+  }, [isOpen]);
+
   return (
     <Dialog
       open={isOpen}
-      onOpenChange={(open) => !open && !isSubmitting && !isSuccess && onClose()}
+      onOpenChange={(open) => {
+        console.log(
+          'QuoteModal: Dialog onOpenChange triggered, new state:',
+          open
+        );
+        if (!open && !isSubmitting && !isSuccess) {
+          onClose();
+        }
+      }}
+      modal={true}
     >
-      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto z-50 fixed">
         <DialogHeader>
           <DialogTitle>Request a Quote</DialogTitle>
           <DialogDescription>

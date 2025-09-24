@@ -27,14 +27,9 @@ async function sendToAdminApi(
   const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
   try {
-    // Skip external API calls to avoid connection errors
-    // This is a temporary fix - normally we would retry or use fallback
-
-    // Return true to simulate successful submission
+    // Uncommented original code to properly send quotes to admin API
     clearTimeout(timeoutId);
-    return true;
 
-    /* Original code commented out to avoid connection errors
     // Try the quote-requests endpoint first, then fall back to others
     const endpoints = [
       `${adminApiBase}/api/quote-requests`,
@@ -114,7 +109,7 @@ async function sendToAdminApi(
       `📝 Quote API: Successfully submitted quote to ${successEndpoint}`
     );
     return true;
-    */
+    // End of original code
   } catch (error: any) {
     clearTimeout(timeoutId);
     logger.error('📝 Quote API: Error submitting quote:', error);
@@ -146,15 +141,82 @@ export async function POST(request: NextRequest) {
 
     // Record the quote request in our database (always do this first)
     // This ensures we have a copy even if external systems fail
-    const savedQuote = await storePendingQuote(requestData);
+    let savedQuote = null;
+    let dbRetryCount = 0;
+    const maxDbRetries = 3;
+
+    while (dbRetryCount < maxDbRetries) {
+      try {
+        logger.debug(
+          `📝 Quote API: Storing quote in database (attempt ${dbRetryCount + 1}/${maxDbRetries})`
+        );
+
+        const fallbackResponse = await fetch(
+          new URL(
+            '/api/quotes/fallback-create',
+            process.env.NEXTAUTH_URL || 'http://localhost:3000'
+          ),
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+            // Add timeout to the fetch request
+            signal: AbortSignal.timeout(8000), // 8 second timeout
+          }
+        );
+
+        if (fallbackResponse.ok) {
+          savedQuote = await fallbackResponse.json();
+          logger.debug('📝 Quote API: Successfully stored quote in database');
+          break; // Success, exit the retry loop
+        } else {
+          const errorText = await fallbackResponse
+            .text()
+            .catch(() => 'No error details');
+          logger.error(
+            `📝 Quote API: Failed to store quote in database. Status: ${fallbackResponse.status}, Error: ${errorText}`
+          );
+
+          // Only retry on server errors (5xx), not client errors (4xx)
+          if (fallbackResponse.status < 500) {
+            break;
+          }
+        }
+      } catch (dbError) {
+        logger.error('📝 Quote API: Error storing quote in database:', dbError);
+      }
+
+      // Increment retry count and wait before retrying
+      dbRetryCount++;
+      if (dbRetryCount < maxDbRetries) {
+        const delay = dbRetryCount * 1000; // Increase delay with each retry
+        logger.debug(
+          `📝 Quote API: Retrying database storage in ${delay}ms...`
+        );
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+
+    if (!savedQuote) {
+      logger.error(
+        `📝 Quote API: Failed to store quote in database after ${maxDbRetries} attempts`
+      );
+    }
 
     // Try sending to the admin API if configured
     let adminApiSuccess = false;
-    if (process.env.ADMIN_API_BASE) {
+    if (process.env.NEXT_PUBLIC_ADMIN_API_BASE) {
+      logger.debug(
+        `📝 Quote API: Sending to admin API at ${process.env.NEXT_PUBLIC_ADMIN_API_BASE}`
+      );
       adminApiSuccess = await sendToAdminApi(
-        process.env.ADMIN_API_BASE,
+        process.env.NEXT_PUBLIC_ADMIN_API_BASE,
         requestData
       );
+    } else {
+      logger.error('📝 Quote API: NEXT_PUBLIC_ADMIN_API_BASE not configured');
     }
 
     // Send email notification (for non-spam requests) if configured

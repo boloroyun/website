@@ -1,0 +1,298 @@
+'use client';
+import { useState } from 'react';
+// Use proper imports with @ alias to ensure correct path resolution
+import {
+  FileUploader as CustomFileUploader,
+  UploadedImage,
+} from '@/components/FileUploader';
+import { Loader2 } from 'lucide-react';
+import { openChat, sendVisitorMessage, setSessionData } from '@/lib/crisp';
+import { addSessionTags as tagSession } from '@/lib/crisp';
+import { toast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/navigation';
+
+export default function QuoteFormWithAPI({
+  productName,
+  productId,
+  sku,
+}: {
+  productName?: string;
+  productId?: string;
+  sku?: string;
+}) {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [zipCode, setZipCode] = useState('');
+  const [message, setMessage] = useState(
+    productName ? `I'm interested in getting a quote for ${productName}.` : ''
+  );
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
+  const [uploadStatus, setUploadStatus] = useState<string>('idle');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!name || !email || !message) {
+      toast({
+        title: 'Missing information',
+        description: 'Please fill out all required fields.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Track this quote request
+      tagSession(['quote-request']);
+
+      // Set session data for the customer
+      setSessionData({
+        name,
+        email,
+        phone,
+        product_of_interest: productName || 'Not specified',
+        product_id: productId || 'Not specified',
+        product_sku: sku || 'Not specified',
+      });
+
+      // Open chat
+      openChat();
+
+      // Prepare message with images if present
+      let fullMessage = `
+Name: ${name}
+Email: ${email}
+Phone: ${phone || 'Not provided'}
+${productName ? `Product: ${productName}` : ''}
+${sku ? `SKU: ${sku}` : ''}
+
+${message}
+      `.trim();
+
+      if (uploadedImages.length > 0) {
+        fullMessage += `\n\n${uploadedImages.length} image(s) uploaded. Please check the attachments.`;
+      }
+
+      // Send the message with a slight delay to ensure chat is open
+      setTimeout(() => {
+        sendVisitorMessage(fullMessage);
+      }, 500);
+
+      // IMPORTANT: Submit the quote request to the API
+      const quoteData = {
+        name,
+        email,
+        phone,
+        zipCode,
+        notes: message,
+        productName,
+        productId,
+        sku,
+        images: uploadedImages.map((img) => ({
+          publicId: img.publicId,
+          secureUrl: img.secureUrl,
+          width: img.width,
+          height: img.height,
+          bytes: img.bytes,
+          format: img.format,
+          originalName: img.originalName,
+        })),
+      };
+
+      console.log('Submitting quote data to API:', quoteData);
+
+      const apiResponse = await fetch('/api/quotes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(quoteData),
+      });
+
+      if (!apiResponse.ok) {
+        const errorText = await apiResponse.text();
+        throw new Error(`API Error: ${apiResponse.status} - ${errorText}`);
+      }
+
+      const apiResult = await apiResponse.json();
+      console.log('API response:', apiResult);
+
+      toast({
+        title: 'Quote request sent',
+        description: 'Our team will get back to you shortly.',
+      });
+
+      // Show success toast with slight delay before redirect
+      setTimeout(() => {
+        // Redirect to homepage after successful submission
+        router.push('/');
+      }, 1500); // 1.5 second delay to allow the user to see the success message
+
+      // Reset form fields (though not necessary since we're redirecting)
+      setName('');
+      setEmail('');
+      setPhone('');
+      setZipCode('');
+      setMessage('');
+      setUploadedImages([]);
+    } catch (error) {
+      console.error('Error submitting quote request:', error);
+      toast({
+        title: 'Something went wrong',
+        description: 'Please try again or contact us directly.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label htmlFor="name" className="text-sm font-medium">
+            Name <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+            placeholder="Your name"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="email" className="text-sm font-medium">
+            Email <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+            placeholder="your.email@example.com"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label htmlFor="phone" className="text-sm font-medium">
+            Phone Number
+          </label>
+          <input
+            id="phone"
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="(Optional) Your phone number"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="zipCode" className="text-sm font-medium">
+            Zip Code
+          </label>
+          <input
+            id="zipCode"
+            type="text"
+            value={zipCode}
+            onChange={(e) => setZipCode(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="(Optional) Your zip code"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="message" className="text-sm font-medium">
+          Message <span className="text-red-500">*</span>
+        </label>
+        <textarea
+          id="message"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[120px]"
+          required
+          placeholder="Please describe what you're looking for..."
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Add Photos (Optional)</label>
+        <CustomFileUploader
+          onImagesUploaded={(images) => {
+            console.log('Images uploaded successfully:', images);
+            setUploadedImages(images);
+            setUploadStatus('success');
+            toast({
+              title: `${images.length} image(s) uploaded`,
+              description: 'Images uploaded successfully',
+              variant: 'default',
+            });
+          }}
+          onError={(error) => {
+            console.error('Upload error:', error);
+            setUploadStatus('error');
+            toast({
+              title: 'Upload Error',
+              description: error,
+              variant: 'destructive',
+            });
+          }}
+          onUploadStatusChange={(isUploading) => {
+            setUploadStatus(isUploading ? 'uploading' : 'idle');
+          }}
+          className="max-h-[300px]"
+        />
+        <p className="text-xs text-gray-500">
+          Upload photos of your space or inspiration images (max 8 files, 10MB
+          each).
+        </p>
+      </div>
+
+      {productName && (
+        <div className="px-4 py-3 bg-blue-50 border border-blue-100 rounded-md">
+          <p className="text-sm text-blue-800">
+            You are requesting a quote for <strong>{productName}</strong>. Our
+            team will provide pricing and availability information.
+          </p>
+        </div>
+      )}
+
+      <div className="flex justify-center">
+        <button
+          type="submit"
+          disabled={isSubmitting || uploadStatus === 'uploading'}
+          className="px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:pointer-events-none min-w-[180px]"
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin inline" />
+              Sending...
+            </>
+          ) : uploadStatus === 'uploading' ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin inline" />
+              Uploading Images...
+            </>
+          ) : (
+            'Submit Quote Request'
+          )}
+        </button>
+      </div>
+    </form>
+  );
+}

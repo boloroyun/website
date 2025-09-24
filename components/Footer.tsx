@@ -47,16 +47,20 @@ const Footer = () => {
       <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white pt-24 pb-16 px-4 md:px-6 lg:px-8 relative overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{ 
-            backgroundImage: 'radial-gradient(circle, #3b82f6 1px, transparent 1px)',
-            backgroundSize: '30px 30px' 
-          }}></div>
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                'radial-gradient(circle, #3b82f6 1px, transparent 1px)',
+              backgroundSize: '30px 30px',
+            }}
+          ></div>
         </div>
-        
+
         {/* Decorative elements */}
         <div className="absolute top-40 right-20 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-40 left-20 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl"></div>
-        
+
         {/* Main container: Handles the grid layout for the footer's content */}
         <div className="max-w-7xl mx-auto relative z-10">
           {/* Footer top section with logo and quick links */}
@@ -65,31 +69,46 @@ const Footer = () => {
               <Image
                 src="/images/logo.jpeg"
                 alt="LUX Cabinets & Stones"
-                width={200}
-                height={60}
-                className="h-16 w-auto object-contain bg-white p-2 rounded-lg shadow-lg"
+                width={350}
+                height={105}
+                className="h-24 w-auto object-contain bg-white p-3 rounded-lg shadow-lg"
               />
             </div>
-            
+
             <div className="flex flex-wrap justify-center gap-6 md:gap-10">
-              <Link href="/about" className="text-gray-300 hover:text-white transition-colors font-medium">
+              <Link
+                href="/about"
+                className="text-gray-300 hover:text-white transition-colors font-medium"
+              >
                 About Us
               </Link>
-              <Link href="/products" className="text-gray-300 hover:text-white transition-colors font-medium">
+              <Link
+                href="/products"
+                className="text-gray-300 hover:text-white transition-colors font-medium"
+              >
                 Products
               </Link>
-              <Link href="/gallery" className="text-gray-300 hover:text-white transition-colors font-medium">
+              <Link
+                href="/gallery"
+                className="text-gray-300 hover:text-white transition-colors font-medium"
+              >
                 Gallery
               </Link>
-              <Link href="/blog" className="text-gray-300 hover:text-white transition-colors font-medium">
+              <Link
+                href="/blog"
+                className="text-gray-300 hover:text-white transition-colors font-medium"
+              >
                 Blog
               </Link>
-              <Link href="/contact" className="text-gray-300 hover:text-white transition-colors font-medium">
+              <Link
+                href="/contact"
+                className="text-gray-300 hover:text-white transition-colors font-medium"
+              >
                 Contact
               </Link>
             </div>
           </div>
-          
+
           {/* Main footer grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
             {/* Column 1: Company Information & Contact */}
@@ -120,7 +139,7 @@ const Footer = () => {
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-start space-x-4">
                     <div className="mt-1">
                       <Phone size={18} className="text-blue-400" />
@@ -147,7 +166,7 @@ const Footer = () => {
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-start space-x-4">
                     <div className="mt-1">
                       <Mail size={18} className="text-blue-400" />
@@ -155,12 +174,18 @@ const Footer = () => {
                     <div>
                       <p className="text-white font-medium">Email</p>
                       <p className="text-gray-400">
-                        <a href="mailto:info@luxcabistones.com" className="hover:text-blue-400 transition-colors">
+                        <a
+                          href="mailto:info@luxcabistones.com"
+                          className="hover:text-blue-400 transition-colors"
+                        >
                           info@luxcabistones.com
                         </a>
                       </p>
                       <p className="text-gray-400">
-                        <a href="mailto:sales@luxcabistones.com" className="hover:text-blue-400 transition-colors">
+                        <a
+                          href="mailto:sales@luxcabistones.com"
+                          className="hover:text-blue-400 transition-colors"
+                        >
                           sales@luxcabistones.com
                         </a>
                       </p>
@@ -171,17 +196,24 @@ const Footer = () => {
 
               {/* Social media links */}
               <div>
-                <h4 className="text-white font-medium mb-4">
-                  CONNECT WITH US
-                </h4>
+                <h4 className="text-white font-medium mb-4">CONNECT WITH US</h4>
                 <div className="flex space-x-4">
-                  <a href="#" className="w-10 h-10 bg-blue-600/20 hover:bg-blue-600 flex items-center justify-center rounded-lg transition-colors">
+                  <a
+                    href="#"
+                    className="w-10 h-10 bg-blue-600/20 hover:bg-blue-600 flex items-center justify-center rounded-lg transition-colors"
+                  >
                     <Facebook size={18} />
                   </a>
-                  <a href="#" className="w-10 h-10 bg-pink-600/20 hover:bg-pink-600 flex items-center justify-center rounded-lg transition-colors">
+                  <a
+                    href="#"
+                    className="w-10 h-10 bg-pink-600/20 hover:bg-pink-600 flex items-center justify-center rounded-lg transition-colors"
+                  >
                     <Instagram size={18} />
                   </a>
-                  <a href="#" className="w-10 h-10 bg-red-600/20 hover:bg-red-600 flex items-center justify-center rounded-lg transition-colors">
+                  <a
+                    href="#"
+                    className="w-10 h-10 bg-red-600/20 hover:bg-red-600 flex items-center justify-center rounded-lg transition-colors"
+                  >
                     <Youtube size={18} />
                   </a>
                 </div>
@@ -198,37 +230,55 @@ const Footer = () => {
                 <ul className="space-y-3">
                   <li className="flex items-center">
                     <ChevronRight size={16} className="text-blue-400 mr-2" />
-                    <Link href="/products/cabinets" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    <Link
+                      href="/products/cabinets"
+                      className="text-gray-300 hover:text-blue-400 transition-colors"
+                    >
                       Custom Cabinets
                     </Link>
                   </li>
                   <li className="flex items-center">
                     <ChevronRight size={16} className="text-blue-400 mr-2" />
-                    <Link href="/products/stones" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    <Link
+                      href="/products/stones"
+                      className="text-gray-300 hover:text-blue-400 transition-colors"
+                    >
                       Countertop Fabrication
                     </Link>
                   </li>
                   <li className="flex items-center">
                     <ChevronRight size={16} className="text-blue-400 mr-2" />
-                    <Link href="/products" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    <Link
+                      href="/products"
+                      className="text-gray-300 hover:text-blue-400 transition-colors"
+                    >
                       Quartz & Granite
                     </Link>
                   </li>
                   <li className="flex items-center">
                     <ChevronRight size={16} className="text-blue-400 mr-2" />
-                    <Link href="/services" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    <Link
+                      href="/services"
+                      className="text-gray-300 hover:text-blue-400 transition-colors"
+                    >
                       Kitchen Remodeling
                     </Link>
                   </li>
                   <li className="flex items-center">
                     <ChevronRight size={16} className="text-blue-400 mr-2" />
-                    <Link href="/services" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    <Link
+                      href="/services"
+                      className="text-gray-300 hover:text-blue-400 transition-colors"
+                    >
                       Bathroom Vanities
                     </Link>
                   </li>
                   <li className="flex items-center">
                     <ChevronRight size={16} className="text-blue-400 mr-2" />
-                    <Link href="/contact" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    <Link
+                      href="/contact"
+                      className="text-gray-300 hover:text-blue-400 transition-colors"
+                    >
                       Free Consultation
                     </Link>
                   </li>
@@ -274,37 +324,55 @@ const Footer = () => {
                 <ul className="space-y-3">
                   <li className="flex items-center">
                     <ChevronRight size={16} className="text-blue-400 mr-2" />
-                    <Link href="/products/stones" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    <Link
+                      href="/products/stones"
+                      className="text-gray-300 hover:text-blue-400 transition-colors"
+                    >
                       Natural Stone
                     </Link>
                   </li>
                   <li className="flex items-center">
                     <ChevronRight size={16} className="text-blue-400 mr-2" />
-                    <Link href="/products/stones" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    <Link
+                      href="/products/stones"
+                      className="text-gray-300 hover:text-blue-400 transition-colors"
+                    >
                       Engineered Quartz
                     </Link>
                   </li>
                   <li className="flex items-center">
                     <ChevronRight size={16} className="text-blue-400 mr-2" />
-                    <Link href="/products/cabinets" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    <Link
+                      href="/products/cabinets"
+                      className="text-gray-300 hover:text-blue-400 transition-colors"
+                    >
                       Kitchen Cabinets
                     </Link>
                   </li>
                   <li className="flex items-center">
                     <ChevronRight size={16} className="text-blue-400 mr-2" />
-                    <Link href="/products/cabinets" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    <Link
+                      href="/products/cabinets"
+                      className="text-gray-300 hover:text-blue-400 transition-colors"
+                    >
                       Bathroom Cabinets
                     </Link>
                   </li>
                   <li className="flex items-center">
                     <ChevronRight size={16} className="text-blue-400 mr-2" />
-                    <Link href="/products/closets" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    <Link
+                      href="/products/closets"
+                      className="text-gray-300 hover:text-blue-400 transition-colors"
+                    >
                       Custom Closets
                     </Link>
                   </li>
                   <li className="flex items-center">
                     <ChevronRight size={16} className="text-blue-400 mr-2" />
-                    <Link href="/products" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    <Link
+                      href="/products"
+                      className="text-gray-300 hover:text-blue-400 transition-colors"
+                    >
                       Hardware & Accessories
                     </Link>
                   </li>
@@ -319,19 +387,28 @@ const Footer = () => {
                 <ul className="space-y-3">
                   <li className="flex items-center">
                     <ChevronRight size={16} className="text-blue-400 mr-2" />
-                    <Link href="/contact" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    <Link
+                      href="/contact"
+                      className="text-gray-300 hover:text-blue-400 transition-colors"
+                    >
                       Contact Us
                     </Link>
                   </li>
                   <li className="flex items-center">
                     <ChevronRight size={16} className="text-blue-400 mr-2" />
-                    <Link href="/about" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    <Link
+                      href="/about"
+                      className="text-gray-300 hover:text-blue-400 transition-colors"
+                    >
                       About Us
                     </Link>
                   </li>
                   <li className="flex items-center">
                     <ChevronRight size={16} className="text-blue-400 mr-2" />
-                    <Link href="/design" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    <Link
+                      href="/design"
+                      className="text-gray-300 hover:text-blue-400 transition-colors"
+                    >
                       Free Design Consultation
                     </Link>
                   </li>
@@ -349,20 +426,35 @@ const Footer = () => {
                 </h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="flex items-center space-x-2 p-3 bg-black/20 rounded-lg">
-                    <Award size={16} className="text-yellow-400 flex-shrink-0" />
-                    <span className="text-sm text-gray-200">Licensed Contractor</span>
+                    <Award
+                      size={16}
+                      className="text-yellow-400 flex-shrink-0"
+                    />
+                    <span className="text-sm text-gray-200">
+                      Licensed Contractor
+                    </span>
                   </div>
                   <div className="flex items-center space-x-2 p-3 bg-black/20 rounded-lg">
-                    <Shield size={16} className="text-green-400 flex-shrink-0" />
-                    <span className="text-sm text-gray-200">Insured & Bonded</span>
+                    <Shield
+                      size={16}
+                      className="text-green-400 flex-shrink-0"
+                    />
+                    <span className="text-sm text-gray-200">
+                      Insured & Bonded
+                    </span>
                   </div>
                   <div className="flex items-center space-x-2 p-3 bg-black/20 rounded-lg">
                     <Award size={16} className="text-blue-400 flex-shrink-0" />
                     <span className="text-sm text-gray-200">BBB A+ Rating</span>
                   </div>
                   <div className="flex items-center space-x-2 p-3 bg-black/20 rounded-lg">
-                    <Shield size={16} className="text-purple-400 flex-shrink-0" />
-                    <span className="text-sm text-gray-200">15-Year Warranty</span>
+                    <Shield
+                      size={16}
+                      className="text-purple-400 flex-shrink-0"
+                    />
+                    <span className="text-sm text-gray-200">
+                      15-Year Warranty
+                    </span>
                   </div>
                 </div>
               </div>
@@ -371,7 +463,8 @@ const Footer = () => {
               <div className="bg-gradient-to-br from-gray-800 to-gray-700 p-5 rounded-xl border border-gray-600/30 shadow-lg">
                 <h4 className="font-bold text-white mb-4">NEWSLETTER</h4>
                 <p className="text-gray-300 text-sm mb-4">
-                  Subscribe to our newsletter for design tips, special offers, and updates.
+                  Subscribe to our newsletter for design tips, special offers,
+                  and updates.
                 </p>
                 <form className="space-y-3">
                   <input
