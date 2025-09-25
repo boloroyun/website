@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { HeroEstimateButton } from '@/components/GetFreeEstimateButton';
 
 interface HeroOverlayProps {
   title: string;
@@ -53,11 +52,7 @@ const HeroOverlay: React.FC<HeroOverlayProps> = ({
           )}
 
           <div className="flex flex-row flex-wrap gap-1.5 sm:gap-3">
-            <div className="w-1/2 xs:w-auto">
-              <HeroEstimateButton />
-            </div>
-
-            <div className="w-1/2 xs:w-auto">
+            <div className="w-full">
               <Link
                 href="/category/closets"
                 className="inline-flex items-center justify-center px-2 sm:px-4 py-1.5 sm:py-2 bg-white/10 backdrop-blur-sm

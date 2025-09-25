@@ -8,7 +8,6 @@ import Footer from '@/components/Footer';
 import { Toaster } from 'sonner';
 import { Toaster as CustomToaster } from '@/components/ui/toaster';
 import CrispChat from '@/components/CrispChat';
-import { FloatingEstimateButton } from '@/components/GetFreeEstimateButton';
 import SessionProvider from '@/components/auth/SessionProvider';
 import Script from 'next/script';
 import SuppressHydrationWarnings from './suppress-hydration-warnings';
@@ -132,7 +131,6 @@ export default function RootLayout({
             {children}
             <MobileBottomBar />
             <Footer />
-            <FloatingEstimateButton />
             <Toaster position="top-right" richColors />
             <CustomToaster />
             <CrispChat />
