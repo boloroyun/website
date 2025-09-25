@@ -11,6 +11,7 @@ import CrispChat from '@/components/CrispChat';
 import SessionProvider from '@/components/auth/SessionProvider';
 import Script from 'next/script';
 import SuppressHydrationWarnings from './suppress-hydration-warnings';
+import SuppressGrammarly from '@/components/SuppressGrammarly';
 import { Providers } from './providers';
 
 export const dynamic = 'force-dynamic';
@@ -126,6 +127,7 @@ export default function RootLayout({
       >
         <SessionProvider>
           <SuppressHydrationWarnings />
+          <SuppressGrammarly />
           <Providers>
             {/* The header is now handled within each page, not globally */}
             {children}
