@@ -16,7 +16,7 @@ interface CrazyDealsProps {
   deals: CrazyDeal[];
 }
 
-const CrazyDeals: React.FC<CrazyDealsProps> = ({ deals }) => {
+const CrazyDeals= ({ deals }) => {
   return (
     <div className="container mx-auto px-4 mb-[20px]">
       <div className="heading my-[10px] ownContainer text-center uppercase sm:my-[40px]">

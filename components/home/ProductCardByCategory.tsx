@@ -55,7 +55,7 @@ interface ProductCardByCategoryProps {
   maxProductsPerCategory?: number;
 }
 
-const ProductCardByCategory: React.FC<ProductCardByCategoryProps> = ({
+const ProductCardByCategory= ({
   heading,
   sections,
   maxProductsPerCategory = 4,

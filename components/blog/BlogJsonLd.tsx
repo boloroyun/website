@@ -7,7 +7,7 @@ interface BlogJsonLdProps {
   post: BlogPost;
 }
 
-const BlogJsonLd: React.FC<BlogJsonLdProps> = ({ post }) => {
+const BlogJsonLd= ({ post }) => {
   const publishedDate = post.publishedAt || post.createdAt;
   const modifiedDate = post.updatedAt;
   const imageUrl = post.featuredImage?.url || '/images/blog-default.jpg';

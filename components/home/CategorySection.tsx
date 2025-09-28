@@ -17,7 +17,7 @@ interface CategorySectionProps {
   categories: Category[];
 }
 
-const CategorySection: React.FC<CategorySectionProps> = ({ categories }) => {
+const CategorySection= ({ categories }) => {
   return (
     <div className="container mx-auto px-4 mb-[20px]">
       <div className="flex justify-between items-center mb-6">

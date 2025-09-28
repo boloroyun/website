@@ -16,7 +16,7 @@ interface ProductInteractionProps {
   onAddToCart: (quantity: number, size?: ProductSize) => void;
 }
 
-const ProductInteraction: React.FC<ProductInteractionProps> = ({
+const ProductInteraction= ({
   selectedSize,
   onAddToCart,
 }) => {

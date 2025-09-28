@@ -331,6 +331,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 tags={tags}
                 featuredPosts={relatedPosts.slice(0, 3)}
                 currentCategory={post.category.slug}
+                currentTag=""
               />
             </div>
           </div>

@@ -16,7 +16,7 @@ interface BlogShareProps {
   post: BlogPost;
 }
 
-const BlogShare: React.FC<BlogShareProps> = ({ post }) => {
+const BlogShare= ({ post }) => {
   const [copied, setCopied] = useState(false);
 
   const currentUrl =

@@ -76,7 +76,7 @@ const Thumbnail = memo(
   }
 );
 
-const ProductImageCarousel: React.FC<ProductImageCarouselProps> = ({
+const ProductImageCarousel= ({
   images,
   productTitle,
 }) => {

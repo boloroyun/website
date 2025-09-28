@@ -10,7 +10,7 @@ interface BlogHeroProps {
   featuredPosts: BlogPost[];
 }
 
-const BlogHero: React.FC<BlogHeroProps> = ({ featuredPosts }) => {
+const BlogHero= ({ featuredPosts }) => {
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',

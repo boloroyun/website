@@ -21,7 +21,7 @@ interface ProductDetailsAccordianProps {
   ingredients?: ProductIngredient[];
 }
 
-const ProductDetailsAccordian: React.FC<ProductDetailsAccordianProps> = ({
+const ProductDetailsAccordian= ({
   description,
   longDescription,
   benefits = [],

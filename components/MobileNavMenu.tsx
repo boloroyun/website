@@ -39,7 +39,7 @@ interface MobileNavMenuProps {
   navItems: NavItem[];
 }
 
-const MobileNavMenu: React.FC<MobileNavMenuProps> = ({ navItems }) => {
+const MobileNavMenu= ({ navItems }) => {
   const [hamMenuOpen, setHamMenuOpen] = useAtom(hamburgerMenuState);
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
 

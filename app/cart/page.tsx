@@ -288,6 +288,8 @@ const CartPage = () => {
         <div className="mt-8 text-center">
           <SocialShare
             variant="minimal"
+            url={typeof window !== 'undefined' ? window.location.href : ''}
+            image=""
             title="LUX Cabinets & Stones - Shopping Cart"
             description="Check out my cart from LUX Cabinets & Stones - Premium kitchen cabinets and stone surfaces."
             hashtags={['LUXCabinets', 'ShoppingCart', 'KitchenDesign']}
@@ -298,6 +300,8 @@ const CartPage = () => {
       {/* Floating Social Share Button */}
       <SocialShare
         variant="floating"
+        url={typeof window !== 'undefined' ? window.location.href : ''}
+        image=""
         title="LUX Cabinets & Stones - Shopping Cart"
         description="Sharing my cart from LUX Cabinets & Stones - Premium kitchen cabinets and stone surfaces for dream homes."
         hashtags={['LUXCabinets', 'ShoppingCart', 'HomeImprovement']}

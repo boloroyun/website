@@ -30,7 +30,7 @@ interface SocialShareProps {
   variant?: 'default' | 'floating' | 'minimal';
 }
 
-const SocialShare: React.FC<SocialShareProps> = ({
+const SocialShare= ({
   url,
   title = 'Check out LUX Cabinets & Stones',
   description = 'Premium kitchen cabinets and stone surfaces for your dream home.',

@@ -74,7 +74,7 @@ interface ProductTypePageClientProps {
   section: ProductTypeSection;
 }
 
-const ProductTypePageClient: React.FC<ProductTypePageClientProps> = ({
+const ProductTypePageClient= ({
   section,
 }) => {
   const [filters, setFilters] = useState<FilterState>({

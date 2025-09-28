@@ -73,7 +73,7 @@ interface ProductsByCategoryProps {
   sections: CategorySection[];
 }
 
-const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({
+const ProductsByCategory= ({
   sections,
 }) => {
   return (

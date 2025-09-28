@@ -21,7 +21,7 @@ interface BlogSidebarProps {
   currentTag?: string;
 }
 
-const BlogSidebar: React.FC<BlogSidebarProps> = ({
+const BlogSidebar= ({
   categories,
   tags,
   featuredPosts,

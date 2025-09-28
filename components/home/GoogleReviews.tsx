@@ -44,7 +44,7 @@ interface SimplePlaceResult {
   reviews?: SimpleReview[];
 }
 
-const GoogleReviews: React.FC<GoogleReviewsProps> = ({ placeId }) => {
+const GoogleReviews= ({ placeId }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [placeData, setPlaceData] = useState<SimplePlaceResult | null>(null);

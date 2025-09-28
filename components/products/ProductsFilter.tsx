@@ -26,7 +26,7 @@ export interface FilterState {
   inStock: boolean;
 }
 
-const ProductsFilter: React.FC<FilterProps> = ({
+const ProductsFilter= ({
   categories,
   onFilterChange,
   onSortChange,

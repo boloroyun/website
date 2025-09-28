@@ -18,7 +18,7 @@ interface BlogGridProps {
   posts: BlogPost[];
 }
 
-const BlogGrid: React.FC<BlogGridProps> = ({ posts }) => {
+const BlogGrid = ({ posts }: BlogGridProps) => {
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',

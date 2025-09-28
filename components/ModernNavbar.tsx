@@ -48,7 +48,7 @@ interface ModernNavbarProps {
   navItems: NavItem[];
 }
 
-const ModernNavbar: React.FC<ModernNavbarProps> = ({ navItems }) => {
+const ModernNavbar= ({ navItems }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);

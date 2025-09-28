@@ -13,7 +13,7 @@ interface BlogPaginationProps {
   searchParams?: Record<string, string | undefined>;
 }
 
-const BlogPagination: React.FC<BlogPaginationProps> = ({
+const BlogPagination= ({
   currentPage,
   totalPages,
   hasNextPage,

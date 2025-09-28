@@ -16,7 +16,7 @@ interface SizeSelectorProps {
   selectedSize?: ProductSize;
 }
 
-const SizeSelector: React.FC<SizeSelectorProps> = ({
+const SizeSelector= ({
   sizes,
   onSizeSelect,
   selectedSize,

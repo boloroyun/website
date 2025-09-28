@@ -29,7 +29,7 @@ interface ProductActionsProps {
   };
 }
 
-const ProductActions: React.FC<ProductActionsProps> = ({
+const ProductActions= ({
   sizes,
   pricingType,
   productData,

@@ -22,7 +22,7 @@ interface ProductCardCarouselProps {
   };
 }
 
-const ProductCardCarousel: React.FC<ProductCardCarouselProps> = ({
+const ProductCardCarousel= ({
   images,
   productTitle,
   productSlug,

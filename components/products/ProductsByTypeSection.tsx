@@ -77,7 +77,7 @@ interface ProductsByTypeSectionProps {
   sections: ProductTypeSection[];
 }
 
-const ProductsByTypeSection: React.FC<ProductsByTypeSectionProps> = ({
+const ProductsByTypeSection= ({
   sections,
 }) => {
   const getTypeIcon = (type: ProductTypeSection['type']) => {

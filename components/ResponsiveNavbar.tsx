@@ -20,7 +20,7 @@ interface ResponsiveNavbarProps {
   navItems: NavItem[];
 }
 
-const ResponsiveNavbar: React.FC<ResponsiveNavbarProps> = ({ navItems }) => {
+const ResponsiveNavbar= ({ navItems }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);

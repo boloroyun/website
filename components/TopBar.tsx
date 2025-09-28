@@ -28,7 +28,7 @@ interface TopBarProps {
   autoSlideInterval?: number;
 }
 
-const TopBar: React.FC<TopBarProps> = ({
+const TopBar= ({
   topbars,
   autoSlide = true,
   autoSlideInterval = 5000,

@@ -9,7 +9,7 @@ interface HeroOverlayProps {
   showClosets?: boolean;
 }
 
-const HeroOverlay: React.FC<HeroOverlayProps> = ({
+const HeroOverlay= ({
   title,
   subtitle,
   ctaText,

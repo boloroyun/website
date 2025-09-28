@@ -76,7 +76,7 @@ interface ProductsPageClientProps {
   initialSections: CategorySection[];
 }
 
-const ProductsPageClient: React.FC<ProductsPageClientProps> = ({
+const ProductsPageClient= ({
   initialCategories,
   initialProducts,
   initialSections,

@@ -9,7 +9,7 @@ interface SectionSeparatorProps {
   className?: string;
 }
 
-const SectionSeparator: React.FC<SectionSeparatorProps> = ({
+const SectionSeparator= ({
   variant = 'wave',
   position = 'bottom',
   color = '#ffffff',

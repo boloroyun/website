@@ -10,7 +10,7 @@ interface RelatedPostsProps {
   posts: BlogPost[];
 }
 
-const RelatedPosts: React.FC<RelatedPostsProps> = ({ posts }) => {
+const RelatedPosts= ({ posts }) => {
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',

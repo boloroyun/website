@@ -38,7 +38,7 @@ interface ProductReviewComponentProps {
   totalReviews: number;
 }
 
-const ProductReviewComponent: React.FC<ProductReviewComponentProps> = ({
+const ProductReviewComponent= ({
   reviews,
   averageRating,
   totalReviews,

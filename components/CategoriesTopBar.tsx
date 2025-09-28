@@ -22,7 +22,7 @@ interface CategoriesTopBarProps {
   categories: NavItem[];
 }
 
-const CategoriesTopBar: React.FC<CategoriesTopBarProps> = ({ categories }) => {
+const CategoriesTopBar= ({ categories }) => {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
