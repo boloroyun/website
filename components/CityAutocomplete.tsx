@@ -27,11 +27,11 @@ const CityAutocomplete = ({
   country = 'US',
   stateCode,
 }: CityAutocompleteProps) => {
-  const [suggestions, setSuggestions] = useState<CityData[]>([]);
+  const [suggestions, setSuggestions] = useState([] as CityData[]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const suggestionsRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef(null as HTMLInputElement | null);
+  const suggestionsRef = useRef(null as HTMLDivElement | null);
 
   useEffect(() => {
     if (value.length >= 2 && country === 'US') {

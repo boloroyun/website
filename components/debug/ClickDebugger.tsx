@@ -11,13 +11,13 @@ interface ClickEvent {
 
 export default function ClickDebugger() {
   const [isActive, setIsActive] = useState(false);
-  const [clickEvents, setClickEvents] = useState<ClickEvent[]>([]);
-  const [hoveredElement, setHoveredElement] = useState<{
+  const [clickEvents, setClickEvents] = useState([] as ClickEvent[]);
+  const [hoveredElement, setHoveredElement] = useState(null as {
     tag: string;
     classes: string;
     zIndex: string;
     position: string;
-  } | null>(null);
+  } | null);
 
   // Toggle the debugger on/off with Shift+D
   useEffect(() => {

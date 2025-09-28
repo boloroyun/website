@@ -46,8 +46,8 @@ interface SimplePlaceResult {
 
 const GoogleReviews= ({ placeId }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [placeData, setPlaceData] = useState<SimplePlaceResult | null>(null);
+  const [error, setError] = useState(null as string | null);
+  const [placeData, setPlaceData] = useState(null as SimplePlaceResult | null);
 
   // Function to display reviews
   const displayReviews = (place: SimplePlaceResult) => {

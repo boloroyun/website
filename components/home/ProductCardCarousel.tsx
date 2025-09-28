@@ -32,7 +32,7 @@ const ProductCardCarousel= ({
 
   // Navigate to previous image with wraparound
   const goToPrevious = useCallback(
-    (e?: React.MouseEvent) => {
+    (e?: any) => {
       if (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -45,7 +45,7 @@ const ProductCardCarousel= ({
 
   // Navigate to next image with wraparound
   const goToNext = useCallback(
-    (e?: React.MouseEvent) => {
+    (e?: any) => {
       if (e) {
         e.preventDefault();
         e.stopPropagation();

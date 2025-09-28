@@ -58,13 +58,13 @@ export function FileUploader({
   onUploadStatusChange,
   className,
 }: FileUploaderProps) {
-  const [files, setFiles] = useState<FileWithPreview[]>([]);
+  const [files, setFiles] = useState([] as FileWithPreview[]);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState(null as string | null);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const dropAreaRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef(null as HTMLInputElement | null);
+  const dropAreaRef = useRef(null as HTMLDivElement | null);
 
   // Clean up object URLs on unmount
   useEffect(() => {

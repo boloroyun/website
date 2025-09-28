@@ -24,7 +24,7 @@ const BannerCarousel = ({
   // 🔥 ALL HOOKS AT TOP LEVEL - No exceptions!
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const [imageError, setImageError] = useState<{ [key: number]: boolean }>({});
+  const [imageError, setImageError] = useState({} as { [key: number]: boolean });
 
   // Calculate images based on current mobile state
   const desktopImages = websiteBanners.map((banner) => banner.url);

@@ -98,7 +98,7 @@ const CartDrawer = () => {
           </Button>
         </SheetTrigger>
         <SheetContent className="w-[90%] max-w-[450px] sm:max-w-[540px] flex flex-col">
-          <SheetHeader className="border-b pb-4">
+          <div className="border-b pb-4">
             <div className="flex items-center justify-between">
               <SheetTitle className="text-xl font-bold">
                 Shopping Cart
@@ -111,7 +111,7 @@ const CartDrawer = () => {
                 </span>
               </div>
             </div>
-          </SheetHeader>
+          </div>
           <div className="flex-1 overflow-hidden">
             {items.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 h-full">
