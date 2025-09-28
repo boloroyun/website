@@ -29,10 +29,10 @@ export default function QuoteFormWithAPI({
   const [message, setMessage] = useState(
     productName ? `I'm interested in getting a quote for ${productName}.` : ''
   );
-  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
-  const [uploadStatus, setUploadStatus] = useState<string>('idle');
+  const [uploadedImages, setUploadedImages] = useState([] as UploadedImage[]);
+  const [uploadStatus, setUploadStatus] = useState('idle' as string);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     if (!name || !email || !message) {

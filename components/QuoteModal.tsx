@@ -42,14 +42,14 @@ export default function QuoteModal({
     notes: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
+  const [uploadedImages, setUploadedImages] = useState([] as UploadedImage[]);
   const [hasUploadingFiles, setHasUploadingFiles] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null as string | null);
 
   // Handle form input changes
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: any
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -70,7 +70,7 @@ export default function QuoteModal({
   }, []);
 
   // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
@@ -313,7 +313,7 @@ export default function QuoteModal({
       modal={true}
     >
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto z-50 fixed">
-        <DialogHeader>
+        <div>
           <DialogTitle>Request a Quote</DialogTitle>
           <DialogDescription>
             {isSuccess ? (
@@ -329,7 +329,7 @@ export default function QuoteModal({
               </span>
             )}
           </DialogDescription>
-        </DialogHeader>
+        </div>
         {!isSuccess && (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 gap-4">

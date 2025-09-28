@@ -26,7 +26,7 @@ const ProductCardCarousel= ({
   images,
   productTitle,
   productSlug,
-  badges = {},
+  badges = {} as any,
 }) => {
   const [currentImage, setCurrentImage] = useState(0);
 

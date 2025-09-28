@@ -193,9 +193,9 @@ const ProductReviewComponent= ({
                 <Button>Leave a Review</Button>
               </DialogTrigger>
               <DialogContent>
-                <DialogHeader>
+                <div>
                   <h2>Submit Your Review</h2>
-                </DialogHeader>
+                </div>
 
                 <form
                 // onSubmit={form.onSubmit(handleSubmit)}
@@ -233,9 +233,9 @@ const ProductReviewComponent= ({
                   </div>
 
                   {/* Submit Button */}
-                  <DialogFooter>
+                  <div className="flex justify-end mt-4">
                     <Button type="submit">Submit Review</Button>
-                  </DialogFooter>
+                  </div>
                 </form>
               </DialogContent>
             </Dialog>

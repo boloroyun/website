@@ -33,13 +33,13 @@ const ProductsFilter= ({
   totalProducts,
 }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState<FilterState>({
+  const [filters, setFilters] = useState({
     categories: [],
     priceRange: { min: 0, max: 1000 },
     featured: false,
     bestSeller: false,
     inStock: false,
-  });
+  } as FilterState);
 
   const [sortBy, setSortBy] = useState('featured');
 

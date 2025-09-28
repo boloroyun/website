@@ -23,7 +23,7 @@ export default function GetQuoteButton({
   const closeModal = () => setIsModalOpen(false);
 
   // Add debugging to help identify click issues
-  const handleButtonClick = (e: React.MouseEvent) => {
+  const handleButtonClick = (e: any) => {
     console.log('Quote button clicked!');
     e.preventDefault(); // Prevent any default behavior
     e.stopPropagation(); // Stop event propagation

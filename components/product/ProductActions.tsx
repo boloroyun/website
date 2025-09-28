@@ -38,8 +38,8 @@ const ProductActions= ({
   const { isAuthenticated, isLoading } = useOTPAuth();
   const params = useParams();
   const [, setCartMenuOpen] = useAtom(cartMenuState);
-  const [selectedSize, setSelectedSize] = useState<ProductSize | undefined>(
-    sizes.length > 0 ? sizes[0] : undefined
+  const [selectedSize, setSelectedSize] = useState(
+    (sizes.length > 0 ? sizes[0] : undefined) as ProductSize | undefined
   );
   const [quantity, setQuantity] = useState(1);
 

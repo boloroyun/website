@@ -77,13 +77,13 @@ interface ProductTypePageClientProps {
 const ProductTypePageClient= ({
   section,
 }) => {
-  const [filters, setFilters] = useState<FilterState>({
+  const [filters, setFilters] = useState({
     categories: [],
     priceRange: { min: 0, max: 1000 },
     featured: false,
     bestSeller: false,
     inStock: false,
-  });
+  } as FilterState);
   const [sortBy, setSortBy] = useState('featured');
 
   // Filter products based on current filters

@@ -81,11 +81,11 @@ const ProductImageCarousel= ({
   productTitle,
 }) => {
   const [currentImage, setCurrentImage] = useState(0);
-  const [loadedImages, setLoadedImages] = useState<{ [key: number]: boolean }>(
-    {}
+  const [loadedImages, setLoadedImages] = useState(
+    {} as { [key: number]: boolean }
   );
-  const [imageErrors, setImageErrors] = useState<{ [key: number]: boolean }>(
-    {}
+  const [imageErrors, setImageErrors] = useState(
+    {} as { [key: number]: boolean }
   );
 
   // Navigate to previous image with wraparound

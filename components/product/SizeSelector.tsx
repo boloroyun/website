@@ -21,8 +21,8 @@ const SizeSelector= ({
   onSizeSelect,
   selectedSize,
 }) => {
-  const [activeSize, setActiveSize] = useState<ProductSize | null>(
-    selectedSize || null
+  const [activeSize, setActiveSize] = useState(
+    (selectedSize || null) as ProductSize | null
   );
 
   const handleSizeClick = (size: ProductSize) => {
