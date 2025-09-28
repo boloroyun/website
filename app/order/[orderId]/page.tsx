@@ -24,15 +24,15 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import Image from 'next/image';
-import { useAuth } from '@/hooks/useAuth';
+import { useOTPAuth } from '@/hooks/useOTPAuth';
 import SocialShare from '@/components/SocialShare';
 import { toast } from 'sonner';
 
 export default function OrderDetailPage() {
   const router = useRouter();
   const params = useParams();
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const [order, setOrder] = useState<any>(null);
+  const { isAuthenticated, isLoading: authLoading } = useOTPAuth();
+  const [order, setOrder] = useState(null as any);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [isSendingSupport, setIsSendingSupport] = useState(false);

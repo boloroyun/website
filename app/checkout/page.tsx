@@ -25,7 +25,7 @@ import {
   X,
 } from 'lucide-react';
 import { useCartStore } from '@/lib/cart-store';
-import { useAuth } from '@/hooks/useAuth';
+import { useOTPAuth } from '@/hooks/useOTPAuth';
 import { getUserShippingAddress } from '@/actions/profile.actions';
 import { createOrder } from '@/actions/orders.actions';
 import { validateCoupon, calculateDiscount } from '@/actions/coupons.actions';
@@ -60,7 +60,7 @@ interface ShippingAddress {
  */
 const CheckoutPage = () => {
   const router = useRouter();
-  const { isAuthenticated, user, isLoading } = useAuth();
+  const { isAuthenticated, user, isLoading } = useOTPAuth();
   const { items, removeItem, updateQuantity, clearCart, hasHydrated } =
     useCartStore();
 
@@ -70,12 +70,12 @@ const CheckoutPage = () => {
   const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('razorpay');
   const [couponCode, setCouponCode] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+  const [appliedCoupon, setAppliedCoupon] = useState(null as any);
   const [discount, setDiscount] = useState(0);
   const [orderCompleted, setOrderCompleted] = useState(false);
 
   // Shipping address state
-  const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({
+  const [shippingAddress, setShippingAddress] = useState({
     firstName: '',
     lastName: '',
     phoneNumber: '',

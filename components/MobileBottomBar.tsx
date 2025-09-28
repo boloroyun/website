@@ -4,14 +4,14 @@ import { Grid, Home, Menu, ShoppingBag, User } from 'lucide-react';
 import Link from 'next/link';
 import { hamburgerMenuState, cartMenuState } from './store';
 import { useCartStore } from '@/lib/cart-store';
-import { useAuth } from '@/hooks/useAuth';
+import { useOTPAuth } from '@/hooks/useOTPAuth';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 const MobileBottomBar = () => {
   const router = useRouter();
   const [hamMenuOpen, setHamMenuOpen] = useAtom(hamburgerMenuState);
   const { getTotalItems, hasHydrated } = useCartStore();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useOTPAuth();
   const [, setCartMenuOpen] = useAtom(cartMenuState);
 
   const handleOnClickHamburgerMenu = () => {

@@ -1,283 +1,483 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
-import ReactMarkdown from 'react-markdown';
+import Link from 'next/link';
+import {
+  Users,
+  Award,
+  Clock,
+  CheckCircle,
+  Star,
+  Phone,
+  Mail,
+  MapPin,
+  Wrench,
+  Palette,
+  Calculator,
+  UserCheck,
+} from 'lucide-react';
 
-// Force dynamic rendering to prevent build-time API calls
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
-// Types for the About page data
-interface AboutPageData {
-  id: string;
-  title: string;
-  content: string;
-  heroImage?: string;
-  seoDescription?: string;
-  isPublished: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-// Fetch about page data from Admin API
-async function getAboutPageData(): Promise<AboutPageData | null> {
-  try {
-    const adminApiBase = process.env.ADMIN_API_BASE;
-    if (!adminApiBase) {
-      console.error('ADMIN_API_BASE environment variable is not set');
-      return null;
-    }
-
-    const response = await fetch(`${adminApiBase}/api/pages/about`, {
-      // Use no-store to always fetch fresh data, or use revalidate for caching
-      next: { revalidate: 300 }, // Revalidate every 5 minutes
-      headers: {
-        'Content-Type': 'application/json',
-        // Add authorization header if needed
-        // 'Authorization': `Bearer ${process.env.INTERNAL_API_TOKEN}`,
-      },
-    });
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        console.log('About page not found in Admin API');
-        return null;
-      }
-      throw new Error(`Failed to fetch about page: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching about page data:', error);
-    return null;
-  }
-}
-
-// Generate metadata for SEO
-export async function generateMetadata(): Promise<Metadata> {
-  const data = await getAboutPageData();
-  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'LUX Cabinets & Stones';
-
-  if (!data || !data.isPublished) {
-    return {
-      title: `About Us | ${siteName}`,
-      description:
-        'Learn more about our company, our story, and our commitment to quality.',
-    };
-  }
-
-  return {
-    title: `${data.title} | ${siteName}`,
+export const metadata: Metadata = {
+  title: 'About Us | LUX Cabinets & Stones',
+  description:
+    'Meet our experienced team of professionals specializing in custom cabinets, countertops, and modern closets. 10+ years of expertise in fabrication and installation.',
+  keywords:
+    'about us, team, cabinet installation, countertop fabrication, custom cabinets, Chantilly VA',
+  openGraph: {
+    title: 'About LUX Cabinets & Stones - Expert Team & Services',
     description:
-      data.seoDescription ||
-      data.content.substring(0, 160).replace(/[#*`]/g, ''),
-    openGraph: {
-      title: data.title,
-      description:
-        data.seoDescription ||
-        data.content.substring(0, 160).replace(/[#*`]/g, ''),
-      images: data.heroImage ? [{ url: data.heroImage }] : [],
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: data.title,
-      description:
-        data.seoDescription ||
-        data.content.substring(0, 160).replace(/[#*`]/g, ''),
-      images: data.heroImage ? [data.heroImage] : [],
-    },
-  };
+      'Meet our experienced team of professionals specializing in custom cabinets, countertops, and modern closets.',
+    type: 'website',
+  },
+};
+
+// Team member interface
+interface TeamMember {
+  name: string;
+  role: string;
+  experience: string;
+  description: string;
+  icon: React.ComponentType<any>;
+  specialties: string[];
 }
 
-// Placeholder component when no data is available
-function AboutPlaceholder() {
+// Team members data
+const teamMembers: TeamMember[] = [
+  {
+    name: 'Ulaanaa',
+    role: 'Master Fabricator & Installer',
+    experience: '10+ Years Experience',
+    description:
+      'Expert in countertop installation and fabrication with over a decade of hands-on experience creating beautiful, durable surfaces.',
+    icon: Wrench,
+    specialties: [
+      'Countertop Installation',
+      'Stone Fabrication',
+      'Precision Cutting',
+      'Quality Control',
+    ],
+  },
+  {
+    name: 'Shirnen',
+    role: 'Senior Fabricator & Installer',
+    experience: '10+ Years Experience',
+    description:
+      'Skilled craftsman specializing in countertop installation and fabrication, bringing precision and artistry to every project.',
+    icon: Award,
+    specialties: [
+      'Custom Fabrication',
+      'Installation Expertise',
+      'Material Handling',
+      'Project Management',
+    ],
+  },
+  {
+    name: 'Bayar',
+    role: 'Sales Manager & Designer',
+    experience: 'Design & Sales Expert',
+    description:
+      'Experienced sales manager with a keen eye for design, helping customers bring their vision to life with expert guidance and creative solutions.',
+    icon: Palette,
+    specialties: [
+      'Interior Design',
+      'Customer Relations',
+      'Project Planning',
+      'Material Selection',
+    ],
+  },
+  {
+    name: 'Bolor',
+    role: 'Designer, Sales Manager & Account Manager',
+    experience: 'Multi-Role Expert',
+    description:
+      'Versatile professional combining design expertise, sales management, and account coordination to deliver comprehensive customer service from initial consultation through project completion.',
+    icon: UserCheck,
+    specialties: [
+      'Interior Design',
+      'Sales Management',
+      'Account Management',
+      'Customer Relations',
+      'Project Coordination',
+      'Design Consultation',
+    ],
+  },
+];
+
+// Services data
+const services = [
+  {
+    title: 'Stock Cabinets',
+    description:
+      'Ready-to-install cabinets available in various styles and finishes for quick delivery and installation.',
+    features: [
+      'Quick Delivery',
+      'Standard Sizes',
+      'Popular Styles',
+      'Budget-Friendly',
+    ],
+    icon: CheckCircle,
+  },
+  {
+    title: 'Semi-Stock Cabinets',
+    description:
+      'Customizable cabinet options with modified dimensions and finishes to fit your specific needs.',
+    features: [
+      'Modified Dimensions',
+      'Custom Finishes',
+      'Flexible Options',
+      'Moderate Timeline',
+    ],
+    icon: Calculator,
+  },
+  {
+    title: 'Custom Cabinets',
+    description:
+      'Fully customized cabinets designed and built to your exact specifications and unique requirements.',
+    features: [
+      'Unique Designs',
+      'Premium Materials',
+      'Perfect Fit',
+      'Unlimited Options',
+    ],
+    icon: Star,
+  },
+  {
+    title: 'Countertops',
+    description:
+      'Professional fabrication and installation of granite, quartz, marble, and other premium stone surfaces.',
+    features: [
+      'Premium Materials',
+      'Expert Fabrication',
+      'Precise Installation',
+      'Lifetime Beauty',
+    ],
+    icon: Award,
+  },
+  {
+    title: 'Modern Closets',
+    description:
+      'Contemporary closet systems designed for maximum storage efficiency and modern aesthetics.',
+    features: [
+      'Space Optimization',
+      'Modern Design',
+      'Custom Organization',
+      'Quality Hardware',
+    ],
+    icon: Users,
+  },
+];
+
+export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-8">
-            <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-6 flex items-center justify-center">
-              <svg
-                className="w-12 h-12 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H9m0 0H5m0 0h2m0 0h4"
-                />
-              </svg>
-            </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">About Us</h1>
-            <p className="text-xl text-gray-600 mb-8">
-              We're working on our story. Check back soon!
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-20">
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="relative container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              About LUX Cabinets & Stones
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-300 mb-8">
+              Transforming homes with premium cabinets, countertops, and modern
+              closets
             </p>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-lg p-8 text-left">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-              LUX Cabinets & Stones
-            </h2>
-            <div className="prose prose-lg text-gray-700 space-y-4">
-              <p>
-                Welcome to LUX Cabinets & Stones, your premier destination for
-                high-quality kitchen cabinets, countertops, and stone surfaces.
-                We specialize in custom fabrication and professional
-                installation services.
-              </p>
-              <p>
-                Our team of skilled craftsmen and designers work together to
-                transform your vision into reality, whether you're renovating
-                your kitchen, bathroom, or any other space in your home.
-              </p>
-              <p>
-                With years of experience in the industry, we pride ourselves on
-                delivering exceptional quality, outstanding customer service,
-                and competitive pricing.
-              </p>
-            </div>
-
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                Contact Information
-              </h3>
-              <div className="space-y-2 text-gray-600">
-                <p>📍 4005 Westfax Dr, Unit M, Chantilly, VA 20151</p>
-                <p>📞 571-335-0118</p>
-                <p>✉️ info@luxcabistones.com</p>
+            <div className="flex items-center justify-center space-x-8 text-sm md:text-base">
+              <div className="flex items-center">
+                <Clock className="w-5 h-5 mr-2" />
+                <span>10+ Years Experience</span>
+              </div>
+              <div className="flex items-center">
+                <Award className="w-5 h-5 mr-2" />
+                <span>Expert Craftsmanship</span>
+              </div>
+              <div className="flex items-center">
+                <Users className="w-5 h-5 mr-2" />
+                <span>Professional Team</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
 
-// Main About page component
-export default async function AboutPage() {
-  const data = await getAboutPageData();
+      {/* Company Story Section */}
+      <div className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Our Story
+              </h2>
+              <div className="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
+            </div>
 
-  // Show placeholder if no data or not published
-  if (!data || !data.isPublished) {
-    return <AboutPlaceholder />;
-  }
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">
+                  Crafting Excellence Since Day One
+                </h3>
+                <p className="text-gray-700 mb-6 leading-relaxed">
+                  At LUX Cabinets & Stones, we believe that every home deserves
+                  the finest craftsmanship. Our journey began with a simple
+                  mission: to transform ordinary spaces into extraordinary
+                  living environments through premium cabinets, stunning
+                  countertops, and modern closet solutions.
+                </p>
+                <p className="text-gray-700 mb-6 leading-relaxed">
+                  With over a decade of combined experience in fabrication and
+                  installation, our team brings unmatched expertise to every
+                  project. We specialize in stock, semi-stock, and fully custom
+                  solutions to meet every budget and design preference.
+                </p>
+                <div className="flex items-center space-x-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600">10+</div>
+                    <div className="text-sm text-gray-600">
+                      Years Experience
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600">500+</div>
+                    <div className="text-sm text-gray-600">
+                      Projects Completed
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600">100%</div>
+                    <div className="text-sm text-gray-600">
+                      Customer Satisfaction
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-  return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Image */}
-      {data.heroImage && (
-        <div className="relative w-full h-96 bg-gray-200">
-          <Image
-            src={data.heroImage}
-            alt={data.title}
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-40" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-white text-center px-4">
-              {data.title}
-            </h1>
+              <div className="relative">
+                <div className="bg-white p-8 rounded-lg shadow-lg">
+                  <h4 className="text-xl font-semibold text-gray-900 mb-4">
+                    Why Choose LUX?
+                  </h4>
+                  <ul className="space-y-3">
+                    <li className="flex items-center">
+                      <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                      <span className="text-gray-700">
+                        Expert craftsmanship with 10+ years experience
+                      </span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                      <span className="text-gray-700">
+                        Stock, semi-stock, and custom solutions
+                      </span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                      <span className="text-gray-700">
+                        Premium materials and modern designs
+                      </span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                      <span className="text-gray-700">
+                        Professional installation and service
+                      </span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                      <span className="text-gray-700">
+                        Competitive pricing and quality guarantee
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      )}
+      </div>
 
-      {/* Content */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto">
-          {/* Title (if no hero image) */}
-          {!data.heroImage && (
+      {/* Team Section */}
+      <div className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
-              <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
-                {data.title}
-              </h1>
-              <div className="w-24 h-1 bg-blue-600 mx-auto" />
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Meet Our Expert Team
+              </h2>
+              <div className="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Our experienced professionals bring decades of combined
+                expertise in fabrication, installation, design, and customer
+                service to every project.
+              </p>
             </div>
-          )}
 
-          {/* Markdown Content */}
-          <div className="prose prose-lg prose-gray max-w-none">
-            <ReactMarkdown
-              components={{
-                // Custom components for better styling
-                h1: ({ children }) => (
-                  <h1 className="text-3xl font-bold text-gray-900 mt-8 mb-4 first:mt-0">
-                    {children}
-                  </h1>
-                ),
-                h2: ({ children }) => (
-                  <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">
-                    {children}
-                  </h2>
-                ),
-                h3: ({ children }) => (
-                  <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">
-                    {children}
-                  </h3>
-                ),
-                p: ({ children }) => (
-                  <p className="text-gray-700 leading-relaxed mb-4">
-                    {children}
+            <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+              {teamMembers.map((member, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-50 rounded-lg p-8 hover:shadow-lg transition-shadow duration-300"
+                >
+                  <div className="flex items-center mb-6">
+                    <div className="bg-blue-100 p-3 rounded-full mr-4">
+                      <member.icon className="w-8 h-8 text-blue-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900">
+                        {member.name}
+                      </h3>
+                      <p className="text-blue-600 font-semibold">
+                        {member.role}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {member.experience}
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="text-gray-700 mb-6 leading-relaxed">
+                    {member.description}
                   </p>
-                ),
-                ul: ({ children }) => (
-                  <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
-                    {children}
-                  </ul>
-                ),
-                ol: ({ children }) => (
-                  <ol className="list-decimal list-inside text-gray-700 mb-4 space-y-2">
-                    {children}
-                  </ol>
-                ),
-                blockquote: ({ children }) => (
-                  <blockquote className="border-l-4 border-blue-600 pl-4 italic text-gray-600 my-6">
-                    {children}
-                  </blockquote>
-                ),
-                a: ({ href, children }) => (
-                  <a
-                    href={href}
-                    className="text-blue-600 hover:text-blue-800 underline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {children}
-                  </a>
-                ),
-              }}
-            >
-              {data.content}
-            </ReactMarkdown>
-          </div>
 
-          {/* Call to Action */}
-          <div className="mt-12 pt-8 border-t border-gray-200 text-center">
-            <h3 className="text-2xl font-semibold text-gray-900 mb-4">
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-3">
+                      Specialties:
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {member.specialties.map((specialty, idx) => (
+                        <span
+                          key={idx}
+                          className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
+                        >
+                          {specialty}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Services Section */}
+      <div className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Our Services
+              </h2>
+              <div className="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                From stock solutions to fully custom designs, we offer
+                comprehensive services to transform your space with premium
+                materials and expert craftsmanship.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {services.map((service, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300"
+                >
+                  <div className="flex items-center mb-4">
+                    <div className="bg-blue-100 p-3 rounded-full mr-4">
+                      <service.icon className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      {service.title}
+                    </h3>
+                  </div>
+
+                  <p className="text-gray-700 mb-4 leading-relaxed">
+                    {service.description}
+                  </p>
+
+                  <ul className="space-y-2">
+                    {service.features.map((feature, idx) => (
+                      <li
+                        key={idx}
+                        className="flex items-center text-sm text-gray-600"
+                      >
+                        <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Contact Section */}
+      <div className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Ready to Transform Your Space?
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Contact us today for a free consultation and quote.
+            </h2>
+            <div className="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
+            <p className="text-xl text-gray-600 mb-8">
+              Contact our expert team today for a free consultation and discover
+              how we can bring your vision to life with premium cabinets,
+              countertops, and closets.
             </p>
+
+            <div className="grid md:grid-cols-3 gap-8 mb-8">
+              <div className="flex flex-col items-center">
+                <div className="bg-blue-100 p-4 rounded-full mb-4">
+                  <Phone className="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Call Us</h3>
+                <a
+                  href="tel:571-335-0118"
+                  className="text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  (571) 335-0118
+                </a>
+              </div>
+
+              <div className="flex flex-col items-center">
+                <div className="bg-blue-100 p-4 rounded-full mb-4">
+                  <Mail className="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Email Us</h3>
+                <a
+                  href="mailto:info@luxcabistones.com"
+                  className="text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  info@luxcabistones.com
+                </a>
+              </div>
+
+              <div className="flex flex-col items-center">
+                <div className="bg-blue-100 p-4 rounded-full mb-4">
+                  <MapPin className="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Visit Us</h3>
+                <p className="text-gray-600 text-center">
+                  4005 Westfax Dr, Unit M<br />
+                  Chantilly, VA 20151
+                </p>
+              </div>
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-lg hover:shadow-xl"
+              >
+                Get Free Consultation
+              </Link>
+              <Link
                 href="/quote"
-                className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
+                className="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 font-semibold rounded-lg border-2 border-blue-600 hover:bg-blue-50 transition-colors duration-200"
               >
-                Get Free Quote
-              </a>
-              <a
-                href="tel:571-335-0118"
-                className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
-              >
-                Call Us: 571-335-0118
-              </a>
+                Request Quote
+              </Link>
             </div>
           </div>
         </div>

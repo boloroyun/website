@@ -35,7 +35,10 @@ export async function POST(request: NextRequest) {
     if (user) {
       try {
         const { token, expires } = await createPasswordResetToken(user.id);
-        const appBaseUrl = process.env.APP_BASE_URL || 'http://localhost:3000';
+        const appBaseUrl =
+          process.env.APP_BASE_URL ||
+          process.env.NEXT_PUBLIC_APP_URL ||
+          'http://localhost:3000';
         const resetLink = `${appBaseUrl}/auth/reset-password?token=${token}`;
         const emailHtml = getPasswordResetEmailHtml(resetLink);
 

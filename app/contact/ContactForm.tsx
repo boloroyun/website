@@ -19,13 +19,13 @@ export default function ContactForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
       const formData = new FormData(e.currentTarget);
-      
+
       // Send form data to server
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -40,13 +40,14 @@ export default function ContactForm() {
       setIsSuccess(true);
       toast({
         title: 'Message Sent!',
-        description: 'We\'ve received your message and will get back to you soon.',
+        description:
+          "We've received your message and will get back to you soon.",
         duration: 5000,
       });
 
       // Reset form
       (e.target as HTMLFormElement).reset();
-      
+
       // Reset success state after 5 seconds
       setTimeout(() => {
         setIsSuccess(false);
@@ -55,7 +56,8 @@ export default function ContactForm() {
       console.error('Error submitting form:', error);
       toast({
         title: 'Error',
-        description: 'There was a problem sending your message. Please try again.',
+        description:
+          'There was a problem sending your message. Please try again.',
         variant: 'destructive',
         duration: 5000,
       });
@@ -214,9 +216,10 @@ export default function ContactForm() {
               type="submit"
               disabled={isSubmitting || isSuccess}
               className={`w-full font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center
-                ${isSuccess 
-                  ? 'bg-green-600 hover:bg-green-700 text-white' 
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+                ${
+                  isSuccess
+                    ? 'bg-green-600 hover:bg-green-700 text-white'
+                    : 'bg-blue-600 hover:bg-blue-700 text-white'
                 } ${isSubmitting ? 'opacity-80 cursor-not-allowed' : ''}`}
             >
               {isSubmitting ? (
@@ -239,8 +242,8 @@ export default function ContactForm() {
           </div>
 
           <p className="text-sm text-gray-500 text-center">
-            We typically respond within 24 hours. For urgent inquiries,
-            please call us directly.
+            We typically respond within 24 hours. For urgent inquiries, please
+            call us directly.
           </p>
         </form>
       </div>

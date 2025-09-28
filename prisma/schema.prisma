@@ -196,11 +196,44 @@ model PasswordResetToken {
   @@index([userId])
 }
 
+model LoginOTP {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String
+  otpHash   String   @unique
+  expires   DateTime
+  usedAt    DateTime?
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([expires])
+}
+
+model WebsiteAccount {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  username  String?
+  name      String?
+  role      Role     @default(CLIENT)
+  image     String?
+  
+  // Website-specific fields
+  defaultPaymentMethod String   @default("")
+  address              Address?
+  
+  // Relations for website functionality
+  cart     WebsiteCart?
+  orders   WebsiteOrder[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model User {
   id                   String   @id @default(auto()) @map("_id") @db.ObjectId
   name                 String?
   email                String   @unique
-  password             String
+  password             String?  // Made optional for OTP authentication
   username             String?  @unique
   role                 Role     @default(CLIENT)
   defaultPaymentMethod String   @default("")
@@ -340,6 +373,20 @@ model Cart {
   updatedAt DateTime @updatedAt
 }
 
+model WebsiteCart {
+  id                 String        @id @default(auto()) @map("_id") @db.ObjectId
+  products           CartProduct[]
+  cartTotal          Float?
+  totalAfterDiscount Float?
+
+  // Relations
+  account   WebsiteAccount @relation(fields: [accountId], references: [id])
+  accountId String         @unique @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Order {
   id                  String          @id @default(auto()) @map("_id") @db.ObjectId
   products            OrderProduct[]
@@ -363,6 +410,34 @@ model Order {
   // Relations
   user   User   @relation(fields: [userId], references: [id])
   userId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model WebsiteOrder {
+  id                  String          @id @default(auto()) @map("_id") @db.ObjectId
+  products            OrderProduct[]
+  shippingAddress     ShippingAddress?
+  paymentMethod       String?
+  paymentResult       PaymentResult?
+  total               Float
+  status              String?         @default("Processing")
+  totalBeforeDiscount Float?
+  couponApplied       String?
+  shippingPrice       Float           @default(0)
+  taxPrice            Float?          @default(0)
+  isPaid              Boolean         @default(false)
+  totalSaved          Float?
+  razorpay_order_id   String?
+  razorpay_payment_id String?
+  paidAt              DateTime?
+  deliveredAt         DateTime?
+  isNew               Boolean         @default(true)
+
+  // Relations
+  account   WebsiteAccount @relation(fields: [accountId], references: [id])
+  accountId String         @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

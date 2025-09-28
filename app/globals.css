@@ -3,6 +3,20 @@
 @tailwind utilities;
 
 @import '../styles/logo-animation.css';
+
+/* Custom animations for colorful explore button */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s ease-in-out;
+}
 @layer base {
   :root {
     --background: 0 0% 100%;

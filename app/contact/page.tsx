@@ -19,7 +19,6 @@ export const metadata: Metadata = {
     'contact, custom cabinets, stone countertops, consultation, quote, cabinet installation',
 };
 
-
 export default function ContactPage() {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -37,17 +36,35 @@ export default function ContactPage() {
             <div className="flex flex-wrap justify-center gap-4">
               <Link
                 href="tel:+15713350118"
-                className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-colors"
+                className="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 rounded-xl font-bold text-lg shadow-2xl hover:shadow-3xl transform hover:scale-110 transition-all duration-500 ease-out border-2 border-white/30 hover:border-white/50 animate-pulse hover:animate-none overflow-hidden"
               >
-                <Phone className="w-5 h-5 mr-2" />
-                Call Now
+                {/* Animated background gradient */}
+                <div className="absolute inset-0 bg-gradient-to-r from-lime-400 via-green-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                {/* Shimmer effect */}
+                <div className="absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shimmer"></div>
+
+                {/* Pulsing glow effect */}
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-500 to-teal-500 blur-lg opacity-50 group-hover:opacity-75 animate-pulse"></div>
+
+                {/* Content */}
+                <span className="relative z-10 flex items-center">
+                  <Phone className="w-6 h-6 mr-3 group-hover:animate-bounce" />
+                  📞 Call Now: (571) 335-0118 📞
+                </span>
               </Link>
               <Link
                 href="#contact-form"
-                className="inline-flex items-center px-6 py-3 bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 rounded-lg font-semibold transition-colors"
+                className="group relative inline-flex items-center px-8 py-4 bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 rounded-xl font-bold text-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 ease-out overflow-hidden"
               >
-                <MessageSquare className="w-5 h-5 mr-2" />
-                Send Message
+                {/* Hover background */}
+                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                {/* Content */}
+                <span className="relative z-10 flex items-center">
+                  <MessageSquare className="w-6 h-6 mr-3 group-hover:animate-pulse" />
+                  💬 Send Message
+                </span>
               </Link>
             </div>
           </div>
@@ -76,18 +93,18 @@ export default function ContactPage() {
                       Main:{' '}
                       <a
                         href="tel:+15713350118"
-                        className="text-blue-600 hover:text-blue-800 font-medium"
+                        className="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-lg hover:bg-blue-50 px-2 py-1 rounded-md transition-all duration-200 hover:scale-105"
                       >
-                        (571) 335-0118
+                        📞 (571) 335-0118
                       </a>
                     </p>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 mt-2">
                       Emergency:{' '}
                       <a
                         href="tel:+15715858345"
-                        className="text-blue-600 hover:text-blue-800 font-medium"
+                        className="inline-flex items-center text-red-600 hover:text-red-800 font-bold text-lg hover:bg-red-50 px-2 py-1 rounded-md transition-all duration-200 hover:scale-105"
                       >
-                        (571) 585-8345
+                        🚨 (571) 585-8345
                       </a>
                     </p>
                   </div>

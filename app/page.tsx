@@ -36,9 +36,9 @@ import {
   getAllCategories,
 } from '@/actions';
 
-// Make this page dynamic to avoid build-time issues with Prisma imports
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// Enable ISR for better performance - revalidate every 5 minutes
+export const revalidate = 300; // 5 minutes
+export const dynamic = 'force-static';
 
 const HomePage = async () => {
   // Fetch all required data for the homepage
@@ -56,8 +56,8 @@ const HomePage = async () => {
     getAppBanners(),
     getSpecialCombos(),
     getCrazyDeals(),
-    getBestSellers(24), // Limit to 24 best sellers (4 per category × 6 categories)
-    getNewArrivals(24), // Limit to 24 new arrivals (4 per category × 6 categories)
+    getBestSellers(12), // Reduced to 12 for better performance
+    getNewArrivals(12), // Reduced to 12 for better performance
     getAllCategories(), // Fetch categories for luxury categories section
     getAllSubCategories(),
   ]);
@@ -303,7 +303,9 @@ const HomePage = async () => {
 
       {/* Google Reviews Section */}
       <div className="relative bg-white">
-        <GoogleReviews placeId="ChIJgUbEo8pZwokR5oXTcr_zNvE" />
+        <GoogleReviews
+          placeId={process.env.NEXT_PUBLIC_GOOGLE_PLACE_ID || ''}
+        />
         <SectionSeparator
           variant="curve"
           position="bottom"

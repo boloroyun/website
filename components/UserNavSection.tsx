@@ -1,65 +1,39 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useOTPAuth } from '@/hooks/useOTPAuth';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { User, ShoppingCart, Loader2 } from 'lucide-react';
+import { User, ShoppingCart, Loader2, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 
 import CartDrawer from './CartDrawer';
-import AccountPopUp from './AccountPopUp';
 
 const UserNavSection = () => {
   const router = useRouter();
-  const { isAuthenticated, user, isLoading } = useAuth();
-  const [isAccountPopUpOpen, setIsAccountPopUpOpen] = useState(false);
+  const { isAuthenticated, user, isLoading, logout } = useOTPAuth();
 
   const handleUserClick = () => {
     if (isAuthenticated) {
-      // Use both approaches to ensure navigation works
-      console.log('🔍 User is authenticated, navigating to profile page');
-      
-      try {
-        // 1. Use Next.js router for a smoother experience
-        router.push('/profile');
-        
-        // 2. Also set a backup direct navigation with a slight delay
-        setTimeout(() => {
-          if (window.location.pathname !== '/profile') {
-            console.log('⚠️ Router navigation may have failed, using direct navigation');
-            window.location.href = '/profile';
-          }
-        }, 500);
-      } catch (error) {
-        console.error('❌ Error navigating to profile:', error);
-        // Fallback to direct navigation if router fails
-        window.location.href = '/profile';
+      // Use Next.js router for smoother navigation
+      console.log('🔍 User is authenticated, navigating to account page');
+      console.log('🔍 Current URL:', window.location.pathname);
+
+      // Only navigate if we're not already on the account page
+      if (window.location.pathname !== '/account') {
+        router.push('/account');
+      } else {
+        console.log('🔍 Already on account page, no navigation needed');
       }
     } else {
-      setIsAccountPopUpOpen(true);
+      // Redirect to new OTP login page
+      console.log('🔍 User not authenticated, redirecting to login');
+      router.push('/auth/login-otp');
     }
   };
-  
-  // Add a direct profile link for authenticated users
-  useEffect(() => {
-    // Clean up any previous link
-    const oldProfileLink = document.getElementById('direct-profile-link');
-    if (oldProfileLink) {
-      oldProfileLink.remove();
-    }
-    
-    // Only for authenticated users
-    if (isAuthenticated && user) {
-      // Create an invisible link that can be triggered programmatically
-      const profileLink = document.createElement('a');
-      profileLink.id = 'direct-profile-link';
-      profileLink.href = '/profile';
-      profileLink.style.display = 'none';
-      document.body.appendChild(profileLink);
-    }
-  }, [isAuthenticated, user]);
+
+  // We're using Next.js router for navigation, no need for direct link
 
   if (isLoading) {
     return (
@@ -82,31 +56,48 @@ const UserNavSection = () => {
 
       {/* User Section */}
       {isAuthenticated ? (
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2">
           {/* Welcome Text */}
-          <span className="hidden md:block text-sm text-gray-600">
+          <span className="hidden sm:block text-sm text-gray-600">
             Welcome,{' '}
-            <span className="font-medium text-gray-900">{user?.username}</span>
+            <span className="font-semibold text-gray-900">
+              {user?.username || user?.name || 'User'}
+            </span>
           </span>
 
-          {/* User Profile Button - Using Link for better navigation */}
-          <Link href="/profile" passHref legacyBehavior>
-            <Button
-              onClick={(e) => {
-                e.preventDefault(); // Prevent default to allow our custom handler
-                handleUserClick();
-              }}
-              variant="ghost"
-              size="icon"
-              className="relative cursor-pointer"
-              title={`View Profile - ${user?.username}`}
-              aria-label="Go to profile page"
-            >
-              <User size={24} className="text-green-600" />
-              {/* Green dot indicator */}
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-            </Button>
-          </Link>
+          {/* User Profile Button */}
+          <Button
+            onClick={handleUserClick}
+            variant="ghost"
+            size="icon"
+            className="relative cursor-pointer hover:bg-green-50 transition-colors group"
+            title={`View Account - ${user?.username}`}
+            aria-label="Go to account page"
+          >
+            <User size={24} className="text-green-600" />
+            {/* Green dot indicator */}
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+            {/* Mobile-friendly tooltip */}
+            <span className="absolute -bottom-8 whitespace-nowrap bg-black text-white text-xs rounded py-1 px-2 hidden md:group-hover:block">
+              My Account
+            </span>
+          </Button>
+
+          {/* Logout Button */}
+          <Button
+            onClick={logout}
+            variant="ghost"
+            size="icon"
+            className="relative cursor-pointer hover:bg-red-50 transition-colors group"
+            title="Sign Out"
+            aria-label="Sign out of your account"
+          >
+            <LogOut size={20} className="text-red-600" />
+            {/* Mobile-friendly tooltip */}
+            <span className="absolute -bottom-8 whitespace-nowrap bg-black text-white text-xs rounded py-1 px-2 hidden md:group-hover:block">
+              Sign Out
+            </span>
+          </Button>
         </div>
       ) : (
         /* Login/Signup Button for non-authenticated users */
@@ -114,18 +105,17 @@ const UserNavSection = () => {
           onClick={handleUserClick}
           variant="ghost"
           size="icon"
-          className="cursor-pointer"
-          title="Login / Sign Up"
+          className="relative cursor-pointer hover:bg-blue-50 transition-colors group"
+          title="Sign In with Email Code"
+          aria-label="Sign in to your account"
         >
-          <User size={24} />
+          <User size={24} className="text-blue-600" />
+          {/* Mobile-friendly tooltip */}
+          <span className="absolute -bottom-8 whitespace-nowrap bg-black text-white text-xs rounded py-1 px-2 hidden md:group-hover:block">
+            Sign In
+          </span>
         </Button>
       )}
-
-      {/* Account PopUp Modal */}
-      <AccountPopUp
-        isOpen={isAccountPopUpOpen}
-        onClose={() => setIsAccountPopUpOpen(false)}
-      />
     </div>
   );
 };

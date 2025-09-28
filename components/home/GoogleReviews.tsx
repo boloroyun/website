@@ -131,6 +131,13 @@ const GoogleReviews: React.FC<GoogleReviewsProps> = ({ placeId }) => {
   };
 
   useEffect(() => {
+    // Check if place ID is provided
+    if (!placeId) {
+      setError('Google Place ID is not configured. Please add NEXT_PUBLIC_GOOGLE_PLACE_ID to your .env file.');
+      setIsLoading(false);
+      return;
+    }
+
     // Create a container for the map
     const mapContainer = document.getElementById('google-map-reviews');
     if (!mapContainer) return;

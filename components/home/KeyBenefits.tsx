@@ -214,9 +214,36 @@ const KeyBenefits = () => {
                 Our experts are waiting to help
               </div>
               <div className="mt-2 sm:mt-3">
-                <button className="bg-gradient-to-r from-blue-700 to-blue-900 text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium hover:shadow-md transition-all duration-300 hover:-translate-y-0.5">
-                  Schedule a Free Consultation
-                </button>
+                <a href="/contact" className="group relative inline-block">
+                  <button className="relative overflow-hidden bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 hover:from-orange-600 hover:via-red-600 hover:to-pink-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-sm sm:text-base font-bold shadow-2xl hover:shadow-3xl transform hover:scale-110 transition-all duration-500 ease-out border-2 border-white/30 hover:border-white/50 animate-pulse hover:animate-none">
+                    {/* Animated background gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                    {/* Shimmer effect */}
+                    <div className="absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shimmer"></div>
+
+                    {/* Pulsing glow effect */}
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-orange-500 to-pink-500 blur-lg opacity-50 group-hover:opacity-75 animate-pulse"></div>
+
+                    {/* Content */}
+                    <span className="relative z-10 flex items-center justify-center">
+                      🗓️ Schedule a FREE Consultation 🗓️
+                      <svg
+                        className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M13 7l5 5m0 0l-5 5m5-5H6"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </a>
               </div>
             </div>
           </div>

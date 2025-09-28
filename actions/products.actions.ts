@@ -1,102 +1,134 @@
 'use server';
 
 import { PrismaClient } from '@prisma/client';
+import { withCache, CACHE_KEYS } from '@/lib/cache';
 
-// Lazy Prisma initialization
+// Optimized Prisma initialization with connection pooling
 let prisma: PrismaClient;
 function getPrisma() {
   if (!prisma) {
-    prisma = new PrismaClient();
+    prisma = new PrismaClient({
+      log:
+        process.env.NODE_ENV === 'development'
+          ? ['query', 'error', 'warn']
+          : ['error'],
+      datasources: {
+        db: {
+          url: process.env.DATABASE_URL,
+        },
+      },
+    });
   }
   return prisma;
 }
 
 // Best Sellers (products sorted by sold count)
 export async function getBestSellers(limit: number = 10) {
-  try {
-    console.log(`🏆 Fetching best seller products (limit: ${limit})...`);
+  return withCache(
+    CACHE_KEYS.BEST_SELLERS(limit),
+    async () => {
+      try {
+        console.log(`🏆 Fetching best seller products (limit: ${limit})...`);
 
-    const bestSellers = await getPrisma().product.findMany({
-      orderBy: [
-        { featured: 'desc' },
-        { bestSeller: 'desc' },
-        { sold: 'desc' },
-        { numReviews: 'desc' },
-        { rating: 'desc' },
-      ],
-      take: limit,
-      include: {
-        category: {
+        const bestSellers = await getPrisma().product.findMany({
+          orderBy: [
+            { featured: 'desc' },
+            { bestSeller: 'desc' },
+            { sold: 'desc' },
+            { numReviews: 'desc' },
+            { rating: 'desc' },
+          ],
+          take: limit,
           select: {
-            name: true,
+            id: true,
+            title: true,
+            description: true,
             slug: true,
-          },
-        },
-        productSubCategories: {
-          include: {
-            subCategory: {
+            brand: true,
+            rating: true,
+            numReviews: true,
+            sold: true,
+            discount: true,
+            pricingType: true,
+            images: true,
+            sizes: true,
+            colors: true,
+            featured: true,
+            bestSeller: true,
+            category: {
               select: {
-                id: true,
                 name: true,
                 slug: true,
               },
             },
+            productSubCategories: {
+              select: {
+                subCategory: {
+                  select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                  },
+                },
+              },
+            },
           },
-        },
-      },
-    });
+        });
 
-    console.log(`📈 Found ${bestSellers.length} best seller products`);
+        console.log(`📈 Found ${bestSellers.length} best seller products`);
 
-    // Transform data for frontend use
-    const formattedProducts = bestSellers.map((product) => ({
-      id: product.id,
-      title: product.title,
-      description: product.description,
-      slug: product.slug,
-      brand: product.brand,
-      rating: product.rating,
-      numReviews: product.numReviews,
-      sold: product.sold,
-      discount: product.discount,
-      pricingType: product.pricingType,
-      // Include new fields with type safety
-      finish: (product as any).finish ?? undefined,
-      location: (product as any).location ?? undefined,
-      images: product.images
-        .map((image) => ({
-          url: image.url || '',
-          public_id: image.public_id || '',
-        }))
-        .filter((image) => image.url),
-      sizes: product.sizes,
-      colors: product.colors,
-      category: product.category,
-      subCategories:
-        product.productSubCategories?.map((psc) => ({
-          id: psc.subCategory.id,
-          name: psc.subCategory.name,
-          slug: psc.subCategory.slug,
-        })) || [],
-      featured: product.featured,
-      bestSeller: product.bestSeller,
-    }));
+        // Transform data for frontend use
+        const formattedProducts = bestSellers.map((product) => ({
+          id: product.id,
+          title: product.title,
+          description: product.description,
+          slug: product.slug,
+          brand: product.brand,
+          rating: product.rating,
+          numReviews: product.numReviews,
+          sold: product.sold,
+          discount: product.discount,
+          pricingType: product.pricingType,
+          // Include new fields with type safety
+          finish: (product as any).finish ?? undefined,
+          location: (product as any).location ?? undefined,
+          images: product.images
+            .map((image) => ({
+              url: image.url || '',
+              public_id: image.public_id || '',
+            }))
+            .filter((image) => image.url),
+          sizes: product.sizes,
+          colors: product.colors,
+          category: product.category,
+          subCategories:
+            product.productSubCategories?.map((psc) => ({
+              id: psc.subCategory.id,
+              name: psc.subCategory.name,
+              slug: psc.subCategory.slug,
+            })) || [],
+          featured: product.featured,
+          bestSeller: product.bestSeller,
+        }));
 
-    console.log(
-      '🔗 Best sellers formatted:',
-      formattedProducts.length,
-      'products'
-    );
+        console.log(
+          '🔗 Best sellers formatted:',
+          formattedProducts.length,
+          'products'
+        );
 
-    return { success: true, data: formattedProducts };
-  } catch (error) {
-    console.error('❌ Error fetching best sellers:', error);
-    return {
-      success: false,
-      error: 'Failed to fetch best sellers',
-      details: error,
-    };
-  }
+        return { success: true, data: formattedProducts };
+      } catch (error) {
+        console.error('❌ Error fetching best sellers:', error);
+        return {
+          success: false,
+          error: 'Failed to fetch best sellers',
+          details: error,
+        };
+      }
+    },
+    300 // Cache for 5 minutes
+  );
 }
 
 // Featured Products

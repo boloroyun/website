@@ -2,7 +2,7 @@
 
 // Import dependencies
 import { useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useOTPAuth } from '@/hooks/useOTPAuth';
 // Import from Crisp library with renamed import to avoid potential issues
 import { identifyUser, addSessionTags as tagSession } from '@/lib/crisp';
 
@@ -10,37 +10,37 @@ import { identifyUser, addSessionTags as tagSession } from '@/lib/crisp';
  * Component that identifies authenticated users in Crisp chat
  */
 export default function CrispIdentifyFromSession() {
-  // Get session data from NextAuth
-  const { data: session, status } = useSession();
+  // Get auth data from OTP auth system
+  const { isAuthenticated, user, isLoading } = useOTPAuth();
 
   useEffect(() => {
-    // Skip if session is loading
-    if (status === 'loading') return;
+    // Skip if auth is loading
+    if (isLoading) return;
 
     // Handle authenticated users
-    if (status === 'authenticated' && session?.user) {
-      const { email, name } = session.user;
+    if (isAuthenticated && user) {
+      const { email, username } = user;
 
       // Only proceed if we have an email
       if (email) {
         console.log('🔐 Identifying authenticated user in Crisp:', {
           email,
-          name,
+          username,
         });
 
         // Set user data in Crisp
         identifyUser({
           email,
-          name: name || undefined,
+          name: username || undefined,
         });
 
         // Tag this session as authenticated
         tagSession(['authenticated']);
       }
-    } else if (status === 'unauthenticated') {
+    } else if (!isAuthenticated) {
       console.log('👤 User is not authenticated - Crisp will remain anonymous');
     }
-  }, [session, status]);
+  }, [isAuthenticated, user, isLoading]);
 
   // This component doesn't render anything
   return null;

@@ -1,24 +1,55 @@
-import { NextResponse } from 'next/server';
-import { handleLogout } from '@/actions/logout.actions';
+import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 export const runtime = 'nodejs';
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
-    const result = await handleLogout();
+    const cookieStore = cookies();
 
-    if (result.success) {
-      return NextResponse.json(result);
-    } else {
-      return NextResponse.json(result, { status: 500 });
-    }
-  } catch (error) {
-    console.error('Logout API error:', error);
+    // Clear authentication cookies
+    cookieStore.set('auth-token', '', {
+      httpOnly: false, // Match the setting from login
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 0,
+      path: '/',
+    });
+
+    cookieStore.set('auth-user', '', {
+      httpOnly: false, // Match the setting from login
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 0,
+      path: '/',
+    });
+
+    console.log('✅ User logged out successfully');
+
     return NextResponse.json(
-      { success: false, error: 'Failed to logout' },
+      { success: true, message: 'Logged out successfully' },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error('❌ Logout API error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
+}
+
+// Handle other HTTP methods
+export async function GET() {
+  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
+}
+
+export async function PUT() {
+  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
+}
+
+export async function DELETE() {
+  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
 }

@@ -30,9 +30,22 @@ const BlogImages = () => {
     },
     {
       src: '/images/i11.jpeg',
+      alt: 'Bathroom Design',
+      title: 'Premium Bathroom',
+      category: 'Bathroom',
+    },
+    {
+      src: '/images/customkit.jpg',
       alt: 'Cabinet Design',
-      title: 'Premium Cabinet Collections',
+      title: 'Premium Custom Cabinets',
       category: 'Cabinets',
+    },
+
+    {
+      src: '/images/closet.jpg',
+      alt: 'Cabinet Design',
+      title: 'Closet Design',
+      category: 'Closets',
     },
   ];
 

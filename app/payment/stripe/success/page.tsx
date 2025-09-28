@@ -10,8 +10,8 @@ function StripeSuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { clearCart } = useCartStore();
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>(
-    'loading'
+  const [status, setStatus] = useState(
+    'loading' as 'loading' | 'success' | 'error'
   );
   const [message, setMessage] = useState('');
 

@@ -44,8 +44,7 @@ import {
   CheckCircle,
   AlertCircle,
 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { logoutAndRedirect } from '@/actions/logout.actions';
+import { useOTPAuth } from '@/hooks/useOTPAuth';
 import {
   US_STATES,
   COUNTRIES,
@@ -58,7 +57,8 @@ import ZipCodeInput from '@/components/ZipCodeInput';
 
 export default function MyAccount() {
   const router = useRouter();
-  const { isAuthenticated, user, logout, isLoading, refreshAuth } = useAuth();
+  const { isAuthenticated, user, logout, isLoading, refreshAuth } =
+    useOTPAuth();
 
   // State management
   const [activeTab, setActiveTab] = useState('profile');
@@ -86,17 +86,50 @@ export default function MyAccount() {
 
   // Initialize form data
   useEffect(() => {
+    console.log('🔍 Profile: Initializing form data with user:', user);
     if (user) {
+      console.log('🔍 Profile: User data structure:', {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+        image: user.image,
+        hasAllRequiredFields: !!(user.id && user.email && user.username),
+      });
       setUsername(user.username || '');
+    } else {
+      console.log('🔍 Profile: No user data available');
     }
   }, [user]);
 
-  // Redirect to home if not authenticated
+  // Redirect to login if not authenticated (with delay to allow auth state to load)
   useEffect(() => {
+    console.log('🔍 Profile page auth check:', {
+      isLoading,
+      isAuthenticated,
+      username: user?.username,
+      pathname: window.location.pathname,
+    });
+
     if (!isLoading && !isAuthenticated) {
-      router.push('/');
+      console.log('🔄 Profile: User not authenticated, will redirect to login');
+      // Add a delay to allow cookies to be read after redirect from login
+      const timer = setTimeout(() => {
+        // Double-check authentication state before redirecting
+        refreshAuth();
+        setTimeout(() => {
+          if (!isAuthenticated) {
+            console.log('🔄 Profile: Executing redirect to login');
+            router.push('/auth/login-otp');
+          }
+        }, 500);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    } else if (!isLoading && isAuthenticated) {
+      console.log('✅ Profile: User authenticated, staying on profile page');
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isLoading, router, user, refreshAuth]);
 
   // Load user orders
   const loadOrders = useCallback(async () => {
@@ -359,14 +392,11 @@ export default function MyAccount() {
     setShowLogoutDialog(false);
 
     try {
-      // Clear client-side state first
+      // Use the OTP auth logout method
       await logout();
-
-      // Use server action to clear all server-side cookies and redirect
-      await logoutAndRedirect();
     } catch (error) {
       console.error('Logout error:', error);
-      // Fallback: just redirect to home if server action fails
+      // Fallback: just redirect to home if logout fails
       router.push('/');
     }
   };
@@ -899,14 +929,14 @@ export default function MyAccount() {
         {/* Logout Confirmation Dialog */}
         <Dialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
           <DialogContent>
-            <DialogHeader>
+            <div>
               <DialogTitle>Confirm Logout</DialogTitle>
               <DialogDescription>
                 Are you sure you want to sign out? You'll need to sign in again
                 to access your account.
               </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
+            </div>
+            <div className="flex justify-end space-x-2 mt-4">
               <Button
                 variant="outline"
                 onClick={() => setShowLogoutDialog(false)}
@@ -917,7 +947,7 @@ export default function MyAccount() {
                 <LogOut className="mr-2 h-4 w-4" />
                 Sign Out
               </Button>
-            </DialogFooter>
+            </div>
           </DialogContent>
         </Dialog>
       </div>

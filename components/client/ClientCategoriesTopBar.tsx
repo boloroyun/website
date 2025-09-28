@@ -3,15 +3,15 @@
 import React, { useEffect, useState } from 'react';
 import CategoriesTopBar from '../CategoriesTopBar';
 
-export function ClientCategoriesTopBar() {
-  interface NavItem {
-    name: string;
-    href: string;
-    children?: NavItem[];
-  }
+interface NavItem {
+  name: string;
+  href: string;
+  children?: NavItem[];
+}
 
-  const [categories, setCategories] = useState<NavItem[]>([]);
-  const [loading, setLoading] = useState(true);
+export function ClientCategoriesTopBar() {
+  const [categories, setCategories] = useState([] as NavItem[]);
+  const [loading, setLoading] = useState(true as boolean);
 
   useEffect(() => {
     const fetchCategories = async () => {

@@ -8,11 +8,11 @@ import Footer from '@/components/Footer';
 import { Toaster } from 'sonner';
 import { Toaster as CustomToaster } from '@/components/ui/toaster';
 import CrispChat from '@/components/CrispChat';
-import SessionProvider from '@/components/auth/SessionProvider';
 import Script from 'next/script';
 import SuppressHydrationWarnings from './suppress-hydration-warnings';
 import SuppressGrammarly from '@/components/SuppressGrammarly';
 import { Providers } from './providers';
+import PerformanceMonitor from '@/components/PerformanceMonitor';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -125,25 +125,24 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProvider>
-          <SuppressHydrationWarnings />
-          <SuppressGrammarly />
-          <Providers>
-            {/* The header is now handled within each page, not globally */}
-            {children}
-            <MobileBottomBar />
-            <Footer />
-            <Toaster position="top-right" richColors />
-            <CustomToaster />
-            <CrispChat />
-          </Providers>
-        </SessionProvider>
+        <SuppressHydrationWarnings />
+        <SuppressGrammarly />
+        <Providers>
+          {/* The header is now handled within each page, not globally */}
+          {children}
+          <MobileBottomBar />
+          <Footer />
+          <Toaster position="top-right" richColors />
+          <CustomToaster />
+          <CrispChat />
+          <PerformanceMonitor />
+        </Providers>
 
         {/* Cloudinary Upload Widget (for signed uploads) */}
-        <Script
+        <script
           src="https://widget.cloudinary.com/v2.0/global/all.js"
-          strategy="afterInteractive"
-        />
+          async
+        ></script>
       </body>
     </html>
   );

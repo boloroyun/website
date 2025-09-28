@@ -12,7 +12,8 @@ interface MailConfig {
 let transporter: nodemailer.Transporter | null = null;
 
 function getMailConfig(): MailConfig | null {
-  const requiredEnvs = [
+  // Try EMAIL_* variables first (new format)
+  const emailEnvs = [
     'EMAIL_HOST',
     'EMAIL_PORT',
     'EMAIL_SECURE',
@@ -21,20 +22,51 @@ function getMailConfig(): MailConfig | null {
     'EMAIL_FROM',
   ];
 
-  const missing = requiredEnvs.filter((env) => !process.env[env]);
-  if (missing.length > 0) {
-    console.warn(`Missing email environment variables: ${missing.join(', ')}`);
-    return null;
+  const hasEmailConfig = emailEnvs.every((env) => process.env[env]);
+
+  if (hasEmailConfig) {
+    return {
+      host: process.env.EMAIL_HOST!,
+      port: parseInt(process.env.EMAIL_PORT!, 10),
+      secure: process.env.EMAIL_SECURE === 'true',
+      user: process.env.EMAIL_USER!,
+      pass: process.env.EMAIL_PASSWORD!,
+      from: process.env.EMAIL_FROM!,
+    };
   }
 
-  return {
-    host: process.env.EMAIL_HOST!,
-    port: parseInt(process.env.EMAIL_PORT!, 10),
-    secure: process.env.EMAIL_SECURE === 'true',
-    user: process.env.EMAIL_USER!,
-    pass: process.env.EMAIL_PASSWORD!,
-    from: process.env.EMAIL_FROM!,
-  };
+  // Fallback to SMTP_* variables (existing format)
+  const smtpEnvs = ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS'];
+  const hasSmtpConfig = smtpEnvs.every((env) => process.env[env]);
+
+  if (hasSmtpConfig && process.env.EMAIL_FROM) {
+    console.log('📧 Using SMTP_* configuration for email');
+    return {
+      host: process.env.SMTP_HOST!,
+      port: parseInt(process.env.SMTP_PORT!, 10),
+      secure: process.env.SMTP_PORT === '465', // 465 is secure, 587 is not
+      user: process.env.SMTP_USER!,
+      pass: process.env.SMTP_PASS!,
+      from: process.env.EMAIL_FROM!,
+    };
+  }
+
+  // Check if we have Resend API key as alternative
+  if (process.env.RESEND_API_KEY && process.env.EMAIL_FROM) {
+    console.log('📧 Resend API key found, but using SMTP for now');
+    // For now, we'll stick with SMTP. Resend integration can be added later if needed.
+  }
+
+  const missingEmailEnvs = emailEnvs.filter((env) => !process.env[env]);
+  const missingSmtpEnvs = smtpEnvs.filter((env) => !process.env[env]);
+
+  console.warn(`Missing email configuration. Need either:`);
+  console.warn(`  EMAIL_* variables: ${missingEmailEnvs.join(', ')}`);
+  console.warn(
+    `  OR SMTP_* variables: ${missingSmtpEnvs.join(', ')} + EMAIL_FROM`
+  );
+
+  return null;
 }
 
 async function createTransporter() {
@@ -137,6 +169,43 @@ export async function sendMail(
     // Return without throwing to allow the application to continue
     return;
   }
+}
+
+export function getLoginOTPEmailHtml(
+  otp: string,
+  expiresInMinutes: number = 5
+): string {
+  return `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <img src="https://res.cloudinary.com/dpeueuyjf/image/upload/v1755294936/website-banners/sdvclxxuhzbxsn7wzpwd.png" alt="LUX Cabinets & Stones Logo" style="max-width: 150px; height: auto;">
+      </div>
+      <h2 style="color: #0056b3; text-align: center;">Your Login Code</h2>
+      <p>Hello,</p>
+      <p>You requested to sign in to your LUX Cabinets & Stones account. Use the verification code below:</p>
+      
+      <div style="text-align: center; margin: 30px 0;">
+        <div style="background-color: #f8f9fa; border: 2px dashed #007bff; padding: 20px; border-radius: 8px; display: inline-block;">
+          <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #007bff; font-family: 'Courier New', monospace;">${otp}</span>
+        </div>
+      </div>
+      
+      <p style="text-align: center; margin: 20px 0;">
+        <strong>This code will expire in ${expiresInMinutes} minutes.</strong>
+      </p>
+      
+      <p>If you didn't request this code, please ignore this email. Your account remains secure.</p>
+      <p>For security reasons, never share this code with anyone.</p>
+      
+      <p>Thank you,<br>The LUX Cabinets & Stones Team</p>
+      <hr style="border: none; border-top: 1px solid #eee; margin-top: 30px;">
+      <p style="text-align: center; font-size: 12px; color: #777;">
+        This email was sent by LUX Cabinets & Stones.
+        <br>
+        &copy; ${new Date().getFullYear()} LUX Cabinets & Stones. All rights reserved.
+      </p>
+    </div>
+  `;
 }
 
 export function getPasswordResetEmailHtml(resetLink: string): string {

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import SizeSelector from './SizeSelector';
 import ProductInteraction from './ProductInteraction';
 import { useCartStore } from '@/lib/cart-store';
-import { useAuth } from '@/hooks/useAuth';
+import { useOTPAuth } from '@/hooks/useOTPAuth';
 import { toast } from 'sonner';
 import { useParams } from 'next/navigation';
 import { useAtom } from 'jotai';
@@ -35,7 +35,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({
   productData,
 }) => {
   const { addItem } = useCartStore();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useOTPAuth();
   const params = useParams();
   const [, setCartMenuOpen] = useAtom(cartMenuState);
   const [selectedSize, setSelectedSize] = useState<ProductSize | undefined>(
