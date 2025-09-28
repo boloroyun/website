@@ -27,12 +27,12 @@ interface PopularColor {
 
 const SearchModal = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState<ProductSearchResult[]>([]);
-  const [recommendedProducts, setRecommendedProducts] = useState<
-    ProductSearchResult[]
-  >([]);
-  const [trendingSearches, setTrendingSearches] = useState<string[]>([]);
-  const [popularColors, setPopularColors] = useState<PopularColor[]>([]);
+  const [searchResults, setSearchResults] = useState([] as ProductSearchResult[]);
+  const [recommendedProducts, setRecommendedProducts] = useState(
+    [] as ProductSearchResult[]
+  );
+  const [trendingSearches, setTrendingSearches] = useState([] as string[]);
+  const [popularColors, setPopularColors] = useState([] as PopularColor[]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 

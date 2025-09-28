@@ -106,10 +106,10 @@ export default function QuoteRequestModal({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
+  const [uploadedImages, setUploadedImages] = useState([] as UploadedImage[]);
   const [hasUploadingFiles, setHasUploadingFiles] = useState(false);
 
-  const [formData, setFormData] = useState<QuoteFormData>({
+  const [formData, setFormData] = useState({
     category: initialCategory,
     material: '',
     sqft: '',
@@ -121,7 +121,7 @@ export default function QuoteRequestModal({
     tallUnits: '',
     drawerStacks: '',
     zipcode: '',
-  });
+  } as QuoteFormData);
 
   const calculateItemsCount = useCallback(() => {
     let count = 0;
@@ -452,7 +452,7 @@ export default function QuoteRequestModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+        <div>
           <DialogTitle className="flex items-center gap-2">
             <Calculator className="h-5 w-5" />
             Request a Quote
@@ -461,7 +461,7 @@ export default function QuoteRequestModal({
             Get an instant estimate for your project. All fields marked with *
             are required.
           </DialogDescription>
-        </DialogHeader>
+        </div>
 
         <div className="space-y-6">
           {/* Category Selection */}
@@ -613,7 +613,7 @@ export default function QuoteRequestModal({
           )}
         </div>
 
-        <DialogFooter>
+        <div className="flex justify-end space-x-2 mt-6">
           <Button
             variant="outline"
             onClick={onClose}
@@ -647,7 +647,7 @@ export default function QuoteRequestModal({
               </>
             )}
           </Button>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );

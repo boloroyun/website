@@ -98,7 +98,7 @@ const IndividualProductReviewPage = async ({
     Object.entries(ratingCounts).reduce(
       (acc, [rating, count]) => acc + Number(rating) * (count as number),
       0
-    ) / totalRatings
+    ) / Math.max(Number(totalRatings), 1)
   ).toFixed(1);
 
   return (
@@ -148,7 +148,7 @@ const IndividualProductReviewPage = async ({
                       ))}
                     </div>
                     <div className="text-sm text-gray-500">
-                      {totalRatings} Verified Buyers
+                      {Number(totalRatings)} Verified Buyers
                     </div>
                   </div>
                 </div>
@@ -163,7 +163,7 @@ const IndividualProductReviewPage = async ({
                           className="h-full bg-primary"
                           style={{
                             width: `${
-                              (ratingCounts[rating] / totalRatings) * 100
+                              ((ratingCounts[rating] as number) / Math.max(Number(totalRatings), 1)) * 100
                             }%`,
                           }}
                         />

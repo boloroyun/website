@@ -8,18 +8,17 @@ interface JsonLdProps {
 }
 
 export default function JsonLd({ data }: JsonLdProps) {
-  const [jsonString, setJsonString] = useState<string>('');
+  const [jsonString, setJsonString] = useState('' as string);
 
   useEffect(() => {
     setJsonString(JSON.stringify(data));
   }, [data]);
 
   return (
-    <Script
+    <script
       id={`json-ld-${Math.random().toString(36).substring(2, 9)}`}
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: jsonString }}
-      strategy="afterInteractive"
     />
   );
 }

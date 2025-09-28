@@ -168,9 +168,9 @@ const FilterButton = () => {
             </Button>
           </SheetTrigger>
           <SheetContent side="bottom" className="h-full overflow-y-auto">
-            <SheetHeader>
+            <div>
               <SheetTitle>Filters</SheetTitle>
-            </SheetHeader>
+            </div>
             <FilterContent />
           </SheetContent>
         </Sheet>
@@ -190,9 +190,9 @@ const FilterButton = () => {
           </Button>
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogContent className="max-w-[80vw]">
-              <DialogHeader>
+              <div>
                 <DialogTitle>Filters</DialogTitle>
-              </DialogHeader>
+              </div>
               <FilterContent />
             </DialogContent>
           </Dialog>

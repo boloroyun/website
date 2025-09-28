@@ -23,7 +23,7 @@ interface ResponsiveNavbarProps {
 const ResponsiveNavbar= ({ navItems }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState(null as string | null);
 
   // Handle scroll event to change navbar style
   useEffect(() => {
