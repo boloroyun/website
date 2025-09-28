@@ -139,15 +139,18 @@ export default async function QuotePage({
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Badge
-                variant={isExpired ? 'destructive' : 'default'}
-                className="text-sm"
+              <div
+                className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors ${
+                  isExpired 
+                    ? 'border-transparent bg-destructive text-destructive-foreground' 
+                    : 'border-transparent bg-primary text-primary-foreground'
+                }`}
               >
-                <span>{isExpired ? 'Expired' : 'Valid'}</span>
-              </Badge>
-              <Badge variant="outline" className="text-sm">
-                <span>{quote.status}</span>
-              </Badge>
+                {isExpired ? 'Expired' : 'Valid'}
+              </div>
+              <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-foreground">
+                {quote.status}
+              </div>
             </div>
           </div>
         </div>
