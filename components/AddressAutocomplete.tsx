@@ -36,11 +36,11 @@ const AddressAutocomplete = ({
   currentCity,
   currentState,
 }: AddressAutocompleteProps) => {
-  const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
+  const [suggestions, setSuggestions] = useState([] as AddressSuggestion[]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const suggestionsRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef(null as HTMLInputElement | null);
+  const suggestionsRef = useRef(null as HTMLDivElement | null);
 
   useEffect(() => {
     if (value.length >= 2 && country === 'US') {

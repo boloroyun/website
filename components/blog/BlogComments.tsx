@@ -7,7 +7,7 @@ interface BlogCommentsProps {
   postId: string;
 }
 
-const BlogComments: React.FC<BlogCommentsProps> = ({ postId }) => {
+const BlogComments = ({ postId }: BlogCommentsProps) => {
   const [commentText, setCommentText] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -48,7 +48,7 @@ const BlogComments: React.FC<BlogCommentsProps> = ({ postId }) => {
     },
   ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsSubmitting(true);
 

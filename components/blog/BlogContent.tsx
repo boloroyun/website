@@ -15,7 +15,7 @@ interface BlogContentProps {
   images: BlogImage[];
 }
 
-const BlogContent: React.FC<BlogContentProps> = ({ content, images }) => {
+const BlogContent = ({ content, images }: BlogContentProps) => {
   // Function to process content and inject images
   const processContent = (htmlContent: string) => {
     // This is a simple implementation - you might want to use a more sophisticated HTML parser
