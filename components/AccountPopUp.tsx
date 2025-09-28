@@ -408,12 +408,12 @@ const AccountPopUp = ({ isOpen, onClose }: AccountPopUpProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
-        <DialogHeader className="sr-only">
+        <div className="sr-only">
           <DialogTitle>Account Access</DialogTitle>
           <DialogDescription>
             Sign in or create an account to continue
           </DialogDescription>
-        </DialogHeader>
+        </div>
 
         <div
           className={`transition-all duration-200 ${isLoading ? 'blur-sm pointer-events-none' : ''}`}
