@@ -143,10 +143,10 @@ export default async function QuotePage({
                 variant={isExpired ? 'destructive' : 'default'}
                 className="text-sm"
               >
-                {isExpired ? 'Expired' : 'Valid'}
+                <span>{isExpired ? 'Expired' : 'Valid'}</span>
               </Badge>
               <Badge variant="outline" className="text-sm">
-                {quote.status}
+                <span>{quote.status}</span>
               </Badge>
             </div>
           </div>
