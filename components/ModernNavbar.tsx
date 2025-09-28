@@ -34,7 +34,7 @@ interface NavItem {
 }
 
 // Map of icon component strings to their React component counterparts
-const IconComponents: Record<string, React.ComponentType<any>> = {
+const IconComponents: Record<string, any> = {
   RiDiscountPercentFill: RiDiscountPercentFill,
   LuStore: LuStore,
   GrLike: GrLike,
