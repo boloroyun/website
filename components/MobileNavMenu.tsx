@@ -41,7 +41,7 @@ interface MobileNavMenuProps {
 
 const MobileNavMenu= ({ navItems }) => {
   const [hamMenuOpen, setHamMenuOpen] = useAtom(hamburgerMenuState);
-  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
+  const [activeSubmenu, setActiveSubmenu] = useState(null as string | null);
 
   const handleOnClickHamburgerMenu = () => {
     setHamMenuOpen(true);
