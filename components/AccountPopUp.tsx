@@ -29,7 +29,7 @@ const AccountPopUp = ({ isOpen, onClose }: AccountPopUpProps) => {
   const [code, setCode] = useState(['', '', '', '']);
   const [resendTimer, setResendTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const inputRefs = useRef([] as (HTMLInputElement | null)[]);
 
   const { refreshAuth } = useOTPAuth();
 
