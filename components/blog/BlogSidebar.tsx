@@ -30,7 +30,7 @@ const BlogSidebar= ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: any) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       window.location.href = `/blog?search=${encodeURIComponent(searchQuery.trim())}`;

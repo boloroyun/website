@@ -656,6 +656,8 @@ Thank you for your assistance.`;
       {/* Floating Social Share Button */}
       <SocialShare
         variant="floating"
+        url={typeof window !== 'undefined' ? window.location.href : ''}
+        image=""
         title={`Order #${order.id.slice(-8)} - LUX Cabinets & Stones`}
         description={`Check out my order from LUX Cabinets & Stones! ${order.products.length} item${order.products.length > 1 ? 's' : ''} ordered for ${formatCurrency(order.total)}.`}
         hashtags={['LUXCabinets', 'OrderUpdate', 'HomeImprovement']}

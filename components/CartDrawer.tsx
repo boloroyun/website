@@ -29,9 +29,7 @@ interface RecommendedProduct {
 const CartDrawer = () => {
   const [cartMenuOpen, setCartMenuOpen] = useAtom(cartMenuState);
   const { items, removeItem, updateQuantity, hasHydrated } = useCartStore();
-  const [recommendedProducts, setRecommendedProducts] = useState<
-    RecommendedProduct[]
-  >([]);
+  const [recommendedProducts, setRecommendedProducts] = useState([] as RecommendedProduct[]);
 
   useEffect(() => {
     const fetchRecommendedProducts = async () => {

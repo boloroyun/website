@@ -31,8 +31,8 @@ const BlogPagination= ({
 
     // Add other search parameters
     Object.entries(searchParams).forEach(([key, value]) => {
-      if (value && value.trim()) {
-        params.set(key, value);
+      if (value && String(value).trim()) {
+        params.set(key, String(value));
       }
     });
 

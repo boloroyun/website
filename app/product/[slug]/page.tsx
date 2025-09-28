@@ -421,6 +421,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
         {/* Social Share Section */}
         <div className="mt-12 text-center">
           <SocialShare
+        url={typeof window !== "undefined" ? window.location.href : ""}
             variant="default"
             title={`${product.title} - LUX Cabinets & Stones`}
             description={product.description}
@@ -436,6 +437,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
 
       {/* Floating Social Share Button */}
       <SocialShare
+        url={typeof window !== "undefined" ? window.location.href : ""}
         variant="floating"
         title={`${product.title} - LUX Cabinets & Stones`}
         description={`Check out this premium ${product.category?.name || 'product'} from LUX Cabinets & Stones. ${product.description}`}

@@ -326,6 +326,8 @@ const PrivacyPolicy = () => {
         {/* Social Share Section */}
         <div className="mt-8 text-center">
           <SocialShare
+        url={typeof window !== "undefined" ? window.location.href : ""}
+        image=""
             variant="minimal"
             title="LUX Cabinets & Stones - Privacy Policy"
             description="Learn about our commitment to protecting your privacy and personal information."
@@ -336,6 +338,8 @@ const PrivacyPolicy = () => {
 
       {/* Floating Social Share Button */}
       <SocialShare
+        url={typeof window !== "undefined" ? window.location.href : ""}
+        image=""
         variant="floating"
         title="LUX Cabinets & Stones - Privacy Policy"
         description="Transparent privacy practices for premium kitchen cabinets and stone surfaces."

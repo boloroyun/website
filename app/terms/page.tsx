@@ -496,6 +496,8 @@ const TermsOfService = () => {
         {/* Social Share Section */}
         <div className="mt-8 text-center">
           <SocialShare
+        url={typeof window !== "undefined" ? window.location.href : ""}
+        image=""
             variant="minimal"
             title="LUX Cabinets & Stones - Terms of Service"
             description="Professional terms of service for premium kitchen cabinets and stone surfaces."
@@ -506,6 +508,8 @@ const TermsOfService = () => {
 
       {/* Floating Social Share Button */}
       <SocialShare
+        url={typeof window !== "undefined" ? window.location.href : ""}
+        image=""
         variant="floating"
         title="LUX Cabinets & Stones - Terms of Service"
         description="Comprehensive terms of service for countertop fabrication and custom cabinetry."

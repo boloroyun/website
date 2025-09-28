@@ -321,6 +321,8 @@ const HomePage = async () => {
 
       {/* Floating Social Share Button */}
       <SocialShare
+        url={typeof window !== "undefined" ? window.location.href : ""}
+        image=""
         variant="floating"
         title="LUX Cabinets & Stones - Premium Kitchen Cabinets & Stone Surfaces"
         description="Transform your kitchen with our premium countertops, custom cabinets, and professional installation services. Get a free quote today!"
