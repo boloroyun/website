@@ -93,7 +93,7 @@ const IndividualProductReviewPage = ({}) => {
     1: 1,
   };
 
-  const totalRatings = Object.values(ratingCounts).reduce(
+  const totalRatings: number = Object.values(ratingCounts).reduce<number>(
     (a: number, b: any) => a + (b as number),
     0
   );
@@ -101,7 +101,7 @@ const IndividualProductReviewPage = ({}) => {
     Object.entries(ratingCounts).reduce(
       (acc, [rating, count]) => acc + Number(rating) * (count as number),
       0
-    ) / totalRatings
+    ) / Math.max(totalRatings, 1)
   ).toFixed(1);
 
   return (

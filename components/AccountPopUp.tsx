@@ -20,9 +20,7 @@ interface AccountPopUpProps {
 }
 
 const AccountPopUp = ({ isOpen, onClose }: AccountPopUpProps) => {
-  const [currentStep, setCurrentStep] = useState<
-    'login' | 'verification' | 'success'
-  >('login');
+  const [currentStep, setCurrentStep] = useState('login' as 'login' | 'verification' | 'success');
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [username, setUsername] = useState('');

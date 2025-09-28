@@ -33,10 +33,10 @@ const lookupOrder = (orderId: string): Promise<orderDetails | null> => {
 
 const TrackOrderPage = () => {
   // State to manage orderId input, order details, error messages, and loading status
-  const [orderId, setOrderId] = useState<string>(""); // For tracking user input
-  const [orderDetails, setOrderDetails] = useState<orderDetails | null>(null); // Store fetched order details
-  const [error, setError] = useState<string>(""); // For error messages
-  const [loading, setLoading] = useState<boolean>(false); // For showing loader during fetch
+  const [orderId, setOrderId] = useState("" as string); // For tracking user input
+  const [orderDetails, setOrderDetails] = useState(null as orderDetails | null); // Store fetched order details
+  const [error, setError] = useState("" as string); // For error messages
+  const [loading, setLoading] = useState(false as boolean); // For showing loader during fetch
 
   // Handle form submission for tracking the order
   const handleSubmit = async (e: React.FormEvent) => {
