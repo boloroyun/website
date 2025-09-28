@@ -7,12 +7,10 @@ import { Mail, CheckCircle, AlertCircle } from 'lucide-react';
 
 const NewsletterSubscribe = () => {
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<
-    'idle' | 'loading' | 'success' | 'error'
-  >('idle');
+  const [status, setStatus] = useState('idle' as 'idle' | 'loading' | 'success' | 'error');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     if (!email.trim()) {
