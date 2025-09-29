@@ -99,4 +99,6 @@ export const CACHE_KEYS = {
   PRODUCT: (slug: string) => `product-${slug}`,
   CATEGORY_PRODUCTS: (slug: string, page: number) =>
     `category-${slug}-page-${page}`,
+  TOP_PRODUCTS_BY_CATEGORY: (categorySlug: string, limit: number) =>
+    `top-products-${categorySlug}-${limit}`,
 } as const;

@@ -685,3 +685,121 @@ export async function getTrendingSearches() {
     };
   }
 }
+
+// Get top products by category slug
+export async function getTopProductsByCategory(
+  categorySlug: string,
+  limit: number = 4
+) {
+  return withCache(
+    CACHE_KEYS.TOP_PRODUCTS_BY_CATEGORY(categorySlug, limit),
+    async () => {
+      try {
+        console.log(
+          `🏆 Fetching top ${limit} products for category: ${categorySlug}...`
+        );
+
+        const topProducts = await getPrisma().product.findMany({
+          where: {
+            category: {
+              slug: categorySlug,
+            },
+          },
+          orderBy: [
+            { featured: 'desc' },
+            { bestSeller: 'desc' },
+            { sold: 'desc' },
+            { numReviews: 'desc' },
+            { rating: 'desc' },
+          ],
+          take: limit,
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            slug: true,
+            brand: true,
+            rating: true,
+            numReviews: true,
+            sold: true,
+            discount: true,
+            pricingType: true,
+            images: true,
+            sizes: true,
+            colors: true,
+            featured: true,
+            bestSeller: true,
+            category: {
+              select: {
+                name: true,
+                slug: true,
+              },
+            },
+            productSubCategories: {
+              select: {
+                subCategory: {
+                  select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        console.log(
+          `📈 Found ${topProducts.length} top products for ${categorySlug}`
+        );
+
+        // Transform data for frontend use
+        const formattedProducts = topProducts.map((product) => ({
+          id: product.id,
+          title: product.title,
+          description: product.description,
+          slug: product.slug,
+          brand: product.brand ?? undefined,
+          rating: product.rating,
+          numReviews: product.numReviews,
+          sold: product.sold ?? undefined,
+          discount: product.discount ?? undefined,
+          pricingType: product.pricingType,
+          images: product.images
+            .map((image: any) => ({
+              url: image.url || '',
+              public_id: image.public_id || '',
+            }))
+            .filter((image: any) => image.url),
+          sizes: product.sizes,
+          colors: product.colors.map((color) => ({
+            ...color,
+            image: color.image ?? undefined,
+          })),
+          category: product.category,
+          subCategories:
+            product.productSubCategories?.map((psc) => ({
+              id: psc.subCategory.id,
+              name: psc.subCategory.name,
+              slug: psc.subCategory.slug,
+            })) || [],
+          featured: product.featured,
+          bestSeller: product.bestSeller,
+        }));
+
+        return { success: true, data: formattedProducts };
+      } catch (error) {
+        console.error(
+          `❌ Error fetching top products for ${categorySlug}:`,
+          error
+        );
+        return {
+          success: false,
+          error: `Failed to fetch top products for ${categorySlug}`,
+          details: error,
+        };
+      }
+    },
+    300 // Cache for 5 minutes
+  );
+}

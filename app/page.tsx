@@ -34,6 +34,7 @@ import {
   getAllSubCategories,
   getNewArrivals,
   getAllCategories,
+  getTopProductsByCategory,
 } from '@/actions';
 
 // Enable ISR for better performance - revalidate every 5 minutes
@@ -51,6 +52,7 @@ const HomePage = async () => {
     newArrivals,
     categories,
     subCategories,
+    topCountertops,
   ] = await Promise.all([
     getWebsiteBanners(),
     getAppBanners(),
@@ -60,6 +62,8 @@ const HomePage = async () => {
     getNewArrivals(12), // Reduced to 12 for better performance
     getAllCategories(), // Fetch categories for luxury categories section
     getAllSubCategories(),
+    // Get top countertop products separately since they're not in best sellers
+    getTopProductsByCategory('countertops', 4),
   ]);
 
   // Organize products by categories for best sellers and new arrivals
@@ -110,20 +114,46 @@ const HomePage = async () => {
     6 // max 6 categories
   );
 
-  // Filter for specific categories in Best Sellers - show only Cabinets and Countertops
-  const bestSellersFiltered = bestSellersBalanced.filter(
-    (section) =>
-      section.categorySlug.toLowerCase() === 'cabinets' ||
-      section.categorySlug.toLowerCase() === 'countertops'
-  );
-
-  // Ensure we have both categories, even if one has no products
-  const cabinetSection = bestSellersFiltered.find(s => s.categorySlug.toLowerCase() === 'cabinets');
-  const countertopSection = bestSellersFiltered.find(s => s.categorySlug.toLowerCase() === 'countertops');
-  
+  // Get specific categories for Best Sellers - ensure we get both Cabinets and Countertops
   const bestSellersCabinetsAndCountertops = [];
-  if (cabinetSection) bestSellersCabinetsAndCountertops.push(cabinetSection);
-  if (countertopSection) bestSellersCabinetsAndCountertops.push(countertopSection);
+
+  // Get Cabinet products (from best sellers)
+  const cabinetProducts = bestSellersFormatted
+    .filter((product) => product.category?.slug.toLowerCase() === 'cabinets')
+    .slice(0, 4); // Take top 4 cabinet products
+
+  if (cabinetProducts.length > 0) {
+    bestSellersCabinetsAndCountertops.push({
+      categoryName: 'Cabinets',
+      categorySlug: 'cabinets',
+      products: cabinetProducts,
+    });
+  }
+
+  // Get Countertop products (use fetched top countertops since they're not in best sellers)
+  const topCountertopsData = topCountertops.success
+    ? (topCountertops.data ?? [])
+    : [];
+
+  // Transform countertop data to match the expected format
+  const countertopProducts = topCountertopsData.map((product) => ({
+    ...product,
+    brand: product.brand ?? undefined,
+    sold: product.sold ?? undefined,
+    discount: product.discount ?? undefined,
+    colors: product.colors.map((color) => ({
+      ...color,
+      image: color.image ?? undefined,
+    })),
+  }));
+
+  if (countertopProducts.length > 0) {
+    bestSellersCabinetsAndCountertops.push({
+      categoryName: 'Countertops',
+      categorySlug: 'countertops',
+      products: countertopProducts,
+    });
+  }
 
   return (
     <div className="relative">
@@ -329,7 +359,7 @@ const HomePage = async () => {
 
       {/* Floating Social Share Button */}
       <SocialShare
-        url={typeof window !== "undefined" ? window.location.href : ""}
+        url={typeof window !== 'undefined' ? window.location.href : ''}
         image=""
         variant="floating"
         title="LUX Cabinets & Stones - Premium Kitchen Cabinets & Stone Surfaces"
