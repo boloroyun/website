@@ -110,12 +110,20 @@ const HomePage = async () => {
     6 // max 6 categories
   );
 
-  // Filter cabinet sections for specific layout handling if needed
-  const cabinetSections = bestSellersBalanced.filter(
+  // Filter for specific categories in Best Sellers - show only Cabinets and Countertops
+  const bestSellersFiltered = bestSellersBalanced.filter(
     (section) =>
-      section.categoryName.toLowerCase().includes('cabinet') ||
-      section.categorySlug.toLowerCase().includes('cabinet')
+      section.categorySlug.toLowerCase() === 'cabinets' ||
+      section.categorySlug.toLowerCase() === 'countertops'
   );
+
+  // Ensure we have both categories, even if one has no products
+  const cabinetSection = bestSellersFiltered.find(s => s.categorySlug.toLowerCase() === 'cabinets');
+  const countertopSection = bestSellersFiltered.find(s => s.categorySlug.toLowerCase() === 'countertops');
+  
+  const bestSellersCabinetsAndCountertops = [];
+  if (cabinetSection) bestSellersCabinetsAndCountertops.push(cabinetSection);
+  if (countertopSection) bestSellersCabinetsAndCountertops.push(countertopSection);
 
   return (
     <div className="relative">
@@ -240,11 +248,11 @@ const HomePage = async () => {
         />
       </div>
 
-      {/* Best Sellers Section */}
+      {/* Best Sellers Section - Cabinets and Countertops */}
       <div className="relative bg-teal-50 pt-8">
         <ProductCardByCategory
           heading="BEST SELLERS"
-          sections={bestSellersBalanced}
+          sections={bestSellersCabinetsAndCountertops}
           maxProductsPerCategory={4}
         />
         <SectionSeparator
