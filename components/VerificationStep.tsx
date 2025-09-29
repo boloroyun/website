@@ -30,7 +30,7 @@ const VerificationStep = ({
   const [error, setError] = useState('');
   const [resendTimer, setResendTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const inputRefs = useRef([] as (HTMLInputElement | null)[]);
 
   // Timer for resend button
   useEffect(() => {
