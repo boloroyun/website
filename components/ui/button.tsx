@@ -37,7 +37,7 @@ export interface ButtonProps
   extends React.HTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (event: any) => void;
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
 }
