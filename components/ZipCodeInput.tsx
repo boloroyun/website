@@ -30,11 +30,11 @@ const ZipCodeInput = ({
   country = 'US',
 }: ZipCodeInputProps) => {
   const [isValidZip, setIsValidZip] = useState(false);
-  const [foundLocation, setFoundLocation] = useState<{
+  const [foundLocation, setFoundLocation] = useState(null as {
     city: string;
     state: string;
     stateCode: string;
-  } | null>(null);
+  } | null);
 
   useEffect(() => {
     if (value.length >= 5 && country === 'US') {
