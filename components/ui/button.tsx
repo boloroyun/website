@@ -42,8 +42,8 @@ export interface ButtonProps
   disabled?: boolean;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+const Button = React.forwardRef(
+  ({ className, variant, size, asChild = false, ...props }: ButtonProps, ref: any) => {
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
