@@ -40,6 +40,7 @@ export interface ButtonProps
   onClick?: (event: any) => void;
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
+  className?: string;
 }
 
 const Button = React.forwardRef(
