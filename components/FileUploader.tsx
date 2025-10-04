@@ -69,7 +69,17 @@ export function FileUploader({
   // Clean up object URLs on unmount
   useEffect(() => {
     return () => {
-      files.forEach((file) => URL.revokeObjectURL(file.previewUrl));
+      // Safely clean up object URLs
+      files.forEach((file) => {
+        try {
+          if (file.previewUrl && file.previewUrl.startsWith('blob:')) {
+            URL.revokeObjectURL(file.previewUrl);
+          }
+        } catch (error) {
+          // Ignore errors during cleanup
+          console.warn('Failed to revoke object URL:', error);
+        }
+      });
     };
   }, [files]);
 

@@ -14,7 +14,10 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { openChat, sendVisitorMessage } from '@/lib/crisp';
 import { storePendingQuote } from '@/lib/quote-fallback';
-import { FileUploader, UploadedImage } from '@/components/FileUploader';
+import {
+  FileUploaderWithCompression as FileUploader,
+  UploadedImage,
+} from '@/components/FileUploaderWithCompression';
 import { ImageIcon, CheckCircle, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -48,9 +51,7 @@ export default function QuoteModal({
   const [error, setError] = useState(null as string | null);
 
   // Handle form input changes
-  const handleChange = (
-    e: any
-  ) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };

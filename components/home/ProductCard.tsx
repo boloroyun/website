@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ProductCardCarousel from './ProductCardCarousel';
 import QuoteRequestButton from '../QuoteRequestButton';
+import GalleryProductCard from './GalleryProductCard';
+import PremiumGalleryProductCard from './PremiumGalleryProductCard';
 
 interface DatabaseProduct {
   id: string;
@@ -172,11 +174,7 @@ const Card = ({
                 </Link>
               ) : (
                 <Link
-                  href={
-                    isGallery
-                      ? '/category/project-gallery'
-                      : `/product/${product.slug}`
-                  }
+                  href={`/product/${product.slug}`}
                   className="block w-full"
                 >
                   <Button
@@ -186,7 +184,7 @@ const Card = ({
                         : 'bg-black text-white hover:bg-gray-800'
                     }`}
                   >
-                    {isGallery ? 'VIEW' : 'VIEW'}
+                    {isGallery ? 'VIEW PROJECT' : 'VIEW'}
                   </Button>
                 </Link>
               )}
@@ -209,6 +207,23 @@ const ProductCard = ({
   products?: DatabaseProduct[];
   viewAllLink?: string;
 }) => {
+  // Check if all products are gallery type
+  const isAllGalleryProducts = products.every(
+    (product) => product.pricingType === 'gallery'
+  );
+
+  // If all products are gallery type, use the premium gallery layout
+  if (isAllGalleryProducts && products.length > 0) {
+    return (
+      <PremiumGalleryProductCard
+        heading={heading}
+        products={products}
+        viewAllLink={viewAllLink}
+      />
+    );
+  }
+
+  // Otherwise use the regular product card layout
   return (
     <div className="container mx-auto mb-[20px]">
       {shop ? null : (

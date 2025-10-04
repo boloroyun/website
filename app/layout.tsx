@@ -13,6 +13,9 @@ import SuppressHydrationWarnings from './suppress-hydration-warnings';
 import SuppressGrammarly from '@/components/SuppressGrammarly';
 import { Providers } from './providers';
 import PerformanceMonitor from '@/components/PerformanceMonitor';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { ReactErrorRecovery } from '@/components/ReactErrorRecovery';
+import { ClientErrorInit } from '@/components/ClientErrorInit';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -127,16 +130,21 @@ export default function RootLayout({
       >
         <SuppressHydrationWarnings />
         <SuppressGrammarly />
-        <Providers>
-          {/* The header is now handled within each page, not globally */}
-          {children}
-          <MobileBottomBar />
-          <Footer />
-          <Toaster position="top-right" richColors />
-          <CustomToaster />
-          <CrispChat />
-          <PerformanceMonitor />
-        </Providers>
+        <ClientErrorInit />
+        <ErrorBoundary>
+          <ReactErrorRecovery>
+            <Providers>
+              {/* The header is now handled within each page, not globally */}
+              {children}
+              <MobileBottomBar />
+              <Footer />
+              <Toaster position="top-right" richColors />
+              <CustomToaster />
+              <CrispChat />
+              <PerformanceMonitor />
+            </Providers>
+          </ReactErrorRecovery>
+        </ErrorBoundary>
 
         {/* Cloudinary Upload Widget (for signed uploads) */}
         <script

@@ -45,7 +45,10 @@ import {
   Camera,
   ImageIcon,
 } from 'lucide-react';
-import { FileUploader, UploadedImage } from '@/components/FileUploader';
+import {
+  FileUploaderWithCompression as FileUploader,
+  UploadedImage,
+} from '@/components/FileUploaderWithCompression';
 
 interface QuoteRequestModalProps {
   isOpen: boolean;

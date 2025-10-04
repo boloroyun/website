@@ -2,9 +2,9 @@
 import { useState } from 'react';
 // Use proper imports with @ alias to ensure correct path resolution
 import {
-  FileUploader as CustomFileUploader,
+  FileUploaderWithCompression as CustomFileUploader,
   UploadedImage,
-} from '@/components/FileUploader';
+} from '@/components/FileUploaderWithCompression';
 import { Loader2 } from 'lucide-react';
 import { openChat, sendVisitorMessage, setSessionData } from '@/lib/crisp';
 import { addSessionTags as tagSession } from '@/lib/crisp';

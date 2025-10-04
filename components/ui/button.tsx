@@ -39,7 +39,7 @@ export interface ButtonProps extends VariantProps<typeof buttonVariants> {
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
   className?: string;
-  children?: React.ReactNode;
+  children?: JSX.Element | JSX.Element[] | string | number;
   [key: string]: any;
 }
 

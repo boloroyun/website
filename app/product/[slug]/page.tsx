@@ -7,6 +7,7 @@ import ProductReviewComponent from '@/components/product/ProductReviewComponent'
 import ProductDetailsAccordian from '@/components/product/ProductDetailsAccordian';
 import ProductActions from '@/components/product/ProductActions';
 import ProductImageCarousel from '@/components/product/ProductImageCarousel';
+import EnhancedProductImageCarousel from '@/components/product/EnhancedProductImageCarousel';
 import SocialShare from '@/components/SocialShare';
 import { getProductBySlug, getRelatedProductsByCategory } from '@/actions';
 import { getProductFeatures } from '@/lib/product-features';
@@ -193,17 +194,34 @@ const ProductPage = async ({ params }: ProductPageProps) => {
 
       {/* Main container */}
       <div className="max-w-7xl ownContainer pb-6 px-6 pt-2">
-        <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 mb-[20px]">
-          {/* Product Image Carousel */}
-          <div className="w-full lg:w-1/2">
-            <ProductImageCarousel
+        <div
+          className={`flex flex-col lg:flex-row gap-6 lg:gap-10 mb-[20px] ${
+            product.pricingType === 'gallery' ? 'lg:gap-12' : ''
+          }`}
+        >
+          {/* Product Image Carousel - Larger for gallery products */}
+          <div
+            className={`w-full ${
+              product.pricingType === 'gallery'
+                ? 'lg:w-[65%] xl:w-[70%]'
+                : 'lg:w-1/2'
+            }`}
+          >
+            <EnhancedProductImageCarousel
               images={product.images || []}
               productTitle={product.title}
+              isGalleryProduct={product.pricingType === 'gallery'}
             />
           </div>
 
-          {/* Product Information */}
-          <div className="w-full lg:w-1/2 space-y-4">
+          {/* Product Information - Adjusted width for gallery products */}
+          <div
+            className={`w-full ${
+              product.pricingType === 'gallery'
+                ? 'lg:w-[35%] xl:w-[30%]'
+                : 'lg:w-1/2'
+            } space-y-4`}
+          >
             {/* Product Title */}
             <h1 className="text-2xl lg:subHeading">{product.title}</h1>
 
@@ -421,7 +439,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
         {/* Social Share Section */}
         <div className="mt-12 text-center">
           <SocialShare
-        url={typeof window !== "undefined" ? window.location.href : ""}
+            url={typeof window !== 'undefined' ? window.location.href : ''}
             variant="default"
             title={`${product.title} - LUX Cabinets & Stones`}
             description={product.description}
@@ -437,7 +455,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
 
       {/* Floating Social Share Button */}
       <SocialShare
-        url={typeof window !== "undefined" ? window.location.href : ""}
+        url={typeof window !== 'undefined' ? window.location.href : ''}
         variant="floating"
         title={`${product.title} - LUX Cabinets & Stones`}
         description={`Check out this premium ${product.category?.name || 'product'} from LUX Cabinets & Stones. ${product.description}`}

@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useMemo, memo } from 'react';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Expand } from 'lucide-react';
+import FullscreenImageModal from './FullscreenImageModal';
 
 interface ProductImage {
   url: string;
@@ -12,6 +13,7 @@ interface ProductImage {
 interface ProductImageCarouselProps {
   images: ProductImage[];
   productTitle: string;
+  isGalleryProduct?: boolean; // New prop to identify gallery products
 }
 
 // Memoized thumbnail component to prevent unnecessary re-renders
@@ -37,24 +39,24 @@ const Thumbnail = memo(
           e.stopPropagation();
           onClick(index);
         }}
-        className={`relative flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden border-2 transition-all ${
+        className={`relative flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden border-3 transition-all duration-300 ${
           isActive
-            ? 'border-blue-600 shadow-md scale-105'
-            : 'border-gray-200 hover:border-gray-400'
+            ? 'border-blue-600 shadow-lg scale-110 ring-2 ring-blue-200'
+            : 'border-gray-200 hover:border-blue-400 hover:shadow-md hover:scale-105'
         }`}
         aria-label={`View image ${index + 1}`}
         aria-pressed={isActive}
       >
         <div
-          className="relative w-full h-full bg-white brightness-110"
-          style={{ boxShadow: 'inset 0 0 15px rgba(255, 255, 255, 0.5)' }}
+          className="relative w-full h-full bg-gradient-to-br from-white to-gray-50"
+          style={{ boxShadow: 'inset 0 0 20px rgba(255, 255, 255, 0.8)' }}
         >
           <Image
             src={image.url}
             alt={`${productTitle} - ${index === 0 ? 'Main view' : `Alternative view ${index}`} - Premium quality cabinet and stone products by Lux Cabinets & Stones`}
             fill
-            className="object-contain p-1 opacity-100"
-            sizes="(max-width: 768px) 64px, 80px"
+            className="object-contain p-2 transition-opacity duration-300 hover:opacity-80"
+            sizes="(max-width: 768px) 80px, 96px"
             style={{
               backgroundColor: '#ffffff',
             }}
@@ -69,16 +71,24 @@ const Thumbnail = memo(
           />
         </div>
         {isActive && (
-          <div className="absolute inset-0 border-2 border-blue-600 rounded-lg pointer-events-none"></div>
+          <div className="absolute inset-0 border-3 border-blue-600 rounded-xl pointer-events-none bg-blue-600/10"></div>
+        )}
+
+        {/* Active indicator */}
+        {isActive && (
+          <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-600 rounded-full border-2 border-white shadow-sm flex items-center justify-center">
+            <div className="w-2 h-2 bg-white rounded-full"></div>
+          </div>
         )}
       </button>
     );
   }
 );
 
-const ProductImageCarousel= ({
+const ProductImageCarousel = ({
   images,
   productTitle,
+  isGalleryProduct = false,
 }) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [loadedImages, setLoadedImages] = useState(
@@ -87,6 +97,7 @@ const ProductImageCarousel= ({
   const [imageErrors, setImageErrors] = useState(
     {} as { [key: number]: boolean }
   );
+  const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
 
   // Navigate to previous image with wraparound
   const goToPrevious = React.useCallback(() => {
@@ -190,27 +201,49 @@ const ProductImageCarousel= ({
   }
 
   return (
-    <div className="w-full space-y-4">
-      {/* Main Image Display */}
+    <div className="w-full space-y-6">
+      {/* Main Image Display - Enhanced UI */}
       <div
-        className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden relative"
-        style={{
-          background: 'linear-gradient(to bottom right, #ffffff, #f9fafb)',
-        }}
+        className={`bg-gradient-to-br from-white via-gray-50 to-white rounded-2xl shadow-lg border-2 overflow-hidden relative group ${
+          isGalleryProduct
+            ? 'shadow-2xl border-gray-200 hover:shadow-3xl'
+            : 'border-gray-100 hover:shadow-xl'
+        } transition-all duration-500`}
       >
-        {/* Loading indicator - only show briefly */}
+        {/* Loading indicator - Enhanced */}
         {false && !isCurrentImageLoaded && !hasCurrentImageError && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-50 bg-opacity-75 z-10">
-            <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-50 to-white bg-opacity-90 z-10 backdrop-blur-sm">
+            <div className="flex flex-col items-center space-y-3">
+              <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+              <p className="text-sm text-gray-600 font-medium">
+                Loading image...
+              </p>
+            </div>
           </div>
         )}
 
-        {/* Current Image */}
-        <div className="p-2 sm:p-4">
+        {/* Current Image - Enhanced responsive sizing */}
+        <div
+          className={`${
+            isGalleryProduct ? 'p-2 sm:p-4 md:p-6 lg:p-8 xl:p-10' : 'p-2 sm:p-4'
+          } relative`}
+        >
+          {/* Decorative corner elements */}
+          <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-blue-200 opacity-50 transition-opacity group-hover:opacity-70"></div>
+          <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-blue-200 opacity-50 transition-opacity group-hover:opacity-70"></div>
+          <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-blue-200 opacity-50 transition-opacity group-hover:opacity-70"></div>
+          <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-blue-200 opacity-50 transition-opacity group-hover:opacity-70"></div>
+
           <div
-            className="relative w-full aspect-square bg-white brightness-110"
+            className={`relative w-full ${
+              isGalleryProduct
+                ? 'aspect-[16/9] sm:aspect-[16/10] lg:aspect-[16/9] xl:aspect-[16/8]'
+                : 'aspect-square'
+            } bg-gradient-to-br from-white via-gray-25 to-white rounded-xl overflow-hidden`}
             style={{
-              boxShadow: 'inset 0 0 30px rgba(255, 255, 255, 0.5)',
+              boxShadow: isGalleryProduct
+                ? 'inset 0 0 60px rgba(59, 130, 246, 0.05), inset 0 0 30px rgba(255, 255, 255, 0.8)'
+                : 'inset 0 0 40px rgba(255, 255, 255, 0.6)',
             }}
           >
             {hasCurrentImageError ? (
@@ -220,17 +253,24 @@ const ProductImageCarousel= ({
             ) : (
               <div
                 key={`image-container-${safeCurrentIndex}`}
-                className="w-full h-full"
+                className="w-full h-full cursor-pointer"
+                onClick={() => setIsFullscreenOpen(true)}
               >
                 <Image
                   key={`main-image-${safeCurrentIndex}`}
                   src={currentImageData?.url || ''}
                   alt={`${productTitle} - ${safeCurrentIndex === 0 ? 'Main product image' : `Detailed view ${safeCurrentIndex + 1}`} - High quality kitchen and bathroom solutions by Lux Cabinets & Stones`}
                   fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
-                  className="object-contain rounded-lg transition-opacity duration-300 opacity-100"
+                  sizes={
+                    isGalleryProduct
+                      ? '(max-width: 640px) 100vw, (max-width: 768px) 95vw, (max-width: 1024px) 85vw, (max-width: 1280px) 75vw, 1200px'
+                      : '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px'
+                  }
+                  className={`object-contain rounded-lg transition-all duration-300 opacity-100 hover:opacity-95 hover:scale-[1.02] ${
+                    isGalleryProduct ? 'object-contain' : 'object-contain'
+                  }`}
                   priority={safeCurrentIndex === 0} // Only prioritize the first image
-                  quality={80} // Slightly reduce quality for better performance
+                  quality={isGalleryProduct ? 95 : 80} // Higher quality for gallery products
                   onLoad={() => {
                     setLoadedImages((prev) => ({
                       ...prev,
@@ -255,7 +295,16 @@ const ProductImageCarousel= ({
           </div>
         </div>
 
-        {/* Navigation Arrows with enhanced click areas */}
+        {/* Fullscreen expand button - Enhanced */}
+        <button
+          onClick={() => setIsFullscreenOpen(true)}
+          className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center bg-white/90 hover:bg-white backdrop-blur-sm rounded-full shadow-lg border border-gray-200 z-30 transition-all duration-300 hover:scale-110 group-hover:shadow-xl"
+          aria-label="View fullscreen"
+        >
+          <Expand className="h-5 w-5 text-gray-700 transition-colors hover:text-blue-600" />
+        </button>
+
+        {/* Navigation Arrows - Enhanced design */}
         {images.length > 1 && (
           <>
             <button
@@ -264,10 +313,10 @@ const ProductImageCarousel= ({
                 e.stopPropagation();
                 goToPrevious();
               }}
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white hover:bg-gray-100 rounded-full shadow-md z-30 transition-transform hover:scale-110"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-white/90 hover:bg-white backdrop-blur-sm rounded-full shadow-lg border border-gray-200 z-30 transition-all duration-300 hover:scale-110 hover:shadow-xl"
               aria-label="Previous image"
             >
-              <ChevronLeft className="h-6 w-6 text-gray-800" />
+              <ChevronLeft className="h-6 w-6 text-gray-700 hover:text-blue-600 transition-colors" />
             </button>
             <button
               onClick={(e) => {
@@ -275,25 +324,27 @@ const ProductImageCarousel= ({
                 e.stopPropagation();
                 goToNext();
               }}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white hover:bg-gray-100 rounded-full shadow-md z-30 transition-transform hover:scale-110"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-white/90 hover:bg-white backdrop-blur-sm rounded-full shadow-lg border border-gray-200 z-30 transition-all duration-300 hover:scale-110 hover:shadow-xl"
               aria-label="Next image"
             >
-              <ChevronRight className="h-6 w-6 text-gray-800" />
+              <ChevronRight className="h-6 w-6 text-gray-700 hover:text-blue-600 transition-colors" />
             </button>
           </>
         )}
 
-        {/* Image counter */}
+        {/* Image counter - Enhanced */}
         {images.length > 1 && (
-          <div className="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full z-20">
-            {safeCurrentIndex + 1} / {images.length}
+          <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-full z-20 border border-white/20 shadow-lg">
+            <span className="font-medium">{safeCurrentIndex + 1}</span>
+            <span className="text-white/60 mx-1">of</span>
+            <span className="font-medium">{images.length}</span>
           </div>
         )}
       </div>
 
-      {/* Thumbnails with active tracking - using memoized component */}
+      {/* Thumbnails - Enhanced design */}
       {images.length > 1 && (
-        <div className="flex justify-center gap-3 overflow-x-auto pb-3 mt-4 px-2 max-w-full scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+        <div className="flex justify-center gap-4 overflow-x-auto pb-4 px-2 max-w-full scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-gray-100 scrollbar-thumb-rounded-full">
           {images.map((image, index) => (
             <Thumbnail
               key={`thumbnail-${index}`}
@@ -306,6 +357,15 @@ const ProductImageCarousel= ({
           ))}
         </div>
       )}
+
+      {/* Fullscreen Image Modal */}
+      <FullscreenImageModal
+        images={images}
+        initialIndex={safeCurrentIndex}
+        isOpen={isFullscreenOpen}
+        onClose={() => setIsFullscreenOpen(false)}
+        productTitle={productTitle}
+      />
     </div>
   );
 };
