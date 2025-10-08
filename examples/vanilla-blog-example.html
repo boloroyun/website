@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Posts - Vanilla JS Example</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Blog Posts</h1>
+        
+        <!-- This is the container where blog posts will be loaded -->
+        <div id="blog-posts" class="space-y-6">
+            Loading blog posts...
+        </div>
+        
+        <!-- Pagination -->
+        <div id="pagination" class="mt-8"></div>
+    </div>
+
+    <script>
+        // Add this to your blog page
+        const API_URL = '/api/public/blog';
+
+        async function loadBlogPosts(page = 1, category = null, tag = null, search = null) {
+            try {
+                // Build query parameters
+                const params = new URLSearchParams();
+                if (page > 1) params.set('page', page.toString());
+                if (category) params.set('category', category);
+                if (tag) params.set('tag', tag);
+                if (search) params.set('search', search);
+
+                const url = params.toString() ? `${API_URL}?${params.toString()}` : API_URL;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayBlogPosts(data.posts);
+                    displayPagination(data.pagination, { category, tag, search });
+                } else {
+                    throw new Error(data.error || 'Failed to load blog posts');
+                }
+            } catch (error) {
+                console.error('Error loading blog posts:', error);
+                displayError(error.message);
+            }
+        }
+
+        function displayBlogPosts(posts) {
+            const blogContainer = document.getElementById('blog-posts');
+            
+            if (!blogContainer) {
+                console.error('Blog container element not found');
+                return;
+            }
+            
+            if (posts.length === 0) {
+                blogContainer.innerHTML = `
+                    <div class="text-center py-16">
+                        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-2">No blog posts found</h3>
+                        <p class="text-gray-600">Check back soon for new content!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            blogContainer.innerHTML = posts.map(post => `
+                <article class="blog-post bg-white rounded-lg shadow-lg border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    ${post.featuredImage ? `
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="${post.featuredImage.url}" alt="${post.title}" class="w-full h-full object-cover transition-transform duration-300 hover:scale-105">
+                            <div class="absolute top-4 left-4">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white" style="background-color: ${post.category.color || '#3B82F6'}90;">
+                                    ${post.category.name}
+                                </span>
+                                ${post.featured ? `
+                                    <span class="ml-2 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-500 text-white">
+                                        ⭐ Featured
+                                    </span>
+                                ` : ''}
+                            </div>
+                        </div>
+                    ` : ''}
+                    <div class="p-6">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors">
+                            ${post.title}
+                        </h2>
+                        <p class="text-gray-600 mb-4 line-clamp-3">
+                            ${post.excerpt}
+                        </p>
+                        <div class="flex items-center text-sm text-gray-500 mb-4 space-x-4">
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                <span>By ${post.authorName}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <span>${new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric'
+                                })}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span>${post.readTime || Math.ceil(post.content.length / 1000)} min read</span>
+                            </div>
+                        </div>
+                        ${post.tags.length > 0 ? `
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                ${post.tags.slice(0, 3).map(tag => `
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
+                                        #${tag.name}
+                                    </span>
+                                `).join('')}
+                                ${post.tags.length > 3 ? `
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
+                                        +${post.tags.length - 3} more
+                                    </span>
+                                ` : ''}
+                            </div>
+                        ` : ''}
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                    <span>${post.views.toLocaleString()} views</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    </svg>
+                                    <span>${post.likes.toLocaleString()} likes</span>
+                                </div>
+                            </div>
+                            <a href="/blog/${post.slug}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200">
+                                Read More
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function displayPagination(pagination, filters = {}) {
+            const paginationContainer = document.getElementById('pagination');
+            
+            if (!paginationContainer || !pagination || pagination.totalPages <= 1) {
+                if (paginationContainer) paginationContainer.innerHTML = '';
+                return;
+            }
+
+            const { currentPage, totalPages, hasPrevPage, hasNextPage } = pagination;
+            
+            let paginationHTML = '<div class="flex items-center justify-center space-x-2">';
+            
+            // Previous button
+            if (hasPrevPage) {
+                paginationHTML += `
+                    <button onclick="loadBlogPosts(${currentPage - 1}, '${filters.category || ''}', '${filters.tag || ''}', '${filters.search || ''}')" 
+                            class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-700 transition-colors">
+                        Previous
+                    </button>
+                `;
+            }
+            
+            // Page numbers
+            for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+                const isActive = i === currentPage;
+                paginationHTML += `
+                    <button onclick="loadBlogPosts(${i}, '${filters.category || ''}', '${filters.tag || ''}', '${filters.search || ''}')" 
+                            class="px-3 py-2 text-sm font-medium ${
+                                isActive 
+                                    ? 'text-white bg-blue-600 border border-blue-600' 
+                                    : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50 hover:text-gray-700'
+                            } rounded-md transition-colors">
+                        ${i}
+                    </button>
+                `;
+            }
+            
+            // Next button
+            if (hasNextPage) {
+                paginationHTML += `
+                    <button onclick="loadBlogPosts(${currentPage + 1}, '${filters.category || ''}', '${filters.tag || ''}', '${filters.search || ''}')" 
+                            class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-700 transition-colors">
+                        Next
+                    </button>
+                `;
+            }
+            
+            paginationHTML += '</div>';
+            paginationContainer.innerHTML = paginationHTML;
+        }
+
+        function displayError(message) {
+            const blogContainer = document.getElementById('blog-posts');
+            blogContainer.innerHTML = `
+                <div class="text-center py-16">
+                    <div class="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-12 h-12 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-2">Error Loading Blog Posts</h3>
+                    <p class="text-gray-600 mb-6">${message}</p>
+                    <button onclick="loadBlogPosts()" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200">
+                        Try Again
+                    </button>
+                </div>
+            `;
+        }
+
+        // Load posts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBlogPosts();
+        });
+    </script>
+</body>
+</html>
