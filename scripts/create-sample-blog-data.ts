@@ -65,6 +65,26 @@ async function createSampleBlogData() {
           
           <h3>4. Bold Color Accents</h3>
           <p>While neutral tones dominate, bold accent colors add personality and warmth.</p>`,
+        featuredImage: {
+          url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+          public_id: 'modern-kitchen-2024',
+          alt: 'Modern kitchen with minimalist design and smart appliances',
+          caption: 'A sleek modern kitchen showcasing 2024 design trends',
+        },
+        images: [
+          {
+            url: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+            public_id: 'smart-appliances',
+            alt: 'Smart kitchen appliances and IoT devices',
+            caption: 'Smart appliances integrated into modern kitchen design',
+          },
+          {
+            url: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2058&q=80',
+            public_id: 'minimalist-storage',
+            alt: 'Minimalist kitchen with hidden storage solutions',
+            caption: 'Clean lines and hidden storage define modern aesthetics',
+          },
+        ],
         status: 'published',
         featured: true,
         published: true,
@@ -107,6 +127,26 @@ async function createSampleBlogData() {
           
           <h3>Hardware and Fixtures</h3>
           <p>Premium hardware in brushed gold, matte black, or polished chrome completes the luxury look.</p>`,
+        featuredImage: {
+          url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+          public_id: 'luxury-materials',
+          alt: 'Luxury kitchen with marble countertops and premium finishes',
+          caption: 'Premium materials showcase luxury kitchen design',
+        },
+        images: [
+          {
+            url: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+            public_id: 'marble-countertops',
+            alt: 'Calacatta marble countertops with dramatic veining',
+            caption: 'Calacatta marble brings timeless elegance',
+          },
+          {
+            url: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2058&q=80',
+            public_id: 'custom-cabinetry',
+            alt: 'Custom wood cabinetry with premium hardware',
+            caption: 'Custom cabinetry with high-end finishes',
+          },
+        ],
         status: 'published',
         featured: false,
         published: true,
@@ -144,6 +184,26 @@ async function createSampleBlogData() {
           
           <h3>Design Tips</h3>
           <p>Use mirrors strategically, choose compact appliances, and maintain clean lines throughout the design.</p>`,
+        featuredImage: {
+          url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+          public_id: 'small-kitchen-design',
+          alt: 'Compact kitchen with space-saving solutions',
+          caption: 'Smart design maximizes space in small kitchens',
+        },
+        images: [
+          {
+            url: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+            public_id: 'vertical-storage',
+            alt: 'Vertical storage solutions in small kitchen',
+            caption: 'Vertical storage maximizes cabinet space',
+          },
+          {
+            url: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2058&q=80',
+            public_id: 'open-shelving',
+            alt: 'Open shelving creates visual space',
+            caption: 'Open shelving makes small spaces feel larger',
+          },
+        ],
         status: 'published',
         featured: false,
         published: true,
