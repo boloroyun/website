@@ -74,8 +74,12 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Blog Posts</h1>
-            <p className="text-red-600">Error loading blog posts: {blogPostsResult.error}</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              Blog Posts
+            </h1>
+            <p className="text-red-600">
+              Error loading blog posts: {blogPostsResult.error}
+            </p>
           </div>
         </div>
       );
@@ -87,33 +91,65 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <h1 className="text-3xl font-bold text-gray-900 mb-8">Blog Posts</h1>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post) => (
-              <div key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                {post.featuredImage && (
-                  <img
-                    src={post.featuredImage.url}
-                    alt={post.featuredImage.alt || post.title}
-                    className="w-full h-48 object-cover"
-                  />
-                )}
-                <div className="p-6">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">{post.title}</h2>
-                  <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">
-                      By {post.authorName}
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      {post.readTime} min read
-                    </span>
+              <article
+                key={post.id}
+                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+              >
+                <a href={`/blog/${post.slug}`} className="block">
+                  {post.featuredImage && (
+                    <div className="relative overflow-hidden">
+                      <img
+                        src={post.featuredImage.url}
+                        alt={post.featuredImage.alt || post.title}
+                        className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  )}
+                  <div className="p-6">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
+                      {post.title}
+                    </h2>
+                    <p className="text-gray-600 mb-4 line-clamp-3">
+                      {post.excerpt}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-500">
+                        By {post.authorName}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {post.readTime} min read
+                      </span>
+                    </div>
                   </div>
+                </a>
+                <div className="px-6 pb-4">
+                  <a
+                    href={`/blog/${post.slug}`}
+                    className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors"
+                  >
+                    Read More
+                    <svg
+                      className="ml-1 w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </a>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
-          
+
           {pagination && pagination.totalPages > 1 && (
             <div className="mt-12 flex justify-center">
               <div className="text-gray-600">
