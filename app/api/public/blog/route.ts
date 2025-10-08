@@ -41,7 +41,9 @@ export async function GET(request: NextRequest) {
     if (tag) {
       whereConditions.tags = {
         some: {
-          slug: tag,
+          tag: {
+            slug: tag,
+          },
         },
       };
     }
@@ -68,7 +70,11 @@ export async function GET(request: NextRequest) {
       where: whereConditions,
       include: {
         category: true,
-        tags: true,
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
       },
       orderBy: [
         { featured: 'desc' },
@@ -109,12 +115,12 @@ export async function GET(request: NextRequest) {
         description: post.category.description,
         color: post.category.color,
       },
-      tags: post.tags.map((tag) => ({
-        id: tag.id,
-        name: tag.name,
-        slug: tag.slug,
-        description: tag.description,
-        color: tag.color,
+      tags: post.tags.map((blogPostTag) => ({
+        id: blogPostTag.tag.id,
+        name: blogPostTag.tag.name,
+        slug: blogPostTag.tag.slug,
+        description: blogPostTag.tag.description || undefined,
+        color: blogPostTag.tag.color,
       })),
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
