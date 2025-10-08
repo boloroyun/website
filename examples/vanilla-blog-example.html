@@ -21,7 +21,7 @@
 
     <script>
         // Add this to your blog page
-        const API_URL = '/api/public/blog';
+        const API_URL = `${window.location.origin}/api/public/blog`;
 
         async function loadBlogPosts(page = 1, category = null, tag = null, search = null) {
             try {

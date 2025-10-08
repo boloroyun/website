@@ -97,7 +97,9 @@ export function useBlogPosts(params: UseBlogPostsParams = {}): UseBlogPostsResul
       if (params.search) queryParams.set('search', params.search);
       if (params.featured) queryParams.set('featured', 'true');
 
-      const response = await fetch(`/api/public/blog?${queryParams.toString()}`);
+      // Auto-detect the correct port from window.location
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+      const response = await fetch(`${baseUrl}/api/public/blog?${queryParams.toString()}`);
       const data = await response.json();
 
       if (data.success) {
@@ -132,7 +134,9 @@ export function useBlogPosts(params: UseBlogPostsParams = {}): UseBlogPostsResul
 // Legacy function for compatibility with existing code
 export async function loadBlogPosts() {
   try {
-    const response = await fetch('/api/public/blog');
+    // Auto-detect the correct port from window.location
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+    const response = await fetch(`${baseUrl}/api/public/blog`);
     const data = await response.json();
     
     if (data.success) {

@@ -64,7 +64,7 @@ const BlogPageClient = ({ initialSearchParams = {} }: BlogPageClientProps) => {
     const fetchMetadata = async () => {
       try {
         // Fetch categories
-        const categoriesResponse = await fetch('/api/blog/categories');
+        const categoriesResponse = await fetch(`${window.location.origin}/api/blog/categories`);
         if (categoriesResponse.ok) {
           const categoriesData = await categoriesResponse.json();
           if (categoriesData.success) {
@@ -73,7 +73,7 @@ const BlogPageClient = ({ initialSearchParams = {} }: BlogPageClientProps) => {
         }
 
         // Fetch tags
-        const tagsResponse = await fetch('/api/blog/tags');
+        const tagsResponse = await fetch(`${window.location.origin}/api/blog/tags`);
         if (tagsResponse.ok) {
           const tagsData = await tagsResponse.json();
           if (tagsData.success) {
