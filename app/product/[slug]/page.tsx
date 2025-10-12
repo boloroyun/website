@@ -9,6 +9,7 @@ import ProductActions from '@/components/product/ProductActions';
 import ProductImageCarousel from '@/components/product/ProductImageCarousel';
 import EnhancedProductImageCarousel from '@/components/product/EnhancedProductImageCarousel';
 import SocialShare from '@/components/SocialShare';
+import SocialMediaLinks from '@/components/SocialMediaLinks';
 import { getProductBySlug, getRelatedProductsByCategory } from '@/actions';
 import { getProductFeatures } from '@/lib/product-features';
 import { notFound } from 'next/navigation';
@@ -450,6 +451,21 @@ const ProductPage = async ({ params }: ProductPageProps) => {
               product.category?.name || 'Products',
             ]}
           />
+          
+          {/* Follow Us Section */}
+          <div className="mt-8 pt-8 border-t border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Follow Us for More Design Inspiration
+            </h3>
+            <SocialMediaLinks 
+              variant="horizontal" 
+              size="md" 
+              className="justify-center"
+            />
+            <p className="text-sm text-gray-600 mt-3">
+              Stay updated with our latest projects, design tips, and exclusive offers!
+            </p>
+          </div>
         </div>
       </div>
 

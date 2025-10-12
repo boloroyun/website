@@ -46,7 +46,7 @@ const BlogShare= ({ post }) => {
     {
       name: 'Twitter',
       icon: Twitter,
-      url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(shareTitle)}&via=LUXCabinets`,
+      url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(shareTitle)}&via=luxcabistones`,
       color: 'hover:bg-sky-500 hover:text-white',
     },
     {
