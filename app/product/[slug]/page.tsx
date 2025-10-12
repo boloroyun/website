@@ -203,7 +203,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
           <div
             className={`w-full ${
               product.pricingType === 'gallery'
-                ? 'lg:w-[65%] xl:w-[70%]'
+                ? 'lg:w-[70%] xl:w-[75%]'
                 : 'lg:w-1/2'
             }`}
           >
@@ -218,7 +218,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
           <div
             className={`w-full ${
               product.pricingType === 'gallery'
-                ? 'lg:w-[35%] xl:w-[30%]'
+                ? 'lg:w-[30%] xl:w-[25%]'
                 : 'lg:w-1/2'
             } space-y-4`}
           >

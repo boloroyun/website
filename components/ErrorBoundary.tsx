@@ -14,7 +14,7 @@ interface ErrorBoundaryProps {
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
 
-export class ErrorBoundary extends React.Component<
+class ErrorBoundaryClass extends React.Component<
   ErrorBoundaryProps,
   ErrorBoundaryState
 > {
@@ -81,6 +81,10 @@ export class ErrorBoundary extends React.Component<
     return this.props.children;
   }
 }
+
+// Export the ErrorBoundary as a properly typed React component
+export const ErrorBoundary: React.ComponentType<ErrorBoundaryProps> =
+  ErrorBoundaryClass;
 
 // Hook version for functional components
 export function useErrorHandler() {

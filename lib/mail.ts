@@ -252,7 +252,7 @@ export async function sendQuoteRequestNotification(
   quoteData: QuoteRequestData,
   notifyEmail: string = process.env.QUOTE_NOTIFICATION_EMAIL ||
     process.env.EMAIL_FROM ||
-    ''
+    'info@luxcabistones.com'
 ): Promise<void> {
   if (!notifyEmail) {
     console.warn('No notification email configured for quote requests');
@@ -263,6 +263,38 @@ export async function sendQuoteRequestNotification(
   const html = getQuoteRequestEmailHtml(quoteData);
 
   await sendMail(notifyEmail, subject, html);
+}
+
+export async function sendCustomerQuoteConfirmation(
+  quoteData: QuoteRequestData
+): Promise<void> {
+  if (!quoteData.email) {
+    console.warn('No customer email provided for quote confirmation');
+    return;
+  }
+
+  const subject = `Quote Request Received - LUX Cabinets & Stones`;
+  const html = getCustomerQuoteConfirmationEmailHtml(quoteData);
+
+  await sendMail(quoteData.email, subject, html);
+}
+
+export async function sendQuoteRequestEmails(
+  quoteData: QuoteRequestData,
+  companyEmail: string = 'info@luxcabistones.com'
+): Promise<void> {
+  try {
+    // Send both emails in parallel for better performance
+    await Promise.all([
+      sendQuoteRequestNotification(quoteData, companyEmail),
+      sendCustomerQuoteConfirmation(quoteData),
+    ]);
+
+    console.log('📧 Both quote request emails sent successfully');
+  } catch (error) {
+    console.error('📧 Error sending quote request emails:', error);
+    throw error;
+  }
 }
 
 export function getQuoteRequestEmailHtml(quoteData: QuoteRequestData): string {
@@ -323,6 +355,97 @@ export function getQuoteRequestEmailHtml(quoteData: QuoteRequestData): string {
       <hr style="border: none; border-top: 1px solid #eee; margin-top: 30px;">
       <p style="text-align: center; font-size: 12px; color: #777;">
         This is an automated email from the LUX Cabinets & Stones website.
+        <br>
+        &copy; ${new Date().getFullYear()} LUX Cabinets & Stones. All rights reserved.
+      </p>
+    </div>
+  `;
+}
+
+export function getCustomerQuoteConfirmationEmailHtml(
+  quoteData: QuoteRequestData
+): string {
+  // Build confirmation page URL if ID and token are provided
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL || 'https://luxcabinetsandstones.com';
+  const confirmationUrl =
+    quoteData.quoteId && quoteData.publicToken
+      ? `${baseUrl}/quote-requests/${quoteData.quoteId}?token=${quoteData.publicToken}`
+      : null;
+
+  return `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <img src="https://res.cloudinary.com/dpeueuyjf/image/upload/v1755294936/website-banners/sdvclxxuhzbxsn7wzpwd.png" alt="LUX Cabinets & Stones Logo" style="max-width: 150px; height: auto;">
+      </div>
+      <h2 style="color: #0056b3; text-align: center;">Thank You for Your Quote Request!</h2>
+      <p>Dear ${quoteData.name},</p>
+      <p>Thank you for your interest in LUX Cabinets & Stones! We have received your quote request and our team will review it shortly.</p>
+      
+      <div style="background-color: #f0f8ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #007bff;">
+        <h3 style="margin-top: 0; color: #0056b3;">Your Quote Request Details</h3>
+        <p><strong>Product:</strong> ${quoteData.productName}</p>
+        ${quoteData.sku ? `<p><strong>SKU:</strong> ${quoteData.sku}</p>` : ''}
+        ${quoteData.phone ? `<p><strong>Your Phone:</strong> ${quoteData.phone}</p>` : ''}
+        ${quoteData.zipCode ? `<p><strong>Your ZIP Code:</strong> ${quoteData.zipCode}</p>` : ''}
+        ${
+          quoteData.notes
+            ? `<p><strong>Your Message:</strong><br>${quoteData.notes}</p>`
+            : ''
+        }
+        <p><strong>Request Date:</strong> ${new Date(
+          quoteData.timestamp
+        ).toLocaleDateString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        })}</p>
+      </div>
+      
+      <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        <h3 style="margin-top: 0; color: #0056b3;">What Happens Next?</h3>
+        <ul style="margin: 10px 0; padding-left: 20px;">
+          <li>Our expert team will review your request within 24 hours</li>
+          <li>We'll contact you to discuss your project details and schedule a consultation</li>
+          <li>You'll receive a detailed, personalized quote for your project</li>
+        </ul>
+      </div>
+      
+      ${
+        confirmationUrl
+          ? `
+      <div style="text-align: center; margin: 30px 0;">
+        <p>You can track your quote request status at any time:</p>
+        <a href="${confirmationUrl}" style="background-color: #007bff; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-size: 16px; display: inline-block;">Track Your Request</a>
+      </div>
+      `
+          : ''
+      }
+      
+      <div style="background-color: #e8f5e8; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        <h3 style="margin-top: 0; color: #0056b3;">Contact Information</h3>
+        <p><strong>Phone:</strong> <a href="tel:+15713350118" style="color: #007bff; text-decoration: none;">(571) 335-0118</a></p>
+        <p><strong>Email:</strong> <a href="mailto:info@luxcabistones.com" style="color: #007bff; text-decoration: none;">info@luxcabistones.com</a></p>
+        <p><strong>Business Hours:</strong><br>
+        Monday - Friday: 9:00 AM - 5:00 PM<br>
+        Saturday: 10:00 AM - 3:00 PM<br>
+        Sunday: By Appointment</p>
+        <p><strong>Showroom:</strong><br>
+        4005 Westfax Dr, Unit M<br>
+        Chantilly, VA 20151</p>
+      </div>
+      
+      <p>We're excited to help you transform your space with our premium cabinets and stones!</p>
+      <p>Best regards,<br><strong>The LUX Cabinets & Stones Team</strong></p>
+      
+      <hr style="border: none; border-top: 1px solid #eee; margin-top: 30px;">
+      <p style="text-align: center; font-size: 12px; color: #777;">
+        This email was sent to confirm your quote request with LUX Cabinets & Stones.
+        <br>
+        Visit us at <a href="https://luxcabinetsandstones.com" style="color: #007bff;">luxcabinetsandstones.com</a>
         <br>
         &copy; ${new Date().getFullYear()} LUX Cabinets & Stones. All rights reserved.
       </p>

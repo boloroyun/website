@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { storePendingQuote } from '@/lib/quote-fallback';
-import { sendQuoteRequestNotification, QuoteRequestData } from '@/lib/mail';
+import { sendQuoteRequestEmails, QuoteRequestData } from '@/lib/mail';
 import * as loggerModule from '@/lib/logger';
 
 // Create a basic logger that won't throw errors
@@ -233,8 +233,8 @@ export async function POST(request: NextRequest) {
         quoteId: savedQuote?.quoteId || 'Unknown',
       };
 
-      // Send notification email to admin
-      await sendQuoteRequestNotification(emailData);
+      // Send both customer confirmation and company notification emails
+      await sendQuoteRequestEmails(emailData, 'info@luxcabistones.com');
       logger.debug('📝 Quote API: Email notification sent successfully');
     } catch (emailError) {
       logger.error(

@@ -243,9 +243,11 @@ const HomePage = async () => {
         ]}
       />
 
-      {/* Standard Navigation */}
-      <TopBarWrapper />
-      <Navbar />
+      {/* Sticky Navigation Header */}
+      <div className="sticky top-0 z-40 bg-white">
+        <TopBarWrapper />
+        <Navbar />
+      </div>
 
       {/* Hero Section with Banner Carousel */}
       <div className="relative">

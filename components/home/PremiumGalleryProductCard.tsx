@@ -78,8 +78,8 @@ const PremiumGalleryProjectCard = ({
         }}
       />
 
-      {/* Image Container - Premium design with full visibility */}
-      <div className="relative w-full aspect-[4/3] overflow-hidden">
+      {/* Image Container - Premium design with enhanced size and full visibility */}
+      <div className="relative w-full aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/10] xl:aspect-[16/9] overflow-hidden">
         {mainImage ? (
           <>
             {!imageLoaded && !imageError && (
@@ -96,17 +96,17 @@ const PremiumGalleryProjectCard = ({
               </div>
             )}
 
-            {/* Main image with 100% visibility */}
-            <div className="relative w-full h-full p-6">
+            {/* Main image with enhanced size and 100% visibility */}
+            <div className="relative w-full h-full p-3 sm:p-4 md:p-6">
               <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gradient-to-br from-white to-gray-25">
                 <Image
                   src={mainImage}
                   alt={`${product.title} - Gallery project by Lux Cabinets & Stones`}
                   fill
-                  className={`object-contain transition-all duration-700 group-hover:scale-105 p-2 ${
+                  className={`object-cover transition-all duration-700 group-hover:scale-105 ${
                     imageLoaded ? 'opacity-100' : 'opacity-0'
                   }`}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1200px) 50vw, 600px"
                   quality={95}
                   onLoad={() => setImageLoaded(true)}
                   onError={() => {
@@ -298,8 +298,8 @@ const PremiumGalleryProductCard = ({
         </div>
       </div>
 
-      {/* Premium Gallery Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+      {/* Premium Gallery Grid - Enhanced for better image display */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8 sm:gap-10 lg:gap-12">
         {products.length > 0 ? (
           products.map((product) => (
             <PremiumGalleryProjectCard key={product.id} product={product} />

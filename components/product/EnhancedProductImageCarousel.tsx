@@ -219,7 +219,7 @@ const EnhancedProductImageCarousel = ({
           <div
             className={`relative w-full ${
               isGalleryProduct
-                ? 'aspect-[16/9] sm:aspect-[16/10] lg:aspect-[16/9] xl:aspect-[16/8]'
+                ? 'aspect-[16/9] sm:aspect-[16/10] md:aspect-[16/9] lg:aspect-[2/1] xl:aspect-[21/9]'
                 : 'aspect-square'
             } bg-gradient-to-br from-white via-gray-25 to-white rounded-3xl overflow-hidden cursor-pointer`}
             onClick={() => setIsFullscreenOpen(true)}
@@ -230,15 +230,15 @@ const EnhancedProductImageCarousel = ({
             }}
           >
             {/* Image with enhanced hover effects */}
-            <div className="relative w-full h-full p-4">
+            <div className="relative w-full h-full p-2 sm:p-3 md:p-4">
               <Image
                 src={currentImageData?.url || ''}
                 alt={`${productTitle} - Premium product showcase`}
                 fill
-                className="object-contain transition-all duration-700 hover:scale-[1.02] hover:opacity-95"
+                className="object-cover transition-all duration-700 hover:scale-[1.02] hover:opacity-95"
                 sizes={
                   isGalleryProduct
-                    ? '(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px'
+                    ? '(max-width: 640px) 100vw, (max-width: 1024px) 95vw, (max-width: 1440px) 85vw, 1400px'
                     : '(max-width: 768px) 100vw, 600px'
                 }
                 quality={isGalleryProduct ? 98 : 85}

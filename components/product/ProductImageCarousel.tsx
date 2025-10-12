@@ -237,7 +237,7 @@ const ProductImageCarousel = ({
           <div
             className={`relative w-full ${
               isGalleryProduct
-                ? 'aspect-[16/9] sm:aspect-[16/10] lg:aspect-[16/9] xl:aspect-[16/8]'
+                ? 'aspect-[16/9] sm:aspect-[16/10] md:aspect-[16/9] lg:aspect-[2/1] xl:aspect-[21/9]'
                 : 'aspect-square'
             } bg-gradient-to-br from-white via-gray-25 to-white rounded-xl overflow-hidden`}
             style={{
@@ -266,8 +266,8 @@ const ProductImageCarousel = ({
                       ? '(max-width: 640px) 100vw, (max-width: 768px) 95vw, (max-width: 1024px) 85vw, (max-width: 1280px) 75vw, 1200px'
                       : '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px'
                   }
-                  className={`object-contain rounded-lg transition-all duration-300 opacity-100 hover:opacity-95 hover:scale-[1.02] ${
-                    isGalleryProduct ? 'object-contain' : 'object-contain'
+                  className={`object-cover rounded-lg transition-all duration-300 opacity-100 hover:opacity-95 hover:scale-[1.02] ${
+                    isGalleryProduct ? 'object-cover' : 'object-contain'
                   }`}
                   priority={safeCurrentIndex === 0} // Only prioritize the first image
                   quality={isGalleryProduct ? 95 : 80} // Higher quality for gallery products

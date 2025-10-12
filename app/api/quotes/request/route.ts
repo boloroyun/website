@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { sendQuoteRequestNotification } from '@/lib/mail';
+import { sendQuoteRequestEmails } from '@/lib/mail';
 
 // Lazy Prisma initialization
 let prisma: PrismaClient;
@@ -93,8 +93,8 @@ export async function POST(request: NextRequest) {
           publicToken: quoteRequest.publicToken,
         };
 
-        // Send confirmation email to customer
-        await sendQuoteRequestNotification(emailData);
+        // Send both customer confirmation and company notification emails
+        await sendQuoteRequestEmails(emailData, 'info@luxcabistones.com');
         console.log(
           '📝 Quote Request API: Email notification sent successfully'
         );

@@ -84,98 +84,100 @@ const NavbarClient = () => {
         </div>
       )}
 
-      {/* Top contact bar */}
-      <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-2 px-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-4 text-sm">
-            <a
-              href="tel:+15713350118"
-              className="flex items-center hover:text-blue-400 transition-colors"
-            >
-              <Phone size={14} className="mr-1" />
-              <span>(571) 335-0118</span>
-            </a>
-            <span className="hidden md:inline text-gray-500">|</span>
-            <span className="hidden md:inline text-gray-300">
-              Mon-Fri: 9AM-5PM
-            </span>
-            <span className="hidden md:inline text-gray-500">|</span>
-            <span className="hidden md:inline text-gray-300">
-              Sat: 10AM-3PM
-            </span>
-          </div>
-          <div className="hidden md:flex items-center space-x-4 text-sm">
-            <Link
-              href="/request-a-quote"
-              className="text-blue-400 hover:text-blue-300 transition-colors"
-            >
-              Get Free Estimate
-            </Link>
-            <span className="text-gray-500">|</span>
-            <Link
-              href="/contact"
-              className="text-gray-300 hover:text-white transition-colors"
-            >
-              Contact Us
-            </Link>
+      {/* Header container */}
+      <div className="bg-white shadow-sm">
+        {/* Top contact bar */}
+        <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-2 px-4">
+          <div className="max-w-7xl mx-auto flex justify-between items-center">
+            <div className="flex items-center space-x-4 text-sm">
+              <a
+                href="tel:+15713350118"
+                className="flex items-center hover:text-blue-400 transition-colors"
+              >
+                <Phone size={14} className="mr-1" />
+                <span>(571) 335-0118</span>
+              </a>
+              <span className="hidden md:inline text-gray-500">|</span>
+              <span className="hidden md:inline text-gray-300">
+                Mon-Fri: 9AM-5PM
+              </span>
+              <span className="hidden md:inline text-gray-500">|</span>
+              <span className="hidden md:inline text-gray-300">
+                Sat: 10AM-3PM
+              </span>
+            </div>
+            <div className="hidden md:flex items-center space-x-4 text-sm">
+              <Link
+                href="/request-a-quote"
+                className="text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                Get Free Estimate
+              </Link>
+              <span className="text-gray-500">|</span>
+              <Link
+                href="/contact"
+                className="text-gray-300 hover:text-white transition-colors"
+              >
+                Contact Us
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Main navigation */}
-      <nav
-        className={`w-full bg-white shadow-sm sticky top-0 z-40 transition-all duration-300 ${
-          scrolled ? 'shadow-md py-2' : 'py-4'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            {/* Left section: Mobile menu and search */}
-            <div className="flex items-center space-x-4">
-              <MobileNavMenu navItems={navItems} />
+        {/* Main navigation */}
+        <nav
+          className={`w-full bg-white transition-all duration-300 ${
+            scrolled ? 'shadow-md py-2' : 'py-4'
+          }`}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between">
+              {/* Left section: Mobile menu and search */}
+              <div className="flex items-center space-x-4">
+                <MobileNavMenu navItems={navItems} />
 
-              <div className="hidden md:flex">
-                <button
-                  className="p-2 text-gray-500 hover:text-blue-600 transition-colors"
-                  aria-label="Search"
+                <div className="hidden md:flex">
+                  <button
+                    className="p-2 text-gray-500 hover:text-blue-600 transition-colors"
+                    aria-label="Search"
+                  >
+                    <Search size={20} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Middle section: Logo */}
+              <div className="flex items-center justify-center">
+                <Link
+                  href={'/'}
+                  className="group relative overflow-hidden transition-all duration-300 p-1 rounded-lg"
                 >
-                  <Search size={20} />
-                </button>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-gray-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+                  <div className="relative transform group-hover:scale-105 transition-transform duration-300">
+                    <Image
+                      src="/images/logo.jpeg"
+                      alt="LUX Cabinets & Stones"
+                      width={600}
+                      height={180}
+                      className={`h-16 sm:h-20 w-auto transition-all duration-300 ${
+                        scrolled ? 'scale-95' : ''
+                      }`}
+                      priority
+                      style={{ objectFit: 'contain' }}
+                    />
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></div>
+                  </div>
+                </Link>
+              </div>
+
+              {/* Right section: User navigation */}
+              <div className="flex justify-end">
+                <UserNavSection />
               </div>
             </div>
 
-            {/* Middle section: Logo */}
-            <div className="flex items-center justify-center">
-              <Link
-                href={'/'}
-                className="group relative overflow-hidden transition-all duration-300 p-1 rounded-lg"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-gray-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
-                <div className="relative transform group-hover:scale-105 transition-transform duration-300">
-                  <Image
-                    src="/images/logo.jpeg"
-                    alt="LUX Cabinets & Stones"
-                    width={600}
-                    height={180}
-                    className={`h-16 sm:h-20 w-auto transition-all duration-300 ${
-                      scrolled ? 'scale-95' : ''
-                    }`}
-                    priority
-                    style={{ objectFit: 'contain' }}
-                  />
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></div>
-                </div>
-              </Link>
-            </div>
-
-            {/* Right section: User navigation */}
-            <div className="flex justify-end">
-              <UserNavSection />
-            </div>
-          </div>
-
-          {/* Desktop Navigation Menu - Hidden as requested */}
-          {/* <div
+            {/* Desktop Navigation Menu - Hidden as requested */}
+            {/* <div
             className={`hidden lg:flex justify-center mt-2 transition-all duration-300 ${
               scrolled ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'
             }`}
@@ -196,8 +198,9 @@ const NavbarClient = () => {
               ))}
             </div>
           </div> */}
-        </div>
-      </nav>
+          </div>
+        </nav>
+      </div>
     </>
   );
 };
