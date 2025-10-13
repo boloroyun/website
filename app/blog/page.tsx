@@ -80,6 +80,19 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
             <p className="text-red-600">
               Error loading blog posts: {blogPostsResult.error}
             </p>
+            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+              <p className="text-sm text-gray-600">
+                Debug: Check{' '}
+                <a 
+                  href="/api/debug/blog-posts" 
+                  className="text-blue-600 hover:underline"
+                  target="_blank"
+                >
+                  /api/debug/blog-posts
+                </a>{' '}
+                to see all blog posts in the database.
+              </p>
+            </div>
           </div>
         </div>
       );
@@ -90,9 +103,46 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Blog Posts</h1>
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">Blog Posts</h1>
+            <div className="text-sm text-gray-600">
+              Showing {posts.length} of {pagination.totalCount} posts
+              {posts.length === 0 && (
+                <div className="mt-2">
+                  <a 
+                    href="/api/debug/blog-posts" 
+                    className="text-blue-600 hover:underline"
+                    target="_blank"
+                  >
+                    Debug: Check database →
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {posts.length === 0 ? (
+            <div className="text-center py-12">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                No Published Blog Posts Found
+              </h2>
+              <p className="text-gray-600 mb-6">
+                There are currently no published blog posts available.
+              </p>
+              <div className="bg-blue-50 border border-blue-200 rounded-md p-4 max-w-md mx-auto">
+                <h3 className="font-medium text-blue-900 mb-2">
+                  Possible Reasons:
+                </h3>
+                <ul className="text-sm text-blue-800 space-y-1">
+                  <li>• Blog posts exist but are not published</li>
+                  <li>• Blog posts have status "draft" instead of "published"</li>
+                  <li>• Database connection issues</li>
+                  <li>• No blog posts have been created yet</li>
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post) => (
               <article
                 key={post.id}
@@ -149,6 +199,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
               </article>
             ))}
           </div>
+          )}
 
           {pagination && pagination.totalPages > 1 && (
             <div className="mt-12 flex justify-center">
