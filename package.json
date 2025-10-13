@@ -10,7 +10,9 @@
     "analyze": "ANALYZE=true npm run build",
     "postinstall": "prisma generate",
     "migrate:deploy": "prisma migrate deploy",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "check-blog-posts": "node scripts/check-blog-posts.js",
+    "fix-blog-posts": "node scripts/check-blog-posts.js fix"
   },
   "dependencies": {
     "@mantine/form": "^7.12.2",
