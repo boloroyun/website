@@ -7,10 +7,10 @@ import TopBarWrapperClient from './TopBarWrapperClient';
 
 const DefaultHeader = () => {
   return (
-    <header>
+    <div className="sticky top-0 z-50 bg-white">
       <TopBarWrapperClient />
       <Navbar />
-    </header>
+    </div>
   );
 };
 

@@ -244,7 +244,7 @@ const HomePage = async () => {
       />
 
       {/* Sticky Navigation Header */}
-      <div className="sticky top-0 z-40 bg-white">
+      <div className="sticky top-0 z-50 bg-white">
         <TopBarWrapper />
         <Navbar />
       </div>
