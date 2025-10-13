@@ -39,7 +39,7 @@ interface MobileNavMenuProps {
   navItems: NavItem[];
 }
 
-const MobileNavMenu= ({ navItems }) => {
+const MobileNavMenu = ({ navItems }: MobileNavMenuProps) => {
   const [hamMenuOpen, setHamMenuOpen] = useAtom(hamburgerMenuState);
   const [activeSubmenu, setActiveSubmenu] = useState(null as string | null);
 
@@ -83,26 +83,35 @@ const MobileNavMenu= ({ navItems }) => {
         <Button
           variant={'ghost'}
           size={'icon'}
-          className="lg:hidden mr-2"
+          className="lg:hidden p-2 hover:bg-gray-100 transition-colors rounded-md"
           onClick={handleOnClickHamburgerMenu}
+          aria-label="Open navigation menu"
         >
-          <Menu size={24} />
+          <Menu size={20} className="text-gray-600" />
         </Button>
       </SheetTrigger>
       <SheetContent
         side={'left'}
-        className="w-[300px] sm:w-[400px] overflow-y-auto"
+        className="w-[280px] sm:w-[320px] md:w-[400px] overflow-y-auto p-0"
       >
-        <div className="flex items-center space-x-4 mb-2">
-          <User size={40} className="border-2 border-black p-1 rounded-full" />
-          <div>
-            <p className="text-sm font-medium">Download our app</p>
-            <p className="text-sm text-muted-foreground">and get 10% OFF!</p>
+        {/* Mobile menu header */}
+        <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-4">
+          <div className="flex items-center space-x-3 mb-3">
+            <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+              <User size={20} className="text-white" />
+            </div>
+            <div>
+              <p className="text-sm font-medium">Download our app</p>
+              <p className="text-xs text-gray-300">and get 10% OFF!</p>
+            </div>
           </div>
+          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm py-2 rounded-md">
+            Download App
+          </Button>
         </div>
-        <Button className="w-full mb-2 bg-red-400 hover:bg-red-500 text-white rounded-none">
-          Download App
-        </Button>
+
+        {/* Navigation items */}
+        <div className="p-4">
         <div className="grid grid-cols-2 gap-4 mb-6">
           <Link href="/profile/orders">
             <Button
