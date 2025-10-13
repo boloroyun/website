@@ -199,6 +199,7 @@ const MobileNavMenu = ({ navItems }: MobileNavMenuProps) => {
             </div>
           ))}
         </div>
+        </div>
       </SheetContent>
     </Sheet>
   );
