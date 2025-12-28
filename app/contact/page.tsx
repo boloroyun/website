@@ -101,7 +101,7 @@ export default function ContactPage() {
                     <p className="text-gray-600 mt-2">
                       Emergency:{' '}
                       <a
-                        href="tel:+15715858345"
+                        href="tel:+17039093897"
                         className="inline-flex items-center text-red-600 hover:text-red-800 font-bold text-lg hover:bg-red-50 px-2 py-1 rounded-md transition-all duration-200 hover:scale-105"
                       >
                         🚨 (703) 909-3897
