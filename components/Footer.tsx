@@ -171,10 +171,10 @@ const Footer = () => {
                       <p className="text-gray-400">
                         Emergency:{' '}
                         <a
-                          href="tel:+15715858345"
+                          href="tel:+17039093897"
                           className="text-red-400 hover:text-red-300 transition-colors"
                         >
-                          (571) 585-8345
+                          (703) 909-3897
                         </a>
                       </p>
                     </div>
