@@ -56,34 +56,7 @@ const teamMembers: TeamMember[] = [
       'Quality Control',
     ],
   },
-  {
-    name: 'Shirnen',
-    role: 'Senior Fabricator & Installer',
-    experience: '10+ Years Experience',
-    description:
-      'Skilled craftsman specializing in countertop installation and fabrication, bringing precision and artistry to every project.',
-    icon: Award,
-    specialties: [
-      'Custom Fabrication',
-      'Installation Expertise',
-      'Material Handling',
-      'Project Management',
-    ],
-  },
-  {
-    name: 'Bayar',
-    role: 'Sales Manager & Designer',
-    experience: 'Design & Sales Expert',
-    description:
-      'Experienced sales manager with a keen eye for design, helping customers bring their vision to life with expert guidance and creative solutions.',
-    icon: Palette,
-    specialties: [
-      'Interior Design',
-      'Customer Relations',
-      'Project Planning',
-      'Material Selection',
-    ],
-  },
+
   {
     name: 'Bolor',
     role: 'Designer, Sales Manager & Account Manager',
